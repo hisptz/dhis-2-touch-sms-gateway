@@ -1,0 +1,8 @@
+{
+  "name": "sms-gateway",
+  "app_id": "",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
