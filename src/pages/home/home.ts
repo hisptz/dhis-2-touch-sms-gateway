@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Component, OnInit} from '@angular/core';
+import { IonicPage, NavController } from 'ionic-angular';
+import {UserProvider} from "../../providers/user/user";
+import {CurrentUser} from "../../models/currentUser";
+import {EncryptionProvider} from "../../providers/encryption/encryption";
 
 /**
  * Generated class for the HomePage page.
@@ -13,13 +16,22 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   selector: 'page-home',
   templateUrl: 'home.html',
 })
-export class HomePage {
+export class HomePage implements OnInit{
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  currentUser : CurrentUser;
+  isLoading : boolean;
+  loadingMessages : string;
+
+  constructor(private navCtrl: NavController,
+              private encryption : EncryptionProvider,
+              private userProvider : UserProvider) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad HomePage');
+  ngOnInit(){
+    this.userProvider.getCurrentUser().then((currentUser: CurrentUser)=>{
+      console.log(currentUser.password);
+      console.log(this.encryption.decode(currentUser.password));
+    })
   }
 
 }

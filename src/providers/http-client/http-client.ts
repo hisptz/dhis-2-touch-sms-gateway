@@ -15,7 +15,8 @@ import {Observable} from "rxjs/Observable";
 export class HttpClientProvider {
 
   public timeOutTime : number;
-  constructor(private http: HTTP, public defaultHttp : Http) {
+  constructor(private http: HTTP,
+              private defaultHttp : Http) {
     this.timeOutTime = 2*60*1000;
   }
 

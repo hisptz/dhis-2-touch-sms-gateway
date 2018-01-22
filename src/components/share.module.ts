@@ -12,5 +12,5 @@ import {AvailableLocalInstanceComponent} from "./available-local-instance/availa
   exports: [LoadingComponent, ProgressBarComponent, EmptyListNotificationComponent, AvailableLocalInstanceComponent, WarningComponent]
 
 })
-export class sharedModule {
+export class SharedModule {
 }

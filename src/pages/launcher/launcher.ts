@@ -40,7 +40,7 @@ export class LauncherPage implements OnInit{
       if(user && user.isLogin){
         this.navCtrl.setRoot('HomePage');
       }else{
-        //this.navCtrl.setRoot('LoginPage');
+        this.navCtrl.setRoot('LoginPage');
       }
     },error=>{
     });

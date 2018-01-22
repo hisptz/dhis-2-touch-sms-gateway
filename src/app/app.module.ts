@@ -25,7 +25,7 @@ export function createTranslateLoader(http: Http) {
 
 import { MyApp } from './app.component';
 import {LauncherPage} from "../pages/launcher/launcher";
-import {sharedModule} from "../components/share.module";
+import {SharedModule} from "../components/share.module";
 import { NetworkAvailabilityProvider } from '../providers/network-availability/network-availability';
 import {UserProvider} from "../providers/user/user";
 import {SmsCommandProvider} from "../providers/sms-command/sms-command";
@@ -34,6 +34,8 @@ import {AppProvider} from "../providers/app/app";
 import {LocalInstanceProvider} from "../providers/local-instance/local-instance";
 import {HttpClientProvider} from "../providers/http-client/http-client";
 import {AppTranslationProvider} from "../providers/app-translation/app-translation";
+import {EncryptionProvider} from "../providers/encryption/encryption";
+import {SettingsProvider} from "../providers/settings/settings";
 
 @NgModule({
   declarations: [
@@ -44,7 +46,7 @@ import {AppTranslationProvider} from "../providers/app-translation/app-translati
     BrowserModule,
     HttpModule,
     IonicStorageModule.forRoot(),
-    sharedModule,
+    SharedModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -64,7 +66,8 @@ import {AppTranslationProvider} from "../providers/app-translation/app-translati
     SplashScreen,HTTP,AppVersion,Network,BackgroundMode,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     NetworkAvailabilityProvider,UserProvider,
-    SqlLiteProvider,SmsCommandProvider,AppProvider,
+    SettingsProvider,
+    SqlLiteProvider,SmsCommandProvider,AppProvider,EncryptionProvider,
     LocalInstanceProvider,HttpClientProvider,AppTranslationProvider
 
   ]
