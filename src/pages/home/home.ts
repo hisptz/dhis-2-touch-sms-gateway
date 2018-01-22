@@ -29,9 +29,17 @@ export class HomePage implements OnInit{
 
   ngOnInit(){
     this.userProvider.getCurrentUser().then((currentUser: CurrentUser)=>{
-      console.log(currentUser.password);
-      console.log(this.encryption.decode(currentUser.password));
+      currentUser.password = this.encryption.decode(currentUser.password);
+      this.currentUser = currentUser;
     })
+  }
+
+  logOut(){
+    this.currentUser.isLogin = false;
+    this.userProvider.setCurrentUser(this.currentUser).then(()=>{
+      this.navCtrl.setRoot('LoginPage');
+    });
+
   }
 
 }

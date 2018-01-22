@@ -8,6 +8,12 @@
 
   <ion-navbar color="primary">
     <ion-title>{{'sms_gateway'|translate}}</ion-title>
+    <ion-buttons start>
+      <button ion-button icon-only (click)="logOut()">
+        <ion-icon name="md-log-out"></ion-icon>
+      </button>
+    </ion-buttons>
+
   </ion-navbar>
 
 </ion-header>
@@ -16,5 +22,8 @@
 <ion-content padding>
 
  here we are in home page
+  <div *ngIf="currentUser && currentUser.password">
+    {{ currentUser.password }}
+  </div>
 
 </ion-content>

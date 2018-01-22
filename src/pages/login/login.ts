@@ -89,8 +89,8 @@ export class LoginPage implements OnInit{
       this.currentUser = currentUser;
     }else{
       this.currentUser.serverUrl = "play.hisptz.org/27";
-      this.currentUser.password = "admin";
-      this.currentUser.username = "district";
+      this.currentUser.username = "admin";
+      this.currentUser.password = "district";
     }
     this.currentLanguage = this.currentUser.currentLanguage;
     this.appTranslationProvider.setAppTranslation(this.currentUser.currentLanguage);
@@ -163,8 +163,9 @@ export class LoginPage implements OnInit{
                     this.progressTracker[currentResourceType].message = "preparing_local_storage";
                     this.sqlLite.generateTables(this.currentUser.currentDatabase).then(()=>{
                       this.updateProgressTracker(resource);
-                      //set up login page
-                      this.setLandingPage(this.currentUser)
+
+                      //other process if any
+
                     }).catch(error=>{
                       this.cancelLoginProcess(this.cancelLoginProcessData);
                       this.AppProvider.setNormalNotification('Fail to prepare local storage');

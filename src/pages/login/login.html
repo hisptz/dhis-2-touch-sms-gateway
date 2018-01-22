@@ -10,8 +10,6 @@
         <p >{{'innovation_in_every_dimension'|translate }}</p>
       </ion-col>
     </ion-row>
-
-     {{ currentUser.password }}
     <ion-row *ngIf="isLoginProcessActive">
       <ion-col [ngClass]="animationEffect.progressBar">
         <progress-bar

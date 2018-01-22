@@ -87,4 +87,5 @@
     <plugin name="cordova-plugin-advanced-http" spec="^1.9.1" />
     <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
     <plugin name="cordova-sqlite-storage" spec="^2.2.0" />
+    <allow-navigation href="http://192.168.43.70:8100" />
 </widget>

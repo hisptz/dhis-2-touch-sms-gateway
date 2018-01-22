@@ -4,6 +4,7 @@ export interface CurrentUser {
   password : string; //encrypted string
   serverUrl :  string;
   currentLanguage : string;
+  isLogin? : boolean;
   authorizationKey? : string;
   currentDatabase? : string;
   dhisVersion? : string;
