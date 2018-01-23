@@ -15,5 +15,6 @@
   "loading_current_user_authorities" : "Discovering current user authorities",
   "preparing_local_storage" : "Preparing local storage",
   "loading" : "Discovering",
-  "sms_gateway":"SMS Gateway"
+  "sms_gateway":"SMS Gateway",
+  "log_out" : "Log out"
 }

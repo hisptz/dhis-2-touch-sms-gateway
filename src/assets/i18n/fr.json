@@ -14,5 +14,7 @@
   "loading_system_information" : "Discovering system information",
   "loading_current_user_authorities" : "Discovering current user authorities",
   "preparing_local_storage" : "Préparation du stockage local",
-  "loading" : "Discovering"
+  "loading" : "Discovering",
+  "sms_gateway":"SMS Gateway",
+  "log_out" : "Log out"
 }

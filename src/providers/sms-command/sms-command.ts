@@ -36,6 +36,7 @@ export class SmsCommandProvider {
     });
   }
 
+  
   /**
    * saving sms commands
    * @param smsCommands
@@ -60,6 +61,8 @@ export class SmsCommandProvider {
     });
   }
 
+
+
   /**
    * get dataSet command configuration
    * @param dataSetId
@@ -67,7 +70,6 @@ export class SmsCommandProvider {
    * @returns {Promise<T>}
    */
   getSmsCommandForDataSet(dataSetId,currentUser){
-
     let ids = [];
     ids.push(dataSetId);
     return new Promise((resolve, reject)=> {
