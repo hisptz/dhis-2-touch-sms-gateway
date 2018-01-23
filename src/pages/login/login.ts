@@ -10,6 +10,8 @@ import {SqlLiteProvider} from "../../providers/sql-lite/sql-lite";
 import {HttpClientProvider} from "../../providers/http-client/http-client";
 import {SettingsProvider} from "../../providers/settings/settings";
 import {EncryptionProvider} from "../../providers/encryption/encryption";
+import {DataSetsProvider} from "../../providers/data-sets/data-sets";
+import {SmsCommandProvider} from "../../providers/sms-command/sms-command";
 
 /**
  * Generated class for the LoginPage page.
@@ -49,6 +51,8 @@ export class LoginPage implements OnInit{
               private AppProvider : AppProvider,
               private encryption : EncryptionProvider,
               private settingsProvider : SettingsProvider,
+              private dataSetsProvider : DataSetsProvider,
+              private smsCommandProvider : SmsCommandProvider,
               private backgroundMode : BackgroundMode) {
   }
 
@@ -163,8 +167,9 @@ export class LoginPage implements OnInit{
                     this.progressTracker[currentResourceType].message = "preparing_local_storage";
                     this.sqlLite.generateTables(this.currentUser.currentDatabase).then(()=>{
                       this.updateProgressTracker(resource);
-
                       //other process if any
+                      this.downloadingDataSets();
+                      this.downloadingSmsCommands();
 
                     }).catch(error=>{
                       this.cancelLoginProcess(this.cancelLoginProcessData);
@@ -222,6 +227,66 @@ export class LoginPage implements OnInit{
     }
   }
 
+  downloadingSmsCommands(){
+    if(this.isLoginProcessActive){
+      let resource = "smsCommand";
+      let currentResourceType = "entryForm";
+      this.progressTracker[currentResourceType].message = "loading_sms_commands";
+      if(this.completedTrackedProcess.indexOf(resource) > -1){
+        this.progressTracker[currentResourceType].message = "sms_commands_have_been_loaded";
+        this.updateProgressTracker(resource);
+      }else{
+        this.smsCommandProvider.getSmsCommandFromServer(this.currentUser).then((smsCommands : any)=>{
+          if(this.isLoginProcessActive){
+            this.progressTracker[currentResourceType].message = "saving_sms_commands";
+            this.smsCommandProvider.savingSmsCommand(smsCommands,this.currentUser.currentDatabase).then(()=>{
+              this.progressTracker[currentResourceType].message = "sms_commands_have_been_saved";
+              this.updateProgressTracker(resource);
+            },error=>{
+              this.cancelLoginProcess(this.cancelLoginProcessData);
+              console.log(JSON.stringify(error));
+              this.AppProvider.setNormalNotification("Fail to save SMS commands");
+            });
+          }
+        },error=>{
+          this.cancelLoginProcess(this.cancelLoginProcessData);
+          console.log(JSON.stringify(error));
+          this.AppProvider.setNormalNotification("Fail to load SMS commands");
+        });
+      }
+    }
+  }
+
+  downloadingDataSets(){
+    if(this.isLoginProcessActive){
+      let resource = 'dataSets';
+      let currentResourceType = "entryForm";
+      this.progressTracker[currentResourceType].message = "loading_entry_forms";
+      if(this.completedTrackedProcess.indexOf(resource) > -1){
+        this.progressTracker[currentResourceType].message = "entry_forms_have_been_loaded";
+        this.updateProgressTracker(resource);
+      }else{
+        this.dataSetsProvider.downloadDataSetsFromServer(this.currentUser).then((dataSets: any)=>{
+          if(this.isLoginProcessActive){
+            this.progressTracker[currentResourceType].message = "saving_entry_forms";
+            this.dataSetsProvider.saveDataSetsFromServer(dataSets,this.currentUser).then(()=>{
+              this.progressTracker[currentResourceType].message = "entry_form_have_been_saved";
+              this.updateProgressTracker(resource);
+            },error=>{
+              this.cancelLoginProcess(this.cancelLoginProcessData);
+              console.log(JSON.stringify(error));
+              this.AppProvider.setNormalNotification('Fail to s ave entry form.');
+            });
+          }
+        },error=>{
+          this.cancelLoginProcess(this.cancelLoginProcessData);
+          console.log(JSON.stringify(error));
+          this.AppProvider.setNormalNotification('Fail to load entry form.');
+        });
+      }
+    }
+  }
+
   cancelLoginProcess(data) {
     this.animationEffect.progressBar = "animated fadeOut";
     this.animationEffect.loginForm = "animated fadeIn";
@@ -251,6 +316,13 @@ export class LoginPage implements OnInit{
   setLandingPage(currentUser){
     currentUser.isLogin = true;
     this.reCheckingAppSetting(currentUser);
+
+    this.smsCommandProvider.checkAndGenerateSmsCommands(currentUser).then(()=>{
+      console.log("Success update");
+    }).catch(error=>{
+      console.error(JSON.stringify(error));
+    });
+
     currentUser.password = this.encryption.encode(currentUser.password);
     this.localInstanceProvider.setLocalInstanceInstances(this.localInstances,currentUser,this.loggedInInInstance).then(()=>{});
     this.UserProvider.setCurrentUser(currentUser).then(()=>{

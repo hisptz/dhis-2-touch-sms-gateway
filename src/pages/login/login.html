@@ -41,25 +41,25 @@
               {{ progressTracker.communication.passStepCount}}/{{ progressTracker.communication.count}}
             </div>
           </ion-item>
-          <!--<ion-item>-->
-            <!--<div style="text-align: center" item-left >-->
-              <!--<div *ngIf="progressTracker.entryForm.passStepCount == progressTracker.entryForm.count">-->
-                <!--<ion-icon name="done-all" color="favorite"></ion-icon>-->
-              <!--</div>-->
-              <!--<div *ngIf="hasUserAuthenticated && progressTracker.entryForm.passStepCount != progressTracker.entryForm.count ">-->
-                <!--<page-loading loadingSize="small"></page-loading>-->
-              <!--</div>-->
-            <!--</div>-->
-            <!--<span text-wrap *ngIf="progressTracker.entryForm.message !=''">-->
-              <!--{{ progressTracker.entryForm.message|translate}}-->
-            <!--</span>-->
-            <!--<span text-wrap *ngIf="progressTracker.entryForm.message ==''">-->
-              <!--{{'aggregate_metadata'|translate}}-->
-            <!--</span>-->
-            <!--<div style="text-align: center" item-right >-->
-              <!--{{ progressTracker.entryForm.passStepCount}}/{{ progressTracker.entryForm.count}}-->
-            <!--</div>-->
-          <!--</ion-item>-->
+          <ion-item>
+            <div style="text-align: center" item-left >
+              <div *ngIf="progressTracker.entryForm.passStepCount == progressTracker.entryForm.count">
+                <ion-icon name="done-all" color="favorite"></ion-icon>
+              </div>
+              <div *ngIf="hasUserAuthenticated && progressTracker.entryForm.passStepCount != progressTracker.entryForm.count ">
+                <page-loading loadingSize="small"></page-loading>
+              </div>
+            </div>
+            <span text-wrap *ngIf="progressTracker.entryForm.message !=''">
+              {{ progressTracker.entryForm.message|translate}}
+            </span>
+            <span text-wrap *ngIf="progressTracker.entryForm.message ==''">
+              {{'aggregate_metadata'|translate}}
+            </span>
+            <div style="text-align: center" item-right >
+              {{ progressTracker.entryForm.passStepCount}}/{{ progressTracker.entryForm.count}}
+            </div>
+          </ion-item>
           <!--<ion-item>-->
             <!--<div style="text-align: center" item-left  >-->
               <!--<div *ngIf="progressTracker.event.passStepCount == progressTracker.event.count">-->

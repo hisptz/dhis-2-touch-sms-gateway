@@ -36,6 +36,7 @@ import {HttpClientProvider} from "../providers/http-client/http-client";
 import {AppTranslationProvider} from "../providers/app-translation/app-translation";
 import {EncryptionProvider} from "../providers/encryption/encryption";
 import {SettingsProvider} from "../providers/settings/settings";
+import { DataSetsProvider } from '../providers/data-sets/data-sets';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import {SettingsProvider} from "../providers/settings/settings";
     NetworkAvailabilityProvider,UserProvider,
     SettingsProvider,
     SqlLiteProvider,SmsCommandProvider,AppProvider,EncryptionProvider,
-    LocalInstanceProvider,HttpClientProvider,AppTranslationProvider
+    LocalInstanceProvider,HttpClientProvider,AppTranslationProvider,
+    DataSetsProvider
 
   ]
 })

@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import {SqlLiteProvider} from "../sql-lite/sql-lite";
 import {HttpClientProvider} from "../http-client/http-client";
+import {DataSetsProvider} from "../data-sets/data-sets";
+import {DataSet} from "../../models/dataSet";
+import {SmsCommand} from "../../models/smsCommand";
 //import { SMS } from '@ionic-native/sms';
 
 /*
@@ -15,7 +18,9 @@ export class SmsCommandProvider {
 
   resourceName : string;
 
-  constructor(private SqlLite : SqlLiteProvider,private HttpClient : HttpClientProvider ) {   //public sms: SMS
+  constructor(private SqlLite : SqlLiteProvider,
+              private dataSetProvider : DataSetsProvider,
+              private HttpClient : HttpClientProvider ) {   //public sms: SMS
     this.resourceName = "smsCommand";
   }
 
@@ -36,7 +41,7 @@ export class SmsCommandProvider {
     });
   }
 
-  
+
   /**
    * saving sms commands
    * @param smsCommands
@@ -59,6 +64,52 @@ export class SmsCommandProvider {
         });
       }
     });
+  }
+
+  checkAndGenerateSmsCommands(currentUser){
+    return new Promise((resolve,reject)=>{
+      this.getAllSmsCommands(currentUser).then((smsCommands : Array<SmsCommand>)=>{
+        if(smsCommands.length == 0){
+          this.dataSetProvider.getAllDataSets(currentUser).then((dataSets : Array<DataSet>)=>{
+            let smsCommands = this.getGenerateSmsCommands(currentUser,dataSets);
+            smsCommands.map((smsCommand : SmsCommand)=>{
+              console.log(JSON.stringify(smsCommand));
+            })
+            resolve();
+          }).catch((error)=>{reject(error)});
+        }else{
+          resolve();
+        }
+      }).catch(error=>{
+        reject(error);
+      });
+    });
+  }
+
+  /**
+   *
+   * @param currentUser
+   * @returns {Promise<any>}
+   */
+  getAllSmsCommands(currentUser){
+    return new Promise((resolve,reject)=>{
+      this.SqlLite.getAllDataFromTable(this.resourceName,currentUser.currentDatabase).then((smsCommands : any)=>{
+        resolve(smsCommands);
+      }).catch((error)=>{
+        reject(error);
+      })
+    });
+  }
+
+  getGenerateSmsCommands(currentUser,dataSets : Array<DataSet>){
+    let smsCommands : Array<SmsCommand>;
+    let dataSetElements =[];
+    let optionCombos= [];
+    let new_format = "abcdefghijklmnopqrstuvwxyzABCDEFGJHIJLMNOPQRSTUVWXYZ0123456789";
+    dataSets.map((dataSet : DataSet)=>{
+      console.log(dataSet.name);
+    });
+    return smsCommands;
   }
 
 

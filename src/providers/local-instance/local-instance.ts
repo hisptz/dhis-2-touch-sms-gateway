@@ -57,8 +57,8 @@ export class LocalInstanceProvider {
         currentLanguage : currentUser.currentLanguage
       });
       if(localInstances && localInstances.length){
-        localInstances.forEach((localInstance : any)=>{
-          if(newInstances.indexOf(localInstance) == -1){
+        localInstances.forEach((localInstance : any)=>{          
+          if(localInstance.id != currentUser.currentDatabase){
             if(!localInstance.currentUser.currentLanguage){
               localInstance.currentLanguage = "en";
               localInstance.currentUser.currentLanguage = "en";

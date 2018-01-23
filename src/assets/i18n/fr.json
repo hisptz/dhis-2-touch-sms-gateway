@@ -16,5 +16,13 @@
   "preparing_local_storage" : "Préparation du stockage local",
   "loading" : "Discovering",
   "sms_gateway":"SMS Gateway",
-  "log_out" : "Log out"
+  "log_out" : "Log out",
+  "loading_entry_forms" : "Loading entry forms",
+  "entry_forms_have_been_loaded" : "Entry forms have been loaded",
+  "saving_entry_forms" : "Saving entry forms",
+  "entry_form_have_been_saved" : "Entry form have been saved",
+  "loading_sms_commands" : "Loading SMS commands",
+  "sms_commands_have_been_loaded" : "SMS commands have been loaded",
+  "saving_sms_commands" : "Saving SMS commands",
+  "sms_commands_have_been_saved" : "SMS commands have been saved"
 }
