@@ -3,6 +3,7 @@ import { IonicPage, NavController } from 'ionic-angular';
 import {UserProvider} from "../../providers/user/user";
 import {CurrentUser} from "../../models/currentUser";
 import {EncryptionProvider} from "../../providers/encryption/encryption";
+import {SmsCommandProvider} from "../../providers/sms-command/sms-command";
 
 /**
  * Generated class for the HomePage page.
@@ -24,6 +25,7 @@ export class HomePage implements OnInit{
 
   constructor(private navCtrl: NavController,
               private encryption : EncryptionProvider,
+              private smsCommandProvider : SmsCommandProvider,
               private userProvider : UserProvider) {
   }
 
@@ -31,6 +33,9 @@ export class HomePage implements OnInit{
     this.userProvider.getCurrentUser().then((currentUser: CurrentUser)=>{
       currentUser.password = this.encryption.decode(currentUser.password);
       this.currentUser = currentUser;
+      this.smsCommandProvider.checkAndGenerateSmsCommands(this.currentUser).then(()=>{
+
+      }).catch(e=>{});
     })
   }
 

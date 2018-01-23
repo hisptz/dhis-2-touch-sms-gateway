@@ -316,7 +316,6 @@ export class LoginPage implements OnInit{
   setLandingPage(currentUser){
     currentUser.isLogin = true;
     this.reCheckingAppSetting(currentUser);
-
     this.smsCommandProvider.checkAndGenerateSmsCommands(currentUser).then(()=>{
       console.log("Success update");
     }).catch(error=>{

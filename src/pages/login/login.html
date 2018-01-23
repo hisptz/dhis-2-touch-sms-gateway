@@ -47,7 +47,7 @@
                 <ion-icon name="done-all" color="favorite"></ion-icon>
               </div>
               <div *ngIf="hasUserAuthenticated && progressTracker.entryForm.passStepCount != progressTracker.entryForm.count ">
-                <page-loading loadingSize="small"></page-loading>
+                <loading loadingSize="small"></loading>
               </div>
             </div>
             <span text-wrap *ngIf="progressTracker.entryForm.message !=''">

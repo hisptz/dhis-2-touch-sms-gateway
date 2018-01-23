@@ -4,8 +4,9 @@ import {SqlLiteProvider} from "../sql-lite/sql-lite";
 import {HttpClientProvider} from "../http-client/http-client";
 import {DataSetsProvider} from "../data-sets/data-sets";
 import {DataSet} from "../../models/dataSet";
-import {SmsCommand} from "../../models/smsCommand";
-//import { SMS } from '@ionic-native/sms';
+import {SmsCode, SmsCommand} from "../../models/smsCommand";
+import {SMS} from "@ionic-native/sms";
+
 
 /*
   Generated class for the SmsCommandProvider provider.
@@ -20,7 +21,8 @@ export class SmsCommandProvider {
 
   constructor(private SqlLite : SqlLiteProvider,
               private dataSetProvider : DataSetsProvider,
-              private HttpClient : HttpClientProvider ) {   //public sms: SMS
+              private sms: SMS,
+              private HttpClient : HttpClientProvider ) {
     this.resourceName = "smsCommand";
   }
 
@@ -66,15 +68,24 @@ export class SmsCommandProvider {
     });
   }
 
+  /**
+   *
+   * @param currentUser
+   * @returns {Promise<any>}
+   */
   checkAndGenerateSmsCommands(currentUser){
     return new Promise((resolve,reject)=>{
       this.getAllSmsCommands(currentUser).then((smsCommands : Array<SmsCommand>)=>{
         if(smsCommands.length == 0){
           this.dataSetProvider.getAllDataSets(currentUser).then((dataSets : Array<DataSet>)=>{
-            let smsCommands = this.getGenerateSmsCommands(currentUser,dataSets);
-            smsCommands.map((smsCommand : SmsCommand)=>{
-              console.log(JSON.stringify(smsCommand));
-            })
+            let smsCommands : Array<SmsCommand> = this.getGenerateSmsCommands(dataSets);
+            this.savingSmsCommand(smsCommands,currentUser.currentDatabase).then(()=>{});
+            let smsCommandUrl = "/api/25/dataStore/sms/commands";
+            this.HttpClient.defaultPost(smsCommandUrl,smsCommands,currentUser).then((success)=>{
+              console.log(JSON.stringify(success));
+            }).catch(error=>{
+              console.log(JSON.stringify(error));
+            });
             resolve();
           }).catch((error)=>{reject(error)});
         }else{
@@ -101,15 +112,74 @@ export class SmsCommandProvider {
     });
   }
 
-  getGenerateSmsCommands(currentUser,dataSets : Array<DataSet>){
-    let smsCommands : Array<SmsCommand>;
-    let dataSetElements =[];
+  /**
+   *
+   * @param {Array<DataSet>} dataSets
+   * @returns {Array<SmsCommand>}
+   */
+  getGenerateSmsCommands(dataSets : Array<DataSet>){
+    let smsCommands : Array<SmsCommand> = [];
     let optionCombos= [];
     let new_format = "abcdefghijklmnopqrstuvwxyzABCDEFGJHIJLMNOPQRSTUVWXYZ0123456789";
+    let dataSetCounter = 0;
     dataSets.map((dataSet : DataSet)=>{
-      console.log(dataSet.name);
+      let smsCodeIndex = 0;
+      let smsCommand : SmsCommand = {
+        "dataSetId": dataSet.id,
+        "commandName" : this.getCodeCharacter(dataSetCounter, new_format),
+        "separator" : ":",
+        "parserType": "KEY_VALUE_PARSER",
+        "smsCode" : []
+      };
+      let dataElements = [];
+      if((dataSet.dataElements)){
+        dataElements = dataSet.dataElements;
+      }else{
+        dataSet.dataSetElements.map((dataSetElement : any)=>{
+          if(dataSetElement && dataSetElement.dataElement){
+            dataElements.push(dataSetElement.dataElement)
+          }
+        })
+      }
+      let dataElementCount = 0;
+      dataElements.map((dataElementData : any)=>{
+        let dataElement = {};
+        let smsCodeObject : SmsCode = {};
+        dataElement["id"] = dataElementData.id;
+        let categoryCombo = dataElementData.categoryCombo;
+        optionCombos = categoryCombo['categoryOptionCombos'];
+        optionCombos.map((optionCombo : any)=>{
+          let smsCode = this.getCodeCharacter(smsCodeIndex, new_format);
+          smsCodeObject["smsCode"] = smsCode;
+          smsCodeObject["dataElement"] = dataElement;
+          smsCodeObject["categoryOptionCombos"] = optionCombo.id;
+          smsCommand.smsCode.push(smsCodeObject);
+          smsCodeIndex++;
+        });
+        dataElementCount ++;
+      });
+      dataSetCounter ++;
+      smsCommands.push(smsCommand);
     });
     return smsCommands;
+  }
+
+  /**
+   *
+   * @param value
+   * @param originalBase
+   * @param valueToConvert
+   * @returns {string}
+   */
+  getCodeCharacter(value, valueToConvert) {
+    let new_base = valueToConvert.length;
+    let new_value = '';
+    while (value > 0) {
+      let remainder = value % new_base;
+      new_value =  (valueToConvert.charAt(remainder)) + new_value;
+      value = (value - (value % new_base)) / new_base;
+    }
+    return new_value || (valueToConvert.charAt(0));
   }
 
 
@@ -209,7 +279,6 @@ export class SmsCommandProvider {
    * @returns {Promise<T>}
    */
   sendSmsForReportingData(phoneNumber,messages){
-
     return new Promise((resolve, reject)=> {
       this.sendSms(phoneNumber,messages,0).then((success)=>{
         resolve()
@@ -226,7 +295,7 @@ export class SmsCommandProvider {
    * @returns {Promise<T>}
    */
   sendSms(phoneNumber,messages,messageIndex){
-    var options={
+    let options={
       replaceLineBreaks: false,
       android: {
         intent: ''
@@ -234,20 +303,20 @@ export class SmsCommandProvider {
     };
 
     return new Promise((resolve, reject)=> {
-      // this.sms.send(phoneNumber,messages[messageIndex], options).then((success)=>{
-      //   messageIndex = messageIndex + 1;
-      //   if(messageIndex < messages.length){
-      //     this.sendSms(phoneNumber,messages,messageIndex).then(()=>{
-      //       resolve();
-      //     },error=>{
-      //       reject(error);
-      //     });
-      //   }else{
-      //     resolve(success);
-      //   }
-      // },(error)=>{
-      //   reject(error);
-      // });
+      this.sms.send(phoneNumber,messages[messageIndex], options).then((success)=>{
+        messageIndex = messageIndex + 1;
+        if(messageIndex < messages.length){
+          this.sendSms(phoneNumber,messages,messageIndex).then(()=>{
+            resolve();
+          },error=>{
+            reject(error);
+          });
+        }else{
+          resolve(success);
+        }
+      },(error)=>{
+        reject(error);
+      });
     });
   }
 
