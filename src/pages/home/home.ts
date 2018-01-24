@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage } from 'ionic-angular';
 import {UserProvider} from "../../providers/user/user";
 import {CurrentUser} from "../../models/currentUser";
 import {EncryptionProvider} from "../../providers/encryption/encryption";
-import {SmsCommandProvider} from "../../providers/sms-command/sms-command";
+import {DataSetsProvider} from "../../providers/data-sets/data-sets";
+import {DataSet} from "../../models/dataSet";
 
 /**
  * Generated class for the HomePage page.
@@ -23,28 +24,22 @@ export class HomePage implements OnInit{
   isLoading : boolean;
   loadingMessages : string;
 
-  constructor(private navCtrl: NavController,
-              private encryption : EncryptionProvider,
-              private smsCommandProvider : SmsCommandProvider,
+  dataSets : Array<DataSet>;
+
+  constructor(private encryption : EncryptionProvider,
+              private dataSetProvider : DataSetsProvider,
               private userProvider : UserProvider) {
+    this.dataSets = [];
   }
 
   ngOnInit(){
     this.userProvider.getCurrentUser().then((currentUser: CurrentUser)=>{
       currentUser.password = this.encryption.decode(currentUser.password);
       this.currentUser = currentUser;
-      this.smsCommandProvider.checkAndGenerateSmsCommands(this.currentUser).then(()=>{
-
-      }).catch(e=>{});
+      this.dataSetProvider.getAllDataSets(currentUser).then((dataSets : Array<DataSet>)=>{
+        this.dataSets = dataSets;
+      })
     })
-  }
-
-  logOut(){
-    this.currentUser.isLogin = false;
-    this.userProvider.setCurrentUser(this.currentUser).then(()=>{
-      this.navCtrl.setRoot('LoginPage');
-    });
-
   }
 
 }

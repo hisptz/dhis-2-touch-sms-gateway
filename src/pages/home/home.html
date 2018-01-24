@@ -7,11 +7,14 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content >
 
- here we are in home page
-  <div *ngIf="currentUser && currentUser.password">
-    {{ currentUser.password }}
-  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        {{ dataSets|json }}
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
 </ion-content>

@@ -26,6 +26,8 @@ export class SmsCommandProvider {
     this.resourceName = "smsCommand";
   }
 
+
+
   /**
    * getting sms commands from login instance
    * @param user
@@ -82,11 +84,11 @@ export class SmsCommandProvider {
             this.savingSmsCommand(smsCommands,currentUser.currentDatabase).then(()=>{});
             let smsCommandUrl = "/api/25/dataStore/sms/commands";
             this.HttpClient.defaultPost(smsCommandUrl,smsCommands,currentUser).then((success)=>{
-              console.log(JSON.stringify(success));
+              resolve();
             }).catch(error=>{
-              console.log(JSON.stringify(error));
+              reject(error);
             });
-            resolve();
+
           }).catch((error)=>{reject(error)});
         }else{
           resolve();
