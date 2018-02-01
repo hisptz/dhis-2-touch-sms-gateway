@@ -6,6 +6,7 @@ import {DataSetsProvider} from "../data-sets/data-sets";
 import {DataSet} from "../../models/dataSet";
 import {SmsCode, SmsCommand} from "../../models/smsCommand";
 import {SMS} from "@ionic-native/sms";
+import {Observable} from "rxjs/Observable";
 
 
 /*
@@ -26,45 +27,47 @@ export class SmsCommandProvider {
     this.resourceName = "smsCommand";
   }
 
-
-
   /**
-   * getting sms commands from login instance
+   *
    * @param user
-   * @returns {Promise<T>}
+   * @returns {Observable<any>}
    */
-  getSmsCommandFromServer(user){
-    return new Promise((resolve, reject)=> {
+  getSmsCommandFromServer(user) : Observable<any> {
+    return new Observable(observer=> {
       let smsCommandUrl = "/api/25/dataStore/sms/commands";
-      this.HttpClient.get(smsCommandUrl,user).then((response : any)=>{
+      this.HttpClient.get(smsCommandUrl,false,user).subscribe((response : any)=>{
         response = JSON.parse(response.data);
-        resolve(response);
-      },error=>{
-        resolve([]);
+        observer.next(response);
+        observer.complete();
+      },()=>{
+        observer.next([]);
+        observer.complete();
       });
     });
   }
 
-
   /**
-   * saving sms commands
-   * @param smsCommands
+   *
+    * @param smsCommands
    * @param databaseName
-   * @returns {Promise<T>}
+   * @returns {Observable<any>}
    */
-  savingSmsCommand(smsCommands,databaseName){
-    return new Promise((resolve, reject)=> {
+  savingSmsCommand(smsCommands,databaseName) : Observable<any>{
+    return new Observable(observer=> {
       if(smsCommands.length == 0){
-        resolve();
+        observer.next();
+        observer.complete();
       }else{
         smsCommands.forEach((smsCommand:any)=>{
           smsCommand["id"] = smsCommand.dataSetId;
         });
-        this.SqlLite.insertBulkDataOnTable(this.resourceName,smsCommands,databaseName).then(()=>{
-          resolve();
+        this.SqlLite.insertBulkDataOnTable(this.resourceName,smsCommands,databaseName).subscribe(()=>{
+          observer.next();
+          observer.complete();
         },error=>{
           console.log(JSON.stringify(error));
-          reject(error);
+          observer.error(error);
+          observer.complete();
         });
       }
     });
@@ -73,28 +76,31 @@ export class SmsCommandProvider {
   /**
    *
    * @param currentUser
-   * @returns {Promise<any>}
+   * @returns {Observable<any>}
    */
-  checkAndGenerateSmsCommands(currentUser){
-    return new Promise((resolve,reject)=>{
-      this.getAllSmsCommands(currentUser).then((smsCommands : Array<SmsCommand>)=>{
+  checkAndGenerateSmsCommands(currentUser) : Observable<any>{
+    console.log("Hello world")
+    return new Observable(observer=>{
+      this.getAllSmsCommands(currentUser).subscribe((smsCommands : Array<SmsCommand>)=>{
         if(smsCommands.length == 0){
-          this.dataSetProvider.getAllDataSets(currentUser).then((dataSets : Array<DataSet>)=>{
+          this.dataSetProvider.getAllDataSets(currentUser).subscribe((dataSets : Array<DataSet>)=>{
             let smsCommands : Array<SmsCommand> = this.getGenerateSmsCommands(dataSets);
-            this.savingSmsCommand(smsCommands,currentUser.currentDatabase).then(()=>{});
+            this.savingSmsCommand(smsCommands,currentUser.currentDatabase).subscribe(()=>{});
             let smsCommandUrl = "/api/25/dataStore/sms/commands";
-            this.HttpClient.defaultPost(smsCommandUrl,smsCommands,currentUser).then((success)=>{
-              resolve();
-            }).catch(error=>{
-              reject(error);
+            this.HttpClient.defaultPost(smsCommandUrl,smsCommands,currentUser).subscribe(()=>{
+              observer.next();
+              observer.complete()
+            },error=>{
+              observer.error(error);
             });
 
-          }).catch((error)=>{reject(error)});
+          },(error)=>{observer.error(error)});
         }else{
-          resolve();
+          observer.next();
+          observer.complete();
         }
-      }).catch(error=>{
-        reject(error);
+      },error=>{
+        observer.error(error);
       });
     });
   }
@@ -102,14 +108,15 @@ export class SmsCommandProvider {
   /**
    *
    * @param currentUser
-   * @returns {Promise<any>}
+   * @returns {Observable<any>}
    */
-  getAllSmsCommands(currentUser){
-    return new Promise((resolve,reject)=>{
-      this.SqlLite.getAllDataFromTable(this.resourceName,currentUser.currentDatabase).then((smsCommands : any)=>{
-        resolve(smsCommands);
-      }).catch((error)=>{
-        reject(error);
+  getAllSmsCommands(currentUser) : Observable<any>{
+    return new Observable(observer=>{
+      this.SqlLite.getAllDataFromTable(this.resourceName,currentUser.currentDatabase).subscribe((smsCommands : any)=>{
+        observer.next(smsCommands);
+        observer.complete();
+      },(error)=>{
+        observer.error(error);
       })
     });
   }
@@ -151,8 +158,7 @@ export class SmsCommandProvider {
         let categoryCombo = dataElementData.categoryCombo;
         optionCombos = categoryCombo['categoryOptionCombos'];
         optionCombos.map((optionCombo : any)=>{
-          let smsCode = this.getCodeCharacter(smsCodeIndex, new_format);
-          smsCodeObject["smsCode"] = smsCode;
+          smsCodeObject["smsCode"] = this.getCodeCharacter(smsCodeIndex, new_format);
           smsCodeObject["dataElement"] = dataElement;
           smsCodeObject["categoryOptionCombos"] = optionCombo.id;
           smsCommand.smsCode.push(smsCodeObject);
@@ -169,7 +175,6 @@ export class SmsCommandProvider {
   /**
    *
    * @param value
-   * @param originalBase
    * @param valueToConvert
    * @returns {string}
    */
@@ -185,56 +190,57 @@ export class SmsCommandProvider {
   }
 
 
-
   /**
-   * get dataSet command configuration
+   *
    * @param dataSetId
    * @param currentUser
-   * @returns {Promise<T>}
+   * @returns {Observable<any>}
    */
-  getSmsCommandForDataSet(dataSetId,currentUser){
+  getSmsCommandForDataSet(dataSetId,currentUser) : Observable<any>{
     let ids = [];
     ids.push(dataSetId);
-    return new Promise((resolve, reject)=> {
-      this.SqlLite.getDataFromTableByAttributes(this.resourceName,"id",ids,currentUser.currentDatabase).then((smsCommands : any)=>{
+    return new Observable(observer=> {
+      this.SqlLite.getDataFromTableByAttributes(this.resourceName,"id",ids,currentUser.currentDatabase).subscribe((smsCommands : any)=>{
         if(smsCommands.length > 0){
-          resolve(smsCommands[0]);
+          observer.next(smsCommands[0]);
+          observer.complete();
         }else{
-          reject();
+          observer.error();
         }
       },error=>{
-        reject();
+        observer.error(error);
       });
     });
   }
 
 
   /**
+   *
    * @param dataSetId
    * @param period
    * @param orgUnitId
    * @param dataElements
    * @param currentUser
-   * @returns {Promise<T>}
+   * @returns {Observable<any>}
    */
-  getEntryFormDataValuesObjectFromStorage(dataSetId,period,orgUnitId,dataElements,currentUser){
+  getEntryFormDataValuesObjectFromStorage(dataSetId,period,orgUnitId,dataElements,currentUser) : Observable<any>{
     let ids = [];
-
     let entryFormDataValuesObjectFromStorage = {};
     dataElements.forEach((dataElement : any)=>{
       dataElement.categoryCombo.categoryOptionCombos.forEach((categoryOptionCombo : any)=>{
         ids.push(dataSetId + '-' + dataElement.id + '-' + categoryOptionCombo.id + '-' + period + '-' + orgUnitId);
       });
     });
-    return new Promise((resolve, reject)=> {
-      this.SqlLite.getDataFromTableByAttributes("dataValues","id",ids,currentUser.currentDatabase).then((dataValues : any)=>{
+    return new Observable((observer)=> {
+      this.SqlLite.getDataFromTableByAttributes("dataValues","id",ids,currentUser.currentDatabase).subscribe((dataValues : any)=>{
         dataValues.forEach((dataValue : any)=>{
           let id = dataValue.de + "-" +dataValue.co;
           entryFormDataValuesObjectFromStorage[id] = dataValue.value;
         });
-        resolve(entryFormDataValuesObjectFromStorage)
+        observer.next(entryFormDataValuesObjectFromStorage);
+        observer.complete();
       },error=>{
-        reject();
+        observer.error(error);
       });
     });
   }
@@ -244,10 +250,10 @@ export class SmsCommandProvider {
    * @param smsCommand
    * @param entryFormDataValuesObject
    * @param selectedPeriod
-   * @returns {Promise<T>}
+   * @returns {Observable<any>}
    */
-  getSmsForReportingData(smsCommand,entryFormDataValuesObject,selectedPeriod){
-    return new Promise((resolve, reject)=> {
+  getSmsForReportingData(smsCommand,entryFormDataValuesObject,selectedPeriod) : Observable<any>{
+    return new Observable(observer=> {
       let sms = [];
       let smsLimit = 135;
       let smsForReportingData = smsCommand.commandName + " " + selectedPeriod.iso + " ";
@@ -269,55 +275,58 @@ export class SmsCommandProvider {
         }
       });
       sms.push(smsForReportingData);
-      resolve(sms);
+      observer.next(sms);
+      observer.complete();
     });
   };
-
 
   /**
    *
    * @param phoneNumber
    * @param messages
-   * @returns {Promise<T>}
+   * @returns {Observable<any>}
    */
-  sendSmsForReportingData(phoneNumber,messages){
-    return new Promise((resolve, reject)=> {
-      this.sendSms(phoneNumber,messages,0).then((success)=>{
-        resolve()
+  sendSmsForReportingData(phoneNumber,messages) : Observable<any>{
+    return new Observable(observer=> {
+      this.sendSms(phoneNumber,messages,0).subscribe(()=>{
+        observer.next();
+        observer.complete();
       },error=>{
-        reject()})
+        observer.error(error)
+      });
     });
   }
 
   /**
-   * sending messages recursively
+   *
    * @param phoneNumber
    * @param messages
    * @param messageIndex
-   * @returns {Promise<T>}
+   * @returns {Observable<any>}
    */
-  sendSms(phoneNumber,messages,messageIndex){
+  sendSms(phoneNumber,messages,messageIndex) : Observable<any>{
     let options={
       replaceLineBreaks: false,
       android: {
         intent: ''
       }
     };
-
-    return new Promise((resolve, reject)=> {
+    return new Observable(observer=> {
       this.sms.send(phoneNumber,messages[messageIndex], options).then((success)=>{
         messageIndex = messageIndex + 1;
         if(messageIndex < messages.length){
-          this.sendSms(phoneNumber,messages,messageIndex).then(()=>{
-            resolve();
+          this.sendSms(phoneNumber,messages,messageIndex).subscribe(()=>{
+            observer.next();
+            observer.complete();
           },error=>{
-            reject(error);
+            observer.error(error);
           });
         }else{
-          resolve(success);
+          observer.next(success);
+          observer.complete();
         }
       },(error)=>{
-        reject(error);
+        observer.error(error);
       });
     });
   }

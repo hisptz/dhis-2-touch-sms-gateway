@@ -24,5 +24,8 @@
   "loading_sms_commands" : "Loading SMS commands",
   "sms_commands_have_been_loaded" : "SMS commands have been loaded",
   "saving_sms_commands" : "Saving SMS commands",
-  "sms_commands_have_been_saved" : "SMS commands have been saved"
+  "sms_commands_have_been_saved" : "SMS commands have been saved",
+  "loading_user_information" : "Discovering user information",
+  "entry_forms" : "Entry forms",
+  "program_without_registration" : "Program without registration"
 }

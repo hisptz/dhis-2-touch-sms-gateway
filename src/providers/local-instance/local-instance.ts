@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {SqlLiteProvider} from "../sql-lite/sql-lite";
+import {Observable} from "rxjs/Observable";
 
 
 
@@ -16,20 +17,21 @@ export class LocalInstanceProvider {
 
   constructor(private sqlLiteProvider : SqlLiteProvider) {
     this.LOCAL_INSTANCE_KEY = "LOCAL_INSTANCE_KEY";
-    this.sqlLiteProvider.createTable(this.LOCAL_INSTANCE_KEY,this.LOCAL_INSTANCE_KEY).then(()=>{
+    this.sqlLiteProvider.createTable(this.LOCAL_INSTANCE_KEY,this.LOCAL_INSTANCE_KEY).subscribe(()=>{
     })
   }
 
   /**
    *
-   * @returns {Promise<any>}
+   * @returns {Observable<any>}
    */
-  getLocalInstances(){
-    return new Promise((resolve,reject)=>{
-      this.sqlLiteProvider.getAllDataFromTable(this.LOCAL_INSTANCE_KEY,this.LOCAL_INSTANCE_KEY).then((localInstances : any)=>{
-        resolve(localInstances);
-      }).catch((error)=>{
-        reject(error);
+  getLocalInstances() : Observable<any>{
+    return new Observable(observer=>{
+      this.sqlLiteProvider.getAllDataFromTable(this.LOCAL_INSTANCE_KEY,this.LOCAL_INSTANCE_KEY).subscribe((localInstances : any)=>{
+        observer.next(localInstances);
+        observer.complete();
+      },(error)=>{
+        observer.error(error);
       })
     })
   }
@@ -39,10 +41,10 @@ export class LocalInstanceProvider {
    * @param localInstances
    * @param currentUser
    * @param loggedInInInstance
-   * @returns {Promise<any>}
+   * @returns {Observable<any>}
    */
-  setLocalInstanceInstances(localInstances,currentUser,loggedInInInstance){
-    return new Promise((resolve,reject)=>{
+  setLocalInstanceInstances(localInstances,currentUser,loggedInInInstance) : Observable<any>{
+    return new Observable(observer=>{
       let newInstances  = [];
       if(!loggedInInInstance && (currentUser && currentUser.serverUrl) ){
         loggedInInInstance = currentUser.serverUrl;
@@ -57,7 +59,7 @@ export class LocalInstanceProvider {
         currentLanguage : currentUser.currentLanguage
       });
       if(localInstances && localInstances.length){
-        localInstances.forEach((localInstance : any)=>{          
+        localInstances.forEach((localInstance : any)=>{
           if(localInstance.id != currentUser.currentDatabase){
             if(!localInstance.currentUser.currentLanguage){
               localInstance.currentLanguage = "en";
@@ -67,10 +69,11 @@ export class LocalInstanceProvider {
           }
         });
       }
-      this.sqlLiteProvider.insertBulkDataOnTable(this.LOCAL_INSTANCE_KEY,newInstances,this.LOCAL_INSTANCE_KEY).then(()=>{
-        resolve();
-      }).catch((error=>{
-        reject(error);
+      this.sqlLiteProvider.insertBulkDataOnTable(this.LOCAL_INSTANCE_KEY,newInstances,this.LOCAL_INSTANCE_KEY).subscribe(()=>{
+        observer.next();
+        observer.complete();
+      },(error=>{
+        observer.error(error);
       }));
     })
   }

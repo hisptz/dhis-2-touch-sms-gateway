@@ -21,12 +21,9 @@ export class MyApp {
   logoUrl : string;
   logOutIcon :  string;
 
-
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen,
               private userProvider: UserProvider) {
     platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       this.rootPage = LauncherPage;
       splashScreen.hide();
@@ -38,12 +35,6 @@ export class MyApp {
     this.pages = [
       { title: 'sms_gateway', component: 'HomePage', active: true, icon: 'home' },
     ];
-
-    // this.activePage.subscribe((selectedPage: any) => {
-    //   this.pages.map(page => {
-    //     page.active = page.title === selectedPage.title;
-    //   });
-    // });
 
   }
 
@@ -58,7 +49,7 @@ export class MyApp {
     try{
       let user :any = await this.userProvider.getCurrentUser();
       user.isLogin = false;
-      this.userProvider.setCurrentUser(user).then(()=>{
+      this.userProvider.setCurrentUser(user).subscribe(()=>{
         this.nav.setRoot('LoginPage');
       })
     }catch (e){

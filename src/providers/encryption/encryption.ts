@@ -88,7 +88,7 @@ export class EncryptionProvider {
       _utf8_decode: function(e) {
         let t = "";
         let n = 0;
-        let r = 0, c1 = 0,c2 = 0;
+        let r = 0,c2 = 0;
         while (n < e.length) {
           r = e.charCodeAt(n);
           if (r < 128) {
@@ -187,7 +187,7 @@ export class EncryptionProvider {
       _utf8_decode: function(e) {
         let t = "";
         let n = 0;
-        let r = 0, c1 = 0,c2 = 0;
+        let r = 0, c2 = 0;
         while (n < e.length) {
           r = e.charCodeAt(n);
           if (r < 128) {

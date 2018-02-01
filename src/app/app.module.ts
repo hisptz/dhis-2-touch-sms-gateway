@@ -16,11 +16,16 @@ import {AppVersion} from "@ionic-native/app-version";
 import {Network} from "@ionic-native/network";
 import {BackgroundMode} from "@ionic-native/background-mode";
 import {IonicStorageModule} from "@ionic/storage";
+import {SMS} from "@ionic-native/sms";
 
 //translations
 export function createTranslateLoader(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
+
+//store
+import {reducers} from "../store/reducers/index";
+import {StoreModule} from "@ngrx/store";
 
 
 import { MyApp } from './app.component';
@@ -37,6 +42,9 @@ import {AppTranslationProvider} from "../providers/app-translation/app-translati
 import {EncryptionProvider} from "../providers/encryption/encryption";
 import {SettingsProvider} from "../providers/settings/settings";
 import { DataSetsProvider } from '../providers/data-sets/data-sets';
+import { SmsGatewayProvider } from '../providers/sms-gateway/sms-gateway';
+
+
 
 @NgModule({
   declarations: [
@@ -46,6 +54,7 @@ import { DataSetsProvider } from '../providers/data-sets/data-sets';
   imports: [
     BrowserModule,
     HttpModule,
+    StoreModule.forRoot(reducers),
     IonicStorageModule.forRoot(),
     SharedModule,
     TranslateModule.forRoot({
@@ -63,14 +72,15 @@ import { DataSetsProvider } from '../providers/data-sets/data-sets';
     LauncherPage
   ],
   providers: [
-    StatusBar,SQLite,
+    StatusBar,SQLite,SMS,
     SplashScreen,HTTP,AppVersion,Network,BackgroundMode,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     NetworkAvailabilityProvider,UserProvider,
     SettingsProvider,
     SqlLiteProvider,SmsCommandProvider,AppProvider,EncryptionProvider,
     LocalInstanceProvider,HttpClientProvider,AppTranslationProvider,
-    DataSetsProvider
+    DataSetsProvider,
+    SmsGatewayProvider
 
   ]
 })

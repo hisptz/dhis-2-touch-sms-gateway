@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClientProvider} from "../http-client/http-client";
 import {SqlLiteProvider} from "../sql-lite/sql-lite";
 import {DataSet} from "../../models/dataSet";
+import {Observable} from "rxjs/Observable";
 
 
 /*
@@ -21,15 +22,16 @@ export class DataSetsProvider {
   /**
    *
    * @param currentUser
-   * @returns {Promise<any>}
+   * @returns {Observable<any>}
    */
-  downloadDataSetsFromServer(currentUser) {
+  downloadDataSetsFromServer(currentUser) :Observable<any>{
     let url = '/api/dataSets.json?fields=id,name,dataSetElements[dataElement[id,categoryCombo[categoryOptionCombos[id,name]]]],dataElements[id,categoryCombo[categoryOptionCombos[id,name]]]';
-    return new Promise((resolve, reject) => {
-      this.httpClient.get(url, currentUser, this.resourceName, 50).then((response: any) => {
-        resolve(response[this.resourceName]);
-      }).catch((error) => {
-        reject(error);
+    return new Observable(observer => {
+      this.httpClient.get(url,false, currentUser, this.resourceName, 50).subscribe((response: any) => {
+        observer.next(response[this.resourceName]);
+        observer.complete();
+      },(error) => {
+        observer.error(error);
       });
     });
   }
@@ -38,14 +40,15 @@ export class DataSetsProvider {
    *
    * @param dataSets
    * @param currentUser
-   * @returns {Promise<any>}
+   * @returns {Observable<any>}
    */
-  saveDataSetsFromServer(dataSets, currentUser) {
-    return new Promise((resolve, reject) => {
-      this.sqlLite.insertBulkDataOnTable(this.resourceName,dataSets,currentUser.currentDatabase).then(()=>{
-        resolve();
-      }).catch((error)=>{
-        reject(error);
+  saveDataSetsFromServer(dataSets, currentUser) :Observable<any>{
+    return new Observable(observer => {
+      this.sqlLite.insertBulkDataOnTable(this.resourceName,dataSets,currentUser.currentDatabase).subscribe(()=>{
+        observer.next();
+        observer.complete();
+      },(error)=>{
+        observer.error(error);
       });
     })
   }
@@ -53,14 +56,15 @@ export class DataSetsProvider {
   /**
    *
     * @param currentUser
-   * @returns {Promise<any>}
+   * @returns {Observable<any>}
    */
-  getAllDataSets(currentUser){
-    return new Promise((resolve, reject) => {
-      this.sqlLite.getAllDataFromTable(this.resourceName,currentUser.currentDatabase).then((dataSets : Array<DataSet>)=>{
-        resolve(dataSets);
-      }).catch((error=>{
-        reject(error);
+  getAllDataSets(currentUser) : Observable<any>{
+    return new Observable(observer=> {
+      this.sqlLite.getAllDataFromTable(this.resourceName,currentUser.currentDatabase).subscribe((dataSets : Array<DataSet>)=>{
+        observer.next(dataSets);
+        observer.complete();
+      },(error=>{
+        observer.error(error);
       }))
     });
   }

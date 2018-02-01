@@ -4,7 +4,6 @@ import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { ToastController} from 'ionic-angular';
 import {SqlLiteProvider} from "../sql-lite/sql-lite";
-import {HttpClientProvider} from "../http-client/http-client";
 import {Http} from "@angular/http";
 
 /*
@@ -18,7 +17,7 @@ export class AppProvider {
 
 
 
-  constructor(private  appVersion: AppVersion,private toastController : ToastController, private httpClient: HttpClientProvider,
+  constructor(private  appVersion: AppVersion,private toastController : ToastController,
               public sqLite: SqlLiteProvider, public http: Http) {
   }
 
@@ -151,7 +150,7 @@ export class AppProvider {
       if(resourceValues.length == 0){
         resolve();
       }else{
-        this.sqLite.insertBulkDataOnTable(resource,resourceValues,databaseName).then(()=>{
+        this.sqLite.insertBulkDataOnTable(resource,resourceValues,databaseName).subscribe(()=>{
           resolve();
 
         },error=>{

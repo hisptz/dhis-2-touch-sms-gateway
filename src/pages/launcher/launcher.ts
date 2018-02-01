@@ -31,7 +31,7 @@ export class LauncherPage implements OnInit{
     this.logoUrl = 'assets/img/logo.png';
     this.backgroundMode.enable();
     this.NetworkAvailabilityProvider.setNetworkStatusDetection();
-    this.UserProvider.getCurrentUser().then((user : any)=>{
+    this.UserProvider.getCurrentUser().subscribe((user : any)=>{
       let currentLanguage = "en";
       if(user && user.currentLanguage){
         currentLanguage = user.currentLanguage;
