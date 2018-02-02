@@ -79,7 +79,6 @@ export class SmsCommandProvider {
    * @returns {Observable<any>}
    */
   checkAndGenerateSmsCommands(currentUser) : Observable<any>{
-    console.log("Hello world")
     return new Observable(observer=>{
       this.getAllSmsCommands(currentUser).subscribe((smsCommands : Array<SmsCommand>)=>{
         if(smsCommands.length == 0){
