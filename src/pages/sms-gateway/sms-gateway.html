@@ -7,7 +7,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content >
+<ion-content>
 
   <ion-grid>
     <ion-row>
@@ -20,26 +20,28 @@
           <div class="item-card" *ngFor="let gatewayContent of gatewayContents">
             <ion-row (tap)="toggleGatewayContents(gatewayContent)">
               <ion-col col-11>
-                <img  class="side-menu-icon" [src]="gatewayContent.icon"/>&nbsp;&nbsp;
+                <img class="side-menu-icon" [src]="gatewayContent.icon" />&nbsp;&nbsp;
                 <span ion-text [color]="(isGatewayContentOpened[gatewayContent.id]) ?'current' : 'font-color'">
-              {{ gatewayContent.name| translate}}
-            </span>
+                  {{ gatewayContent.name| translate}}
+                </span>
               </ion-col>
-              <ion-col col-1 item >
+              <ion-col col-1 item>
                 <div style="text-align: center;">
-                  <ion-icon [color]="(isGatewayContentOpened[gatewayContent.id]) ?'current' : 'font-color'" *ngIf="!(isGatewayContentOpened[gatewayContent.id])" name="ios-arrow-down" item-right></ion-icon>
-                  <ion-icon [color]="(isGatewayContentOpened[gatewayContent.id]) ?'current' : 'font-color'" *ngIf="(isGatewayContentOpened[gatewayContent.id])" name="ios-arrow-up" item-right></ion-icon>
+                  <ion-icon [color]="(isGatewayContentOpened[gatewayContent.id]) ?'current' : 'font-color'" *ngIf="!(isGatewayContentOpened[gatewayContent.id])"
+                    name="ios-arrow-down" item-right></ion-icon>
+                  <ion-icon [color]="(isGatewayContentOpened[gatewayContent.id]) ?'current' : 'font-color'" *ngIf="(isGatewayContentOpened[gatewayContent.id])"
+                    name="ios-arrow-up" item-right></ion-icon>
                 </div>
               </ion-col>
             </ion-row>
-            <div *ngIf="(isGatewayContentOpened[gatewayContent.id])" >
+            <div *ngIf="(isGatewayContentOpened[gatewayContent.id])">
               <hr>
-              <div *ngIf="gatewayContent.id == 'entry_forms'" >
+              <div *ngIf="gatewayContent.id == 'entry_forms'">
                 <div *ngFor="let dataSet of dataSets">
                   {{ dataSet.name }}
                 </div>
               </div>
-              <div *ngIf="gatewayContent.id == 'program_without_registration'" >
+              <div *ngIf="gatewayContent.id == 'program_without_registration'">
                 coming soon
               </div>
 

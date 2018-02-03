@@ -1,28 +1,36 @@
-import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
+import { Component, ViewChild } from "@angular/core";
+import { Nav, Platform } from "ionic-angular";
+import { StatusBar } from "@ionic-native/status-bar";
+import { SplashScreen } from "@ionic-native/splash-screen";
 
-import {LauncherPage} from "../pages/launcher/launcher";
-import {UserProvider} from "../providers/user/user";
-import {Subject} from "rxjs";
+import { LauncherPage } from "../pages/launcher/launcher";
+import { UserProvider } from "../providers/user/user";
+import { Subject } from "rxjs";
 
 @Component({
-  templateUrl: 'app.html'
+  templateUrl: "app.html"
 })
 export class MyApp {
-
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any;
   activePage = new Subject();
 
-  pages: Array<{ title: string, component: any, active: boolean, icon: string }>;
-  logoUrl : string;
-  logOutIcon :  string;
+  pages: Array<{
+    title: string;
+    component: any;
+    active: boolean;
+    icon: string;
+  }>;
+  logoUrl: string;
+  logOutIcon: string;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen,
-              private userProvider: UserProvider) {
+  constructor(
+    platform: Platform,
+    statusBar: StatusBar,
+    splashScreen: SplashScreen,
+    private userProvider: UserProvider
+  ) {
     platform.ready().then(() => {
       statusBar.styleDefault();
       this.rootPage = LauncherPage;
@@ -33,9 +41,13 @@ export class MyApp {
     this.logOutIcon = "assets/img/logo.png";
 
     this.pages = [
-      { title: 'sms_gateway', component: 'HomePage', active: true, icon: 'home' },
+      {
+        title: "sms_gateway",
+        component: "SmsGatewayPage",
+        active: true,
+        icon: "home"
+      }
     ];
-
   }
 
   openPage(page) {
@@ -45,17 +57,16 @@ export class MyApp {
     this.activePage.next(page);
   }
 
-  async logOut(){
-    try{
-      this.userProvider.getCurrentUser().subscribe(user=>{
+  async logOut() {
+    try {
+      this.userProvider.getCurrentUser().subscribe(user => {
         user.isLogin = false;
-        this.userProvider.setCurrentUser(user).subscribe(()=>{
-          this.nav.setRoot('LoginPage');
-        })
-      });      
-    }catch (e){
+        this.userProvider.setCurrentUser(user).subscribe(() => {
+          this.nav.setRoot("LoginPage");
+        });
+      });
+    } catch (e) {
       console.log(JSON.stringify(e));
     }
   }
-
 }
