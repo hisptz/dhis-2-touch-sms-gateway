@@ -92,15 +92,28 @@ export class SmsGatewayProvider {
       );
     document.addEventListener("onSMSArrive", (event: any) => {
       let smsResponse = event.data;
-      this.getSmsToDataValuePayload(smsResponse, smsCommandObjects).subscribe(
-        (payload: any) => {
-          console.log(JSON.stringify(payload));
-        },
-        error => {
-          console.log("Error : on get payload : " + JSON.stringify(error));
-        }
-      );
+      this.processMessage(smsResponse, smsCommandObjects);
     });
+  }
+
+  processMessage(smsResponse, smsCommandObjects) {
+    this.getSmsToDataValuePayload(smsResponse, smsCommandObjects).subscribe(
+      (payload: any) => {
+        let url = "/api/25/dataValueSets";
+        this.http.defaultPost(url, payload).subscribe(
+          response => {
+            console.log("Success import data value");
+            console.log(JSON.stringify(response));
+          },
+          error => {
+            console.log("Error on post data : " + JSON.stringify(error));
+          }
+        );
+      },
+      error => {
+        console.log("Error : on get payload : " + JSON.stringify(error));
+      }
+    );
   }
 
   getSmsToDataValuePayload(smsResponse, smsCommandObjects): Observable<any> {
@@ -142,7 +155,6 @@ export class SmsGatewayProvider {
                       dataValues: dataValues
                     };
                     observer.next(payload);
-                    observer.complete();
                   } else {
                     observer.error("User has not assinged organisation unit");
                   }
@@ -207,7 +219,6 @@ export class SmsGatewayProvider {
           number;
         this.http.get(url, true).subscribe(
           (response: any) => {
-            console.log(JSON.stringify(response));
             if (response && response.users && response.users.length > 0) {
               observer.next(response.users[0].organisationUnits);
               observer.complete();
