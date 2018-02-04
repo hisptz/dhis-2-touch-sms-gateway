@@ -4,6 +4,9 @@ import { UserProvider } from "../../providers/user/user";
 import { NetworkAvailabilityProvider } from "../../providers/network-availability/network-availability";
 import { AppTranslationProvider } from "../../providers/app-translation/app-translation";
 import { BackgroundMode } from "@ionic-native/background-mode";
+import { ApplicationState } from "../../store/reducers";
+import { Store } from "@ngrx/store";
+import { LoadedCurrentUser } from "../../store/actions/currentUser.actons";
 
 /**
  * Generated class for the LauncherPage page.
@@ -24,7 +27,8 @@ export class LauncherPage implements OnInit {
     private UserProvider: UserProvider,
     private NetworkAvailabilityProvider: NetworkAvailabilityProvider,
     private appTranslationProvider: AppTranslationProvider,
-    private backgroundMode: BackgroundMode
+    private backgroundMode: BackgroundMode,
+    private store: Store<ApplicationState>
   ) {}
 
   ngOnInit() {
@@ -39,6 +43,7 @@ export class LauncherPage implements OnInit {
         }
         this.appTranslationProvider.setAppTranslation(currentLanguage);
         if (user && user.isLogin) {
+          this.store.dispatch(new LoadedCurrentUser(user));
           this.navCtrl.setRoot("SmsGatewayPage");
         } else {
           this.navCtrl.setRoot("LoginPage");

@@ -86,7 +86,6 @@ export class SmsGatewayProvider {
 
     document.addEventListener("onSMSArrive", (e: any) => {
       let sms = e.data;
-      console.log(JSON.stringify(e));
       console.log(sms);
     });
   }
@@ -95,10 +94,10 @@ export class SmsGatewayProvider {
     if (SMS)
       SMS.stopWatch(
         () => {
-          console.log("stop started");
+          console.log("watching stop");
         },
         Error => {
-          console.log("failed to start watching" + JSON.stringify(Error));
+          console.log("failed to stop watching" + JSON.stringify(Error));
         }
       );
   }

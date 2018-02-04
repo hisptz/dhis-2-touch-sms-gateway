@@ -7,6 +7,8 @@ import { DataSetsProvider } from "../../providers/data-sets/data-sets";
 import { DataSet } from "../../models/dataSet";
 import { SmsGatewayProvider } from "../../providers/sms-gateway/sms-gateway";
 import { SmsConfiguration } from "../../models/smsCommand";
+import { AppProvider } from "../../providers/app/app";
+import { SmsCommandProvider } from "../../providers/sms-command/sms-command";
 
 /**
  * Generated class for the SmsGatewayPage page.
@@ -25,14 +27,17 @@ export class SmsGatewayPage implements OnInit {
   isLoading: boolean;
   loadingMessage: string;
 
-  dataSets: Array<DataSet>;
+  dataSets: Array<any>;
   gatewayContents: Array<{ id: string; name: string; icon: string }>;
   isGatewayContentOpened: any;
   isSyncActive: boolean;
+  smsCommandMapper: any;
 
   constructor(
     private encryption: EncryptionProvider,
+    private appProvider: AppProvider,
     private smsGateway: SmsGatewayProvider,
+    private smsCommand: SmsCommandProvider,
     private menu: MenuController,
     private dataSetProvider: DataSetsProvider,
     private userProvider: UserProvider
@@ -43,6 +48,7 @@ export class SmsGatewayPage implements OnInit {
   ngOnInit() {
     this.menu.enable(true);
     this.isGatewayContentOpened = {};
+    this.smsCommandMapper = {};
     this.isSyncActive = false;
     this.gatewayContents = this.getGatewayContents();
     this.isLoading = true;
@@ -54,21 +60,44 @@ export class SmsGatewayPage implements OnInit {
       this.dataSetProvider
         .getAllDataSets(currentUser)
         .subscribe((dataSets: Array<DataSet>) => {
-          this.dataSets = dataSets;
           this.toggleGatewayContents(this.gatewayContents[0]);
           this.smsGateway.getSmsConfigurations(currentUser).subscribe(
             (smsConfigurations: SmsConfiguration) => {
-              this.isLoading = false;
-              console.log(JSON.stringify(smsConfigurations));
+              dataSets.map((dataSet: DataSet) => {
+                this.dataSets.push({
+                  id: dataSet.id,
+                  name: dataSet.name,
+                  status:
+                    smsConfigurations.dataSetIds.indexOf(dataSet.id) > -1
+                      ? true
+                      : false
+                });
+              });
               this.isSyncActive = smsConfigurations.isStarted;
-              if (smsConfigurations.isStarted) {
-                this.smsGateway.startWatchingSms();
-              }
+              this.loadingMessage = "loading_sms_commands";
+              this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
+                smsCommandMapper => {
+                  if (smsConfigurations.isStarted) {
+                    this.smsGateway.startWatchingSms(smsCommandMapper);
+                  }
+                  this.isLoading = false;
+                  this.smsCommandMapper = smsCommandMapper;
+                },
+                error => {
+                  this.isLoading = false;
+                  this.appProvider.setNormalNotification(
+                    "Fail to load sms commands"
+                  );
+                }
+              );
             },
             error => {
               this.isLoading = false;
               console.log(
                 "Error on loading sms configurations " + JSON.stringify(error)
+              );
+              this.appProvider.setNormalNotification(
+                "Fail to load sms configurations"
               );
             }
           );
@@ -91,12 +120,12 @@ export class SmsGatewayPage implements OnInit {
 
   getGatewayContents() {
     let gatewayContents = [
-      { id: "entry_forms", name: "entry_forms", icon: "assets/icon/form.png" },
-      {
-        id: "program_without_registration",
-        name: "program_without_registration",
-        icon: "assets/icon/form.png"
-      }
+      { id: "entry_forms", name: "entry_forms", icon: "assets/icon/form.png" }
+      // {
+      //   id: "program_without_registration",
+      //   name: "program_without_registration",
+      //   icon: "assets/icon/form.png"
+      // }
     ];
     return gatewayContents;
   }
@@ -104,9 +133,29 @@ export class SmsGatewayPage implements OnInit {
   startOrStopSync() {
     this.isSyncActive = !this.isSyncActive;
     if (this.isSyncActive) {
-      this.smsGateway.startWatchingSms();
+      this.smsGateway.startWatchingSms(this.smsCommandMapper);
     } else {
       this.smsGateway.stopWatchingSms();
     }
+    let dataSetIds = [];
+    this.dataSets.map((dataSet: any) => {
+      if (dataSet.status) {
+        dataSetIds.push(dataSet.id);
+      }
+    });
+    let smsConfigurations: SmsConfiguration = {
+      isStarted: this.isSyncActive,
+      dataSetIds: dataSetIds
+    };
+    this.smsGateway
+      .setSmsConfigurations(this.currentUser, smsConfigurations)
+      .subscribe(
+        () => {
+          console.log("configurations has been updated");
+        },
+        error => {
+          console.log("Error : " + JSON.stringify(error));
+        }
+      );
   }
 }
