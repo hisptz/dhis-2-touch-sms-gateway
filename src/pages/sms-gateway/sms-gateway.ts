@@ -78,7 +78,10 @@ export class SmsGatewayPage implements OnInit {
               this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
                 smsCommandMapper => {
                   if (smsConfigurations.isStarted) {
-                    this.smsGateway.startWatchingSms(smsCommandMapper);
+                    this.smsGateway.startWatchingSms(
+                      smsCommandMapper,
+                      smsConfigurations
+                    );
                   }
                   this.isLoading = false;
                   this.smsCommandMapper = smsCommandMapper;
@@ -132,11 +135,6 @@ export class SmsGatewayPage implements OnInit {
 
   startOrStopSync() {
     this.isSyncActive = !this.isSyncActive;
-    if (this.isSyncActive) {
-      this.smsGateway.startWatchingSms(this.smsCommandMapper);
-    } else {
-      this.smsGateway.stopWatchingSms();
-    }
     let dataSetIds = [];
     this.dataSets.map((dataSet: any) => {
       if (dataSet.status) {
@@ -151,6 +149,14 @@ export class SmsGatewayPage implements OnInit {
       .setSmsConfigurations(this.currentUser, smsConfigurations)
       .subscribe(
         () => {
+          if (this.isSyncActive) {
+            this.smsGateway.startWatchingSms(
+              this.smsCommandMapper,
+              smsConfigurations
+            );
+          } else {
+            this.smsGateway.stopWatchingSms();
+          }
           console.log("configurations has been updated");
         },
         error => {

@@ -79,7 +79,7 @@ export class SmsGatewayProvider {
     return defaultConfigurations;
   }
 
-  startWatchingSms(smsCommandObjects) {
+  startWatchingSms(smsCommandObjects, smsConfigurations) {
     if (SMS)
       SMS.startWatch(
         () => {
@@ -92,12 +92,18 @@ export class SmsGatewayProvider {
       );
     document.addEventListener("onSMSArrive", (event: any) => {
       let smsResponse = event.data;
-      this.processMessage(smsResponse, smsCommandObjects);
+      console.log("Here we are");
+      //this.processMessage(smsResponse, smsCommandObjects, smsConfigurations);
     });
   }
 
-  processMessage(smsResponse, smsCommandObjects) {
-    this.getSmsToDataValuePayload(smsResponse, smsCommandObjects).subscribe(
+  processMessage(smsResponse, smsCommandObjects, smsConfigurations) {
+    console.log("Processing sms");
+    this.getSmsToDataValuePayload(
+      smsResponse,
+      smsCommandObjects,
+      smsConfigurations
+    ).subscribe(
       (payload: any) => {
         let url = "/api/25/dataValueSets";
         this.http.defaultPost(url, payload).subscribe(
@@ -116,7 +122,11 @@ export class SmsGatewayProvider {
     );
   }
 
-  getSmsToDataValuePayload(smsResponse, smsCommandObjects): Observable<any> {
+  getSmsToDataValuePayload(
+    smsResponse,
+    smsCommandObjects,
+    smsConfigurations
+  ): Observable<any> {
     return new Observable(observer => {
       if (smsResponse.body) {
         let availableSmsCodes = Object.keys(smsCommandObjects);
@@ -142,27 +152,31 @@ export class SmsGatewayProvider {
                 smsCommandObject,
                 smsCodeToValueMapper
               );
-              //@todo handling if payload saving if user is not found
-              this.getUserOrganisationUnits(smsResponse).subscribe(
-                (organisationUnits: any) => {
-                  if (organisationUnits && organisationUnits.length > 0) {
-                    orgUnit = organisationUnits[0].id;
-                    let payload = {
-                      dataSet: dataSet,
-                      completeDate: this.getCompletenessDate(),
-                      period: period,
-                      orgUnit: orgUnit,
-                      dataValues: dataValues
-                    };
-                    observer.next(payload);
-                  } else {
-                    observer.error("User has not assinged organisation unit");
+              if (smsConfigurations.dataSetIds.indexOf(dataSet) > -1) {
+                //@todo handling if payload saving if user is not found
+                this.getUserOrganisationUnits(smsResponse).subscribe(
+                  (organisationUnits: any) => {
+                    if (organisationUnits && organisationUnits.length > 0) {
+                      orgUnit = organisationUnits[0].id;
+                      let payload = {
+                        dataSet: dataSet,
+                        completeDate: this.getCompletenessDate(),
+                        period: period,
+                        orgUnit: orgUnit,
+                        dataValues: dataValues
+                      };
+                      observer.next(payload);
+                    } else {
+                      observer.error("User has not assinged organisation unit");
+                    }
+                  },
+                  error => {
+                    observer.error(error);
                   }
-                },
-                error => {
-                  observer.error(error);
-                }
-              );
+                );
+              } else {
+                observer.error("Data set is has not beeing set for sync");
+              }
             } else {
               observer.error("Missing data values from received sms");
             }
