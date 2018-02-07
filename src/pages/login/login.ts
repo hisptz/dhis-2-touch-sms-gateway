@@ -294,7 +294,7 @@ export class LoginPage implements OnInit {
             this.AppProvider.setNormalNotification(
               "You have enter wrong username or password or server address"
             );
-          } else if (404) {
+          } else if (error.status == 404) {
             console.log(JSON.stringify(error));
             this.AppProvider.setNormalNotification(
               "Please check server address"

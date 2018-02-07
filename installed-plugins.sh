@@ -10,3 +10,4 @@ ionic cordova plugin add cordova-plugin-whitelist
 ionic cordova plugin add ionic-plugin-keyboard
 ionic cordova plugin add cordova-plugin-app-version
 ionic cordova plugin add cordova-plugin-sms
+ionic cordova plugin add cordova.plugins.diagnostic

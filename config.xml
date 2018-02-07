@@ -59,4 +59,5 @@
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
     <plugin name="cordova-plugin-sms" spec="^1.0.5" />
     <engine name="android" spec="~6.3.0" />
+    <plugin name="cordova.plugins.diagnostic" spec="^3.9.2" />
 </widget>
