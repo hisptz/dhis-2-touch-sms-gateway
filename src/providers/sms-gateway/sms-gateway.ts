@@ -92,8 +92,7 @@ export class SmsGatewayProvider {
       );
     document.addEventListener("onSMSArrive", (event: any) => {
       let smsResponse = event.data;
-      console.log("Here we are");
-      //this.processMessage(smsResponse, smsCommandObjects, smsConfigurations);
+      this.processMessage(smsResponse, smsCommandObjects, smsConfigurations);
     });
   }
 

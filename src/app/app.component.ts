@@ -19,7 +19,6 @@ export class MyApp {
   pages: Array<{
     title: string;
     component: any;
-    active: boolean;
     icon: string;
   }>;
   logoUrl: string;
@@ -41,20 +40,14 @@ export class MyApp {
     this.logOutIcon = "assets/img/logo.png";
 
     this.pages = [
-      {
-        title: "sms_gateway",
-        component: "SmsGatewayPage",
-        active: true,
-        icon: "home"
-      }
+      { title: "sms_gateway", component: "SmsGatewayPage", icon: "home" },
+      { title: "about", component: "AboutPage", icon: "information-circle" },
+      { title: "setting", component: "SettingPage", icon: "construct" }
     ];
   }
 
   openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
-    this.activePage.next(page);
   }
 
   async logOut() {

@@ -27,5 +27,13 @@
   "sms_commands_have_been_saved" : "SMS commands have been saved",
   "loading_user_information" : "Discovering user information",
   "entry_forms" : "Entry forms",
-  "program_without_registration" : "Program without registration"
+  "program_without_registration" : "Program without registration",
+  "about": "About",
+  "system_info": "System info",
+  "loading_app_information": "Discovering app information",
+  "settings": "Settings",
+  "loading_current_user_information": "Discovering user information",
+  "loading_settings": "Discovering settings",
+  "app_settings": "App setting",
+  "current_language": "Current language"
 }

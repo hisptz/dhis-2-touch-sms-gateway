@@ -43,6 +43,7 @@ import {EncryptionProvider} from "../providers/encryption/encryption";
 import {SettingsProvider} from "../providers/settings/settings";
 import { DataSetsProvider } from '../providers/data-sets/data-sets';
 import { SmsGatewayProvider } from '../providers/sms-gateway/sms-gateway';
+import {AboutProvider} from "../providers/about/about";
 
 
 
@@ -76,7 +77,7 @@ import { SmsGatewayProvider } from '../providers/sms-gateway/sms-gateway';
     SplashScreen,HTTP,AppVersion,Network,BackgroundMode,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     NetworkAvailabilityProvider,UserProvider,
-    SettingsProvider,
+    SettingsProvider,AboutProvider,
     SqlLiteProvider,SmsCommandProvider,AppProvider,EncryptionProvider,
     LocalInstanceProvider,HttpClientProvider,AppTranslationProvider,
     DataSetsProvider,

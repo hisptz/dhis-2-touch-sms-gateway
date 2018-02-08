@@ -14,7 +14,7 @@ import { Observable } from "rxjs/Observable";
 export class UserProvider {
   public userData: any;
 
-  constructor(private storage: Storage, private http: HTTP) {}
+  constructor(public storage: Storage, public http: HTTP) {}
 
   /**
    *
@@ -71,7 +71,7 @@ export class UserProvider {
    */
   getUserAuthorities(user): Observable<any> {
     this.http.useBasicAuth(user.username, user.password);
-    let fields = "fields=authorities,id,dataViewOrganisationUnits";
+    let fields = "fields=authorities,id,name,dataViewOrganisationUnits";
     let url = user.serverUrl;
     url += "/api/me.json?" + fields;
     if (user.dhisVersion && parseInt(user.dhisVersion) > 25) {
