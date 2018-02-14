@@ -120,23 +120,12 @@ export class LoginPage implements OnInit {
   toggleLoginFormAndLocalInstances() {
     this.isLocalInstancesListOpen = !this.isLocalInstancesListOpen;
   }
-
   updateTranslationLanguage(language: string) {
     try {
       this.appTranslationProvider.setAppTranslation(language);
       this.currentLanguage = language;
       this.currentUser.currentLanguage = language;
       this.UserProvider.setCurrentUser(this.currentUser).subscribe(() => {});
-      if (
-        this.currentUser &&
-        this.currentUser.serverUrl &&
-        this.currentUser.username
-      ) {
-        this.currentUser["currentDatabase"] =
-          this.AppProvider.getDataBaseName(this.currentUser.serverUrl) +
-          "_" +
-          this.currentUser.username;
-      }
     } catch (e) {
       this.AppProvider.setNormalNotification("Fail to set translation ");
       console.log(JSON.stringify(e));
