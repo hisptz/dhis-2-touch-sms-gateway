@@ -3,7 +3,9 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>{{'sms_gateway'|translate}}</ion-title>
+    <ion-title>
+      <span [translate]="'sms gateway'"></span>
+    </ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -14,7 +16,7 @@
       <ion-col>
 
         <div *ngIf="isLoading">
-          <loading [loadingMessage]="loadingMessage|translate" [loadingSize]="'large'"></loading>
+          <loading [loadingMessage]="loadingMessage" [loadingSize]="'large'"></loading>
         </div>
         <div *ngIf="!isLoading">
           <div class="item-card" *ngFor="let gatewayContent of gatewayContents">
@@ -22,7 +24,7 @@
               <ion-col col-11>
                 <img class="side-menu-icon" [src]="gatewayContent.icon" />&nbsp;&nbsp;
                 <span ion-text [color]="(isGatewayContentOpened[gatewayContent.id]) ?'current' : 'font-color'">
-                  {{ gatewayContent.name| translate}}
+                  <span [translate]="gatewayContent.name"></span>
                 </span>
               </ion-col>
               <ion-col col-1 item>

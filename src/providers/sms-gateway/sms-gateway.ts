@@ -59,7 +59,7 @@ export class SmsGatewayProvider {
         .set(key, configuration)
         .then(() => {
           observer.next();
-          observer.complete();
+          //observer.complete();
         })
         .catch(error => {
           observer.error(error);

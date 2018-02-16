@@ -52,11 +52,11 @@ export class SmsGatewayPage implements OnInit {
     this.isSyncActive = false;
     this.gatewayContents = this.getGatewayContents();
     this.isLoading = true;
-    this.loadingMessage = "loading_user_information";
+    this.loadingMessage = "loading user information";
     this.userProvider.getCurrentUser().subscribe((currentUser: CurrentUser) => {
       currentUser.password = this.encryption.decode(currentUser.password);
       this.currentUser = currentUser;
-      this.loadingMessage = "loading_entry_forms";
+      this.loadingMessage = "loading entry forms";
       this.dataSetProvider
         .getAllDataSets(currentUser)
         .subscribe((dataSets: Array<DataSet>) => {
@@ -74,7 +74,7 @@ export class SmsGatewayPage implements OnInit {
                 });
               });
               this.isSyncActive = smsConfigurations.isStarted;
-              this.loadingMessage = "loading_sms_commands";
+              this.loadingMessage = "loading sms commands";
               this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
                 smsCommandMapper => {
                   if (smsConfigurations.isStarted) {
@@ -89,7 +89,7 @@ export class SmsGatewayPage implements OnInit {
                 error => {
                   this.isLoading = false;
                   this.appProvider.setNormalNotification(
-                    "Fail to load sms commands"
+                    "fail to load sms commands"
                   );
                 }
               );
@@ -100,7 +100,7 @@ export class SmsGatewayPage implements OnInit {
                 "Error on loading sms configurations " + JSON.stringify(error)
               );
               this.appProvider.setNormalNotification(
-                "Fail to load sms configurations"
+                "fail to load sms configurations"
               );
             }
           );
@@ -123,7 +123,7 @@ export class SmsGatewayPage implements OnInit {
 
   getGatewayContents() {
     let gatewayContents = [
-      { id: "entry_forms", name: "entry_forms", icon: "assets/icon/form.png" }
+      { id: "entry_forms", name: "entry forms", icon: "assets/icon/form.png" }
       // {
       //   id: "program_without_registration",
       //   name: "program_without_registration",

@@ -148,7 +148,7 @@ export class LoginPage implements OnInit {
       this.currentUser.currentLanguage = language;
       this.UserProvider.setCurrentUser(this.currentUser).subscribe(() => {});
     } catch (e) {
-      this.AppProvider.setNormalNotification("Fail to set translation ");
+      this.AppProvider.setNormalNotification("fail to set translation ");
       console.log(JSON.stringify(e));
     }
   }
@@ -175,7 +175,7 @@ export class LoginPage implements OnInit {
       this.loggedInInInstance = this.currentUser.serverUrl;
       this.reInitiateProgressTrackerObject(this.currentUser);
       this.progressTracker[currentResourceType].message =
-        "establishing_connection_to_server";
+        "establishing connection to server";
       this.UserProvider.authenticateUser(this.currentUser).subscribe(
         (response: any) => {
           response = this.getResponseData(response);
@@ -200,7 +200,7 @@ export class LoginPage implements OnInit {
               resource = "Loading system information";
               if (this.isLoginProcessActive) {
                 this.progressTracker[currentResourceType].message =
-                  "loading_system_information";
+                  "loading system information";
                 this.HttpClientProvider.get(
                   "/api/system/info",
                   false,
@@ -215,7 +215,7 @@ export class LoginPage implements OnInit {
                         this.updateProgressTracker(resource);
                         if (this.isLoginProcessActive) {
                           this.progressTracker[currentResourceType].message =
-                            "loading_current_user_authorities";
+                            "loading current user authorities";
                           this.UserProvider.getUserAuthorities(
                             this.currentUser
                           ).subscribe(
@@ -229,7 +229,7 @@ export class LoginPage implements OnInit {
                               this.progressTracker[
                                 currentResourceType
                               ].message =
-                                "preparing_local_storage";
+                                "preparing local storage";
                               this.sqlLite
                                 .generateTables(
                                   this.currentUser.currentDatabase
@@ -247,7 +247,7 @@ export class LoginPage implements OnInit {
                                       this.cancelLoginProcessData
                                     );
                                     this.AppProvider.setNormalNotification(
-                                      "Fail to prepare local storage"
+                                      "fail to prepare local storage"
                                     );
                                     console.error(
                                       "error : " + JSON.stringify(error)
@@ -260,7 +260,7 @@ export class LoginPage implements OnInit {
                                 this.cancelLoginProcessData
                               );
                               this.AppProvider.setNormalNotification(
-                                "Fail to load user authorities"
+                                "fail to load user authorities"
                               );
                               console.error("error : " + JSON.stringify(error));
                             }
@@ -270,7 +270,7 @@ export class LoginPage implements OnInit {
                       error => {
                         this.cancelLoginProcess(this.cancelLoginProcessData);
                         this.AppProvider.setNormalNotification(
-                          "Fail to load user authorities"
+                          "fail to load user authorities"
                         );
                         console.error("error : " + JSON.stringify(error));
                       }
@@ -279,7 +279,7 @@ export class LoginPage implements OnInit {
                   error => {
                     this.cancelLoginProcess(this.cancelLoginProcessData);
                     this.AppProvider.setNormalNotification(
-                      "Fail to load system information"
+                      "fail to load system information"
                     );
                     console.error("error : " + JSON.stringify(error));
                   }
@@ -289,7 +289,7 @@ export class LoginPage implements OnInit {
             error => {
               this.cancelLoginProcess(this.cancelLoginProcessData);
               this.AppProvider.setNormalNotification(
-                "Fail to save current user information"
+                "fail to save current user information"
               );
               console.error("error : " + JSON.stringify(error));
             }
@@ -298,16 +298,16 @@ export class LoginPage implements OnInit {
         (error: any) => {
           if (error.status == 0) {
             this.AppProvider.setNormalNotification(
-              "Please check your network connectivity"
+              "please check your network connectivity"
             );
           } else if (error.status == 401) {
             this.AppProvider.setNormalNotification(
-              "You have enter wrong username or password or server address"
+              "you have enter wrong username or password or server address"
             );
           } else if (error.status == 404) {
             console.log(JSON.stringify(error));
             this.AppProvider.setNormalNotification(
-              "Please check server address"
+              "please check server address"
             );
           } else if (error.error) {
             this.AppProvider.setNormalNotification(error.error);
@@ -320,7 +320,7 @@ export class LoginPage implements OnInit {
     } else {
       this.cancelLoginProcess(this.cancelLoginProcessData);
       this.AppProvider.setNormalNotification(
-        "Please enter server address, username and password"
+        "please enter server address, username and password"
       );
     }
   }
@@ -338,10 +338,10 @@ export class LoginPage implements OnInit {
       let resource = "smsCommand";
       let currentResourceType = "entryForm";
       this.progressTracker[currentResourceType].message =
-        "loading_sms_commands";
+        "loading sms commands";
       if (this.completedTrackedProcess.indexOf(resource) > -1) {
         this.progressTracker[currentResourceType].message =
-          "sms_commands_have_been_loaded";
+          "sms commands have been loaded";
         this.updateProgressTracker(resource);
       } else {
         this.smsCommandProvider
@@ -350,7 +350,7 @@ export class LoginPage implements OnInit {
             (smsCommands: any) => {
               if (this.isLoginProcessActive) {
                 this.progressTracker[currentResourceType].message =
-                  "saving_sms_commands";
+                  "saving sms commands";
                 this.smsCommandProvider
                   .savingSmsCommand(
                     smsCommands,
@@ -359,14 +359,14 @@ export class LoginPage implements OnInit {
                   .subscribe(
                     () => {
                       this.progressTracker[currentResourceType].message =
-                        "sms_commands_have_been_saved";
+                        "sms commands have been saved";
                       this.updateProgressTracker(resource);
                     },
                     error => {
                       this.cancelLoginProcess(this.cancelLoginProcessData);
                       console.log(JSON.stringify(error));
                       this.AppProvider.setNormalNotification(
-                        "Fail to save SMS commands"
+                        "fail to save SMS commands"
                       );
                     }
                   );
@@ -376,7 +376,7 @@ export class LoginPage implements OnInit {
               this.cancelLoginProcess(this.cancelLoginProcessData);
               console.log(JSON.stringify(error));
               this.AppProvider.setNormalNotification(
-                "Fail to load SMS commands"
+                "fail to load SMS commands"
               );
             }
           );
@@ -388,10 +388,10 @@ export class LoginPage implements OnInit {
     if (this.isLoginProcessActive) {
       let resource = "dataSets";
       let currentResourceType = "entryForm";
-      this.progressTracker[currentResourceType].message = "loading_entry_forms";
+      this.progressTracker[currentResourceType].message = "loading entry forms";
       if (this.completedTrackedProcess.indexOf(resource) > -1) {
         this.progressTracker[currentResourceType].message =
-          "entry_forms_have_been_loaded";
+          "entry forms have been loaded";
         this.updateProgressTracker(resource);
       } else {
         this.dataSetsProvider
@@ -400,20 +400,20 @@ export class LoginPage implements OnInit {
             (dataSets: any) => {
               if (this.isLoginProcessActive) {
                 this.progressTracker[currentResourceType].message =
-                  "saving_entry_forms";
+                  "saving entry forms";
                 this.dataSetsProvider
                   .saveDataSetsFromServer(dataSets, this.currentUser)
                   .subscribe(
                     () => {
                       this.progressTracker[currentResourceType].message =
-                        "entry_form_have_been_saved";
+                        "entry form have been saved";
                       this.updateProgressTracker(resource);
                     },
                     error => {
                       this.cancelLoginProcess(this.cancelLoginProcessData);
                       console.log(JSON.stringify(error));
                       this.AppProvider.setNormalNotification(
-                        "Fail to s ave entry form."
+                        "fail to s ave entry form"
                       );
                     }
                   );
@@ -422,9 +422,7 @@ export class LoginPage implements OnInit {
             error => {
               this.cancelLoginProcess(this.cancelLoginProcessData);
               console.log(JSON.stringify(error));
-              this.AppProvider.setNormalNotification(
-                "Fail to load entry form."
-              );
+              this.AppProvider.setNormalNotification("fail to load entry form");
             }
           );
       }

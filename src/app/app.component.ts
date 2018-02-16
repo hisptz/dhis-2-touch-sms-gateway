@@ -40,9 +40,9 @@ export class MyApp {
     this.logOutIcon = "assets/img/logo.png";
 
     this.pages = [
-      { title: "sms_gateway", component: "SmsGatewayPage", icon: "home" },
+      { title: "sms gateway", component: "SmsGatewayPage", icon: "home" },
       { title: "about", component: "AboutPage", icon: "information-circle" },
-      { title: "setting", component: "SettingPage", icon: "construct" }
+      { title: "settings", component: "SettingPage", icon: "construct" }
     ];
   }
 
