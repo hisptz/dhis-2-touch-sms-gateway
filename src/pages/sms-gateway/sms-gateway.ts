@@ -80,7 +80,8 @@ export class SmsGatewayPage implements OnInit {
                   if (smsConfigurations.isStarted) {
                     this.smsGateway.startWatchingSms(
                       smsCommandMapper,
-                      smsConfigurations
+                      smsConfigurations,
+                      this.currentUser
                     );
                   }
                   this.isLoading = false;
@@ -141,27 +142,34 @@ export class SmsGatewayPage implements OnInit {
         dataSetIds.push(dataSet.id);
       }
     });
-    let smsConfigurations: SmsConfiguration = {
-      isStarted: this.isSyncActive,
-      dataSetIds: dataSetIds
-    };
-    this.smsGateway
-      .setSmsConfigurations(this.currentUser, smsConfigurations)
-      .subscribe(
-        () => {
-          if (this.isSyncActive) {
-            this.smsGateway.startWatchingSms(
-              this.smsCommandMapper,
-              smsConfigurations
-            );
-          } else {
-            this.smsGateway.stopWatchingSms();
-          }
-          console.log("configurations has been updated");
-        },
-        error => {
-          console.log("Error : " + JSON.stringify(error));
-        }
-      );
+    this.smsGateway.getSmsConfigurations(this.currentUser).subscribe(
+      (smsConfiguration: SmsConfiguration) => {
+        const newSmsConfiguration: SmsConfiguration = {
+          dataSetIds: dataSetIds,
+          isStarted: this.isSyncActive,
+          syncedSMSIds: smsConfiguration.syncedSMSIds
+        };
+        this.smsGateway
+          .setSmsConfigurations(this.currentUser, newSmsConfiguration)
+          .subscribe(
+            () => {
+              if (this.isSyncActive) {
+                this.smsGateway.startWatchingSms(
+                  this.smsCommandMapper,
+                  newSmsConfiguration,
+                  this.currentUser
+                );
+              } else {
+                this.smsGateway.stopWatchingSms();
+              }
+              console.log("configurations has been updated");
+            },
+            error => {
+              console.log("Error : " + JSON.stringify(error));
+            }
+          );
+      },
+      erro => {}
+    );
   }
 }

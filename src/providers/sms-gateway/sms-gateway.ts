@@ -15,6 +15,8 @@ declare var SMS: any;
 */
 @Injectable()
 export class SmsGatewayProvider {
+  synchronizationWatcher: any;
+
   constructor(
     private storage: Storage,
     private http: HttpClientProvider,
@@ -74,30 +76,59 @@ export class SmsGatewayProvider {
   getDefaultConfigurations(): SmsConfiguration {
     let defaultConfigurations: SmsConfiguration = {
       dataSetIds: [],
-      isStarted: false
+      isStarted: false,
+      syncedSMSIds: []
     };
     return defaultConfigurations;
   }
 
-  startWatchingSms(smsCommandObjects, smsConfigurations) {
-    if (SMS)
-      SMS.startWatch(
-        () => {
-          this.backgroundMode.enable();
-          console.log("watching started");
-        },
-        Error => {
-          console.log("failed to start watching : " + JSON.stringify(Error));
-        }
-      );
-    document.addEventListener("onSMSArrive", (event: any) => {
-      let smsResponse = event.data;
-      this.processMessage(smsResponse, smsCommandObjects, smsConfigurations);
-    });
+  startWatchingSms(
+    smsCommandObjects,
+    smsConfigurations: SmsConfiguration,
+    currentUser
+  ) {
+    if (SMS) {
+      this.backgroundMode.enable();
+      this.synchronizationWatcher = setInterval(() => {
+        SMS.listSMS({}, (data: any) => {
+          if (data && data.length > 0) {
+            data.map((smsData: any) => {
+              if (smsConfigurations.syncedSMSIds.indexOf(smsData._id) == -1) {
+                const smsResponse = {
+                  _id: smsData._id,
+                  address: smsData.address,
+                  body: smsData.body
+                };
+                this.processMessage(
+                  smsResponse,
+                  smsCommandObjects,
+                  smsConfigurations,
+                  currentUser
+                );
+              }
+            });
+          } else {
+            console.log("on sms found");
+          }
+        });
+      }, 60 * 1000);
+    }
   }
 
-  processMessage(smsResponse, smsCommandObjects, smsConfigurations) {
-    console.log("Processing sms");
+  marksSyncedSMS(smsId, smsConfigurations, currentUser) {
+    smsConfigurations.syncedSMSIds.push(smsId);
+    this.setSmsConfigurations(currentUser, smsConfigurations).subscribe(
+      () => {},
+      error => {}
+    );
+  }
+
+  processMessage(
+    smsResponse,
+    smsCommandObjects,
+    smsConfigurations,
+    currentUser
+  ) {
     this.getSmsToDataValuePayload(
       smsResponse,
       smsCommandObjects,
@@ -107,6 +138,11 @@ export class SmsGatewayProvider {
         let url = "/api/25/dataValueSets";
         this.http.defaultPost(url, payload).subscribe(
           response => {
+            this.marksSyncedSMS(
+              smsResponse._id,
+              smsConfigurations,
+              currentUser
+            );
             console.log("Success import data value");
             console.log(JSON.stringify(response));
           },
@@ -252,15 +288,7 @@ export class SmsGatewayProvider {
   }
 
   stopWatchingSms() {
-    if (SMS)
-      SMS.stopWatch(
-        () => {
-          this.backgroundMode.disable();
-          console.log("watching stop");
-        },
-        Error => {
-          console.log("failed to stop watching" + JSON.stringify(Error));
-        }
-      );
+    console.log(JSON.stringify(this.synchronizationWatcher));
+    clearInterval(this.synchronizationWatcher);
   }
 }
