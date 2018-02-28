@@ -10,13 +10,13 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpModule, Http } from '@angular/http';
 
 //native plugins
-import {SQLite} from "@ionic-native/sqlite";
-import {HTTP} from "@ionic-native/http";
-import {AppVersion} from "@ionic-native/app-version";
-import {Network} from "@ionic-native/network";
-import {BackgroundMode} from "@ionic-native/background-mode";
-import {IonicStorageModule} from "@ionic/storage";
-import {SMS} from "@ionic-native/sms";
+import { SQLite } from '@ionic-native/sqlite';
+import { HTTP } from '@ionic-native/http';
+import { AppVersion } from '@ionic-native/app-version';
+import { Network } from '@ionic-native/network';
+import { BackgroundMode } from '@ionic-native/background-mode';
+import { IonicStorageModule } from '@ionic/storage';
+import { SMS } from '@ionic-native/sms';
 
 //translations
 export function createTranslateLoader(http: Http) {
@@ -24,34 +24,28 @@ export function createTranslateLoader(http: Http) {
 }
 
 //store
-import {reducers} from "../store/reducers/index";
-import {StoreModule} from "@ngrx/store";
-
+import { reducers } from '../store/reducers/index';
+import { StoreModule } from '@ngrx/store';
 
 import { MyApp } from './app.component';
-import {LauncherPage} from "../pages/launcher/launcher";
-import {SharedModule} from "../components/share.module";
+import { LauncherPage } from '../pages/launcher/launcher';
+import { SharedModule } from '../components/shared.module';
 import { NetworkAvailabilityProvider } from '../providers/network-availability/network-availability';
-import {UserProvider} from "../providers/user/user";
-import {SmsCommandProvider} from "../providers/sms-command/sms-command";
-import {SqlLiteProvider} from "../providers/sql-lite/sql-lite";
-import {AppProvider} from "../providers/app/app";
-import {LocalInstanceProvider} from "../providers/local-instance/local-instance";
-import {HttpClientProvider} from "../providers/http-client/http-client";
-import {AppTranslationProvider} from "../providers/app-translation/app-translation";
-import {EncryptionProvider} from "../providers/encryption/encryption";
-import {SettingsProvider} from "../providers/settings/settings";
+import { UserProvider } from '../providers/user/user';
+import { SmsCommandProvider } from '../providers/sms-command/sms-command';
+import { SqlLiteProvider } from '../providers/sql-lite/sql-lite';
+import { AppProvider } from '../providers/app/app';
+import { LocalInstanceProvider } from '../providers/local-instance/local-instance';
+import { HttpClientProvider } from '../providers/http-client/http-client';
+import { AppTranslationProvider } from '../providers/app-translation/app-translation';
+import { EncryptionProvider } from '../providers/encryption/encryption';
+import { SettingsProvider } from '../providers/settings/settings';
 import { DataSetsProvider } from '../providers/data-sets/data-sets';
 import { SmsGatewayProvider } from '../providers/sms-gateway/sms-gateway';
-import {AboutProvider} from "../providers/about/about";
-
-
+import { AboutProvider } from '../providers/about/about';
 
 @NgModule({
-  declarations: [
-    MyApp,
-    LauncherPage
-  ],
+  declarations: [MyApp, LauncherPage],
   imports: [
     BrowserModule,
     HttpModule,
@@ -61,28 +55,37 @@ import {AboutProvider} from "../providers/about/about";
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
+        useFactory: createTranslateLoader,
         deps: [Http]
       }
     }),
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    LauncherPage
-  ],
+  entryComponents: [MyApp, LauncherPage],
   providers: [
-    StatusBar,SQLite,SMS,
-    SplashScreen,HTTP,AppVersion,Network,BackgroundMode,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    NetworkAvailabilityProvider,UserProvider,
-    SettingsProvider,AboutProvider,
-    SqlLiteProvider,SmsCommandProvider,AppProvider,EncryptionProvider,
-    LocalInstanceProvider,HttpClientProvider,AppTranslationProvider,
+    StatusBar,
+    SQLite,
+    SMS,
+    SplashScreen,
+    HTTP,
+    AppVersion,
+    Network,
+    BackgroundMode,
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
+    NetworkAvailabilityProvider,
+    UserProvider,
+    SettingsProvider,
+    AboutProvider,
+    SqlLiteProvider,
+    SmsCommandProvider,
+    AppProvider,
+    EncryptionProvider,
+    LocalInstanceProvider,
+    HttpClientProvider,
+    AppTranslationProvider,
     DataSetsProvider,
     SmsGatewayProvider
-
   ]
 })
 export class AppModule {}

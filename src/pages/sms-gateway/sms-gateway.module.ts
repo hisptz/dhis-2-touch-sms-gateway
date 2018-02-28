@@ -1,8 +1,8 @@
-import { NgModule } from "@angular/core";
-import { IonicPageModule } from "ionic-angular";
-import { SmsGatewayPage } from "./sms-gateway";
-import { SharedModule } from "../../components/share.module";
-import { TranslateModule } from "@ngx-translate/core";
+import { NgModule } from '@angular/core';
+import { IonicPageModule } from 'ionic-angular';
+import { SmsGatewayPage } from './sms-gateway';
+import { SharedModule } from '../../components/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [SmsGatewayPage],

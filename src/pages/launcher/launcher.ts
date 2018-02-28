@@ -1,12 +1,11 @@
-import { Component, OnInit } from "@angular/core";
-import { NavController } from "ionic-angular";
-import { UserProvider } from "../../providers/user/user";
-import { NetworkAvailabilityProvider } from "../../providers/network-availability/network-availability";
-import { AppTranslationProvider } from "../../providers/app-translation/app-translation";
-import { BackgroundMode } from "@ionic-native/background-mode";
-import { ApplicationState } from "../../store/reducers";
-import { Store } from "@ngrx/store";
-import { LoadedCurrentUser } from "../../store/actions/currentUser.actons";
+import { Component, OnInit } from '@angular/core';
+import { NavController } from 'ionic-angular';
+import { UserProvider } from '../../providers/user/user';
+import { NetworkAvailabilityProvider } from '../../providers/network-availability/network-availability';
+import { AppTranslationProvider } from '../../providers/app-translation/app-translation';
+import { ApplicationState } from '../../store/reducers/index';
+import { Store } from '@ngrx/store';
+import { LoadedCurrentUser } from '../../store/actions/currentUser.actons';
 
 /**
  * Generated class for the LauncherPage page.
@@ -16,37 +15,35 @@ import { LoadedCurrentUser } from "../../store/actions/currentUser.actons";
  */
 
 @Component({
-  selector: "page-launcher",
-  templateUrl: "launcher.html"
+  selector: 'page-launcher',
+  templateUrl: 'launcher.html'
 })
 export class LauncherPage implements OnInit {
   logoUrl: string;
 
   constructor(
     private navCtrl: NavController,
+    private store: Store<ApplicationState>,
     private UserProvider: UserProvider,
     private NetworkAvailabilityProvider: NetworkAvailabilityProvider,
-    private appTranslationProvider: AppTranslationProvider,
-    private backgroundMode: BackgroundMode,
-    private store: Store<ApplicationState>
+    private appTranslationProvider: AppTranslationProvider
   ) {}
 
   ngOnInit() {
-    this.logoUrl = "assets/img/logo.png";
-    this.backgroundMode.enable();
+    this.logoUrl = 'assets/img/logo.png';
     this.NetworkAvailabilityProvider.setNetworkStatusDetection();
     this.UserProvider.getCurrentUser().subscribe(
       (user: any) => {
-        let currentLanguage = "en";
+        let currentLanguage = 'en';
         if (user && user.currentLanguage) {
           currentLanguage = user.currentLanguage;
         }
         this.appTranslationProvider.setAppTranslation(currentLanguage);
         if (user && user.isLogin) {
           this.store.dispatch(new LoadedCurrentUser(user));
-          this.navCtrl.setRoot("SmsGatewayPage");
+          this.navCtrl.setRoot('SmsGatewayPage');
         } else {
-          this.navCtrl.setRoot("LoginPage");
+          this.navCtrl.setRoot('LoginPage');
         }
       },
       error => {}
