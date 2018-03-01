@@ -4,7 +4,7 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>
-      <span [translate]="'sms gateway'"></span>
+      <span [translate]="'SMS gateway'"></span>
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -41,7 +41,7 @@
               <div *ngIf="gatewayContent.id == 'entry_forms'">
                 <div *ngFor="let dataSet of dataSets">
                   <ion-item no-lines>
-                    <ion-checkbox color="blue" [(ngModel)]="dataSet.status" disabled="{{(isSyncActive)?'true':'false'}}"></ion-checkbox>
+                    <ion-checkbox color="blue" [(ngModel)]="dataSet.status" (ionChange)="updateSelectedItems()" disabled="{{(isSyncActive)?'true':'false'}}"></ion-checkbox>
                     <ion-label> {{ dataSet.name }} </ion-label>
                   </ion-item>
                 </div>
@@ -53,8 +53,8 @@
             </div>
           </div>
 
-          <button ion-button full [color]="(isSyncActive)? 'danger': 'primary'" (click)="startOrStopSync()">
-            {{ (isSyncActive)? 'stop': 'start' |translate }}
+          <button ion-button full [disabled]="!shouldEnableSYncButton" [color]="(isSyncActive)? 'danger': 'primary'" (click)="startOrStopSync()">
+            {{ (isSyncActive)? 'Stop': 'Start' |translate }}
           </button>
         </div>
       </ion-col>
