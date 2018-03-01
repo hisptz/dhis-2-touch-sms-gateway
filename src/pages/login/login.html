@@ -6,7 +6,7 @@
         <div class="logo">
           <img [src]="logoUrl">
         </div>
-        <p [translate]="'innovation in every dimension'"></p>
+        <p [translate]="'Innovation in every dimension'"></p>
       </ion-col>
     </ion-row>
     <ion-row *ngIf="isLoginProcessActive">
@@ -31,7 +31,7 @@
               {{ progressTracker.communication.message|translate}}
             </span>
             <span text-wrap *ngIf="progressTracker.communication.message ==''">
-              {{'establishing connection to server'|translate}}
+              <span [translate]="'Establishing connection to server'"></span>
             </span>
             <div style="text-align: center" item-right>
               {{ progressTracker.communication.passStepCount}}/{{ progressTracker.communication.count}}
@@ -50,7 +50,7 @@
               {{ progressTracker.entryForm.message|translate}}
             </span>
             <span text-wrap *ngIf="progressTracker.entryForm.message ==''">
-              {{'aggregate metadata'|translate}}
+              <span [translate]="'Aggregate metadata'"></span>
             </span>
             <div style="text-align: center" item-right>
               {{ progressTracker.entryForm.passStepCount}}/{{ progressTracker.entryForm.count}}
@@ -88,15 +88,15 @@
             <ion-col>
               <div class="round-form-container">
                 <ion-item>
-                  <ion-input [(ngModel)]="currentUser.serverUrl" type="text" name="serverUrl" placeholder="{{'enter server address'|translate}}"></ion-input>
+                  <ion-input [(ngModel)]="currentUser.serverUrl" type="text" name="serverUrl" placeholder="{{'Enter server address'|translate}}"></ion-input>
                 </ion-item>
 
                 <ion-item>
-                  <ion-input [(ngModel)]="currentUser.username" type="text" name="username" placeholder="{{'enter username'|translate}}"></ion-input>
+                  <ion-input [(ngModel)]="currentUser.username" type="text" name="username" placeholder="{{'Enter username'|translate}}"></ion-input>
                 </ion-item>
 
                 <ion-item>
-                  <ion-input [(ngModel)]="currentUser.password" name="password" type="password" placeholder="{{'enter password'|translate}}"></ion-input>
+                  <ion-input [(ngModel)]="currentUser.password" name="password" type="password" placeholder="{{'Enter password'|translate}}"></ion-input>
                 </ion-item>
               </div>
             </ion-col>
@@ -105,7 +105,7 @@
           <ion-row>
             <ion-col>
               <button type="submit" class="normalButton" ion-button full text-capitalize>
-                <span [translate]="'login'"></span>
+                <span [translate]="'Login'"></span>
               </button>
             </ion-col>
           </ion-row>
@@ -116,7 +116,7 @@
           </div>
           <button ion-button block clear color="light" text-capitalize (click)="toggleLocalInstancesList()">
             <img class="side-menu-icon" [src]="offlineIcon" />&nbsp;&nbsp;
-            <span [translate]="'offline instances'"></span>
+            <span [translate]="'Offline instances'"></span>
           </button>
         </div>
       </div>
@@ -124,6 +124,7 @@
 
     <ion-row>
       <ion-col class="bottomSLogan">
+
       </ion-col>
     </ion-row>
     <ion-row>
@@ -146,7 +147,7 @@
         </p>
         <p>
           <span class="bottom-sLogan-title">
-            <span [translate]="'powered by'"></span> HISPTZ </span>
+            <span [translate]="'Powered by'"></span> HISPTZ </span>
         </p>
       </ion-col>
     </ion-row>

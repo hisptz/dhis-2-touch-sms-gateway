@@ -1,14 +1,14 @@
-import { Component, OnInit } from "@angular/core";
-import { IonicPage, MenuController } from "ionic-angular";
-import { UserProvider } from "../../providers/user/user";
-import { CurrentUser } from "../../models/currentUser";
-import { EncryptionProvider } from "../../providers/encryption/encryption";
-import { DataSetsProvider } from "../../providers/data-sets/data-sets";
-import { DataSet } from "../../models/dataSet";
-import { SmsGatewayProvider } from "../../providers/sms-gateway/sms-gateway";
-import { SmsConfiguration } from "../../models/smsCommand";
-import { AppProvider } from "../../providers/app/app";
-import { SmsCommandProvider } from "../../providers/sms-command/sms-command";
+import { Component, OnInit } from '@angular/core';
+import { IonicPage, MenuController } from 'ionic-angular';
+import { UserProvider } from '../../providers/user/user';
+import { CurrentUser } from '../../models/currentUser';
+import { EncryptionProvider } from '../../providers/encryption/encryption';
+import { DataSetsProvider } from '../../providers/data-sets/data-sets';
+import { DataSet } from '../../models/dataSet';
+import { SmsGatewayProvider } from '../../providers/sms-gateway/sms-gateway';
+import { SmsConfiguration } from '../../models/smsCommand';
+import { AppProvider } from '../../providers/app/app';
+import { SmsCommandProvider } from '../../providers/sms-command/sms-command';
 
 /**
  * Generated class for the SmsGatewayPage page.
@@ -19,8 +19,8 @@ import { SmsCommandProvider } from "../../providers/sms-command/sms-command";
 
 @IonicPage()
 @Component({
-  selector: "page-sms-gateway",
-  templateUrl: "sms-gateway.html"
+  selector: 'page-sms-gateway',
+  templateUrl: 'sms-gateway.html'
 })
 export class SmsGatewayPage implements OnInit {
   currentUser: CurrentUser;
@@ -52,14 +52,13 @@ export class SmsGatewayPage implements OnInit {
     this.isSyncActive = false;
     this.gatewayContents = this.getGatewayContents();
     this.isLoading = true;
-    this.loadingMessage = "loading user information";
+    this.loadingMessage = 'loading user information';
     this.userProvider.getCurrentUser().subscribe((currentUser: CurrentUser) => {
       currentUser.password = this.encryption.decode(currentUser.password);
       this.currentUser = currentUser;
-      this.loadingMessage = "loading entry forms";
-      this.dataSetProvider
-        .getAllDataSets(currentUser)
-        .subscribe((dataSets: Array<DataSet>) => {
+      this.loadingMessage = 'loading entry forms';
+      this.dataSetProvider.getAllDataSets(currentUser).subscribe(
+        (dataSets: Array<DataSet>) => {
           this.toggleGatewayContents(this.gatewayContents[0]);
           this.smsGateway.getSmsConfigurations(currentUser).subscribe(
             (smsConfigurations: SmsConfiguration) => {
@@ -74,7 +73,7 @@ export class SmsGatewayPage implements OnInit {
                 });
               });
               this.isSyncActive = smsConfigurations.isStarted;
-              this.loadingMessage = "loading sms commands";
+              this.loadingMessage = 'loading sms commands';
               this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
                 smsCommandMapper => {
                   if (smsConfigurations.isStarted) {
@@ -90,7 +89,7 @@ export class SmsGatewayPage implements OnInit {
                 error => {
                   this.isLoading = false;
                   this.appProvider.setNormalNotification(
-                    "fail to load sms commands"
+                    'fail to load sms commands'
                   );
                 }
               );
@@ -98,14 +97,18 @@ export class SmsGatewayPage implements OnInit {
             error => {
               this.isLoading = false;
               console.log(
-                "Error on loading sms configurations " + JSON.stringify(error)
+                'Error on loading sms configurations ' + JSON.stringify(error)
               );
               this.appProvider.setNormalNotification(
-                "fail to load sms configurations"
+                'fail to load sms configurations'
               );
             }
           );
-        });
+        },
+        error => {
+          console.log(JSON.stringify(error));
+        }
+      );
     });
   }
 
@@ -124,7 +127,7 @@ export class SmsGatewayPage implements OnInit {
 
   getGatewayContents() {
     let gatewayContents = [
-      { id: "entry_forms", name: "entry forms", icon: "assets/icon/form.png" }
+      { id: 'entry_forms', name: 'entry forms', icon: 'assets/icon/form.png' }
       // {
       //   id: "program_without_registration",
       //   name: "program_without_registration",
@@ -162,10 +165,10 @@ export class SmsGatewayPage implements OnInit {
               } else {
                 this.smsGateway.stopWatchingSms();
               }
-              console.log("configurations has been updated");
+              console.log('configurations has been updated');
             },
             error => {
-              console.log("Error : " + JSON.stringify(error));
+              console.log('Error : ' + JSON.stringify(error));
             }
           );
       },
