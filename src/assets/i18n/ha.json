@@ -1,0 +1,66 @@
+{
+  "Innovation in every dimension": "Innovation a kowane girma",
+  "Establishing connection to server": "Tabbatar dangane da uwar garke",
+  "Enter server address": "Shigar da adireshin uwar garken",
+  "Enter username": "Shigar da sunan mai amfani",
+  "Enter password": "Shigar da kalmar sirri",
+  "Login": "Shiga",
+  "or": "ko",
+  "Offline instances": "offline lokutta",
+  "Powered by": "powered by",
+  "Discovering system information": "Ganowa tsarin bayanai",
+  "Discovering current user authorities":
+    "Ganowa halin yanzu mai amfani da hukumomin",
+  "Preparing local storage": "Shirya gida ajiya",
+  "Fail to prepare local storage": "Kasa shirya gida ajiya",
+  "Fail to discover user authorities": "Kasa gano mai amfani da hukumomin",
+  "Fail to discover system information": "Kasa gano tsarin bayanai",
+  "Fail to save current user information":
+    "Kasa ajiye halin yanzu mai amfani da bayanai",
+  "Please check your network connectivity":
+    "Don Allah a duba cibiyar sadarwa connectivity",
+  "You have enter wrong username or password or server address":
+    "Kana da shigar da ba daidai ba ko kalmar ko adireshin uwar garken",
+  "Please check server address, or contact your help desk":
+    "Don Allah a duba adireshin uwar garken, ko tuntuɓi mai taimako tebur",
+  "Please enter server address, username and password":
+    "Don Allah shigar da adireshin uwar garken, sunan mai amfani da kuma kalmar sirri",
+  "Aggregate metadata": "tara metadata",
+  "Discovering SMS commands": "Ganowa SMS dokokin",
+  "SMS commands have been discovered": "SMS dokokin da aka gano",
+  "Saving SMS commands": "Ajiye SMS dokokin",
+  "SMS commands have been saved": "SMS dokokin da aka ajiye",
+  "Fail to save SMS commands": "Kasa ajiye SMS dokokin",
+  "Fail to discover SMS commands": "Kasa gano SMS dokokin",
+  "Discovering entry forms": "Ganowa shigarwa siffofin",
+  "Entry forms have been discovered": "Entry siffofin da aka gano",
+  "Saving entry forms": "Ajiye shigarwa siffofin",
+  "Entry forms have been saved": "Entry siffofin da aka ajiye",
+  "Fail to save entry forms": "Kasa ajiye shigarwa siffofin",
+  "Fail to discover entry forms": "Kasa gano shigarwa siffofin",
+  "Search": "search",
+  "There is no local instance to select": "Babu gida misali don zaɓar",
+  "Discovering available local instances": "Ganowa samuwa gida lokutta",
+  "Fail to load available local instances": "Kasa load samuwa gida lokutta",
+  "Log out": "fita daga",
+  "About": "game da",
+  "System info": "tsarin info",
+  "Discovering current user information":
+    "Ganowa halin yanzu mai amfani da bayanai",
+  "Discovering app information": "Ganowa app bayanai",
+  "Fail to discover current user information":
+    "Kasa gano halin yanzu mai amfani da bayanai",
+  "Fail to discover app information": "Kasa gano app bayanai",
+  "Settings": "Saituna",
+  "App settings": "app saituna",
+  "Current language": "yanzu harshe",
+  "Fail to load current user information":
+    "Kasa load halin yanzu mai amfani da bayanai",
+  "Fail to set translation": "Kasa kafa translation",
+  "SMS gateway": "SMS ƙofa",
+  "Stop": "Tsaya",
+  "Start": "Fara",
+  "Entry forms": "Entry siffofin",
+  "Fail to discover SMS command": "Kasa gano SMS umurnin",
+  "Fail to discover SMS configurations": "Kasa gano SMS jeri"
+}

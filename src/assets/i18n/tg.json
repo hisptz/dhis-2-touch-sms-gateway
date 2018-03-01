@@ -1,0 +1,67 @@
+{
+  "Innovation in every dimension": "Инноватсияи дар ҳар андозагирии",
+  "Establishing connection to server": "Ташкили робита ба сервер",
+  "Enter server address": "суроғаи сервер, ворид кунед",
+  "Enter username": "номи корбарӣ ворид кунед",
+  "Enter password": "паролро ворид кунед",
+  "Login": "Даромадан",
+  "or": "ё",
+  "Offline instances": "ҳолатҳо Ғоиб",
+  "Powered by": "Нерӯмандшуда аз тарафи",
+  "Discovering system information": "Ошкор маълумоти системаи",
+  "Discovering current user authorities": "Ошкор мақомоти корбари ҷорӣ",
+  "Preparing local storage": "Омодасозии нигаҳдории маҳаллӣ",
+  "Fail to prepare local storage": "Ҳатман ба тайёр нигаҳдорӣ маҳаллӣ",
+  "Fail to discover user authorities": "Хилоф кашф мақомоти истифодабаранда",
+  "Fail to discover system information":
+    "Хилоф кашф иттилооти марбут ба системаи",
+  "Fail to save current user information":
+    "Ҳатман ба ҷуз маълумоти корбари ҷорӣ",
+  "Please check your network connectivity":
+    "Лутфан пайвасти шабакаи шумо санҷед",
+  "You have enter wrong username or password or server address":
+    "Шумо номи корбарӣ ва нодуруст ё гузарвожа ё суроғаи сервер ворид кунед",
+  "Please check server address, or contact your help desk":
+    "Лутфан, суроғаи сервер тафтиш кунед ё ба кассаи кӯмак кунед",
+  "Please enter server address, username and password":
+    "Лутфан сервер суроға, номи корбарӣ ва гузарвожаро ворид кунед",
+  "Aggregate metadata": "луѓати маљмўъ",
+  "Discovering SMS commands": "Ошкор фармонҳои SMS",
+  "SMS commands have been discovered": "фармонҳои SMS доранд кашф шудааст",
+  "Saving SMS commands": "Сарфаи фармонҳои SMS",
+  "SMS commands have been saved": "фармонҳои SMS захира шуд",
+  "Fail to save SMS commands": "Хилоф наҷот фармонҳои SMS",
+  "Fail to discover SMS commands": "Хилоф кашф фармонҳои SMS",
+  "Discovering entry forms": "Ошкор шаклҳои вуруд",
+  "Entry forms have been discovered":
+    "шаклњои Дохилшавӣ кардаанд, ошкор шудааст,",
+  "Saving entry forms": "Сарфаи шаклҳои вуруд",
+  "Entry forms have been saved": "шаклњои Дохилшавӣ захира шуд",
+  "Fail to save entry forms": "Хилоф наҷот шаклҳои вуруд",
+  "Fail to discover entry forms": "Хилоф кашф шаклҳои вуруд",
+  "Search": "кофтуков",
+  "There is no local instance to select": "аст, масалан маҳаллӣ интихоб нест",
+  "Discovering available local instances": "Ошкор ҳолатҳо маҳаллӣ дастрас",
+  "Fail to load available local instances":
+    "Ҳатман ба бор ҳолатҳо маҳаллӣ дастрас",
+  "Log out": "Баромадан",
+  "About": "дар бораи",
+  "System info": "маълумоти Системаи",
+  "Discovering current user information": "Ошкор маълумоти корбари ҷорӣ",
+  "Discovering app information": "Ошкор маълумоти барнома",
+  "Fail to discover current user information":
+    "Хилоф кашф маълумоти корбари ҷорӣ",
+  "Fail to discover app information": "Хилоф кашф маълумоти барнома",
+  "Settings": "Танзимот",
+  "App settings": "танзимоти Барномасозони",
+  "Current language": "забони ҷорӣ",
+  "Fail to load current user information":
+    "Ҳатман ба бор маълумот корбари ҷорӣ",
+  "Fail to set translation": "Ҳатман ба танзим тарҷума",
+  "SMS gateway": "дарвозаи SMS",
+  "Stop": "Ист",
+  "Start": "Оғоз",
+  "Entry forms": "шаклњои Дохилшавӣ",
+  "Fail to discover SMS command": "Хилоф кашф фармони SMS",
+  "Fail to discover SMS configurations": "Хилоф кашф пайкарбандии SMS"
+}

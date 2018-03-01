@@ -1,0 +1,68 @@
+{
+  "Innovation in every dimension": "Inovasi di unggal diménsi",
+  "Establishing connection to server": "Ngadegkeun sambungan ka server",
+  "Enter server address": "Lebetkeun alamat server",
+  "Enter username": "Lebetkeun landihan",
+  "Enter password": "Lebetkeun sandi",
+  "Login": "Lebet",
+  "or": "atawa",
+  "Offline instances": "instansi offline",
+  "Powered by": "Ditanagaan ku",
+  "Discovering system information": "Inpo Sistim Ngajalajah",
+  "Discovering current user authorities": "Ngajalajah otoritas pamaké ayeuna",
+  "Preparing local storage": "Nyiapkeun gudang lokal",
+  "Fail to prepare local storage": "Gagal nyiapkeun gudang lokal",
+  "Fail to discover user authorities": "Gagal pikeun manggihan otoritas pamaké",
+  "Fail to discover system information":
+    "Gagal pikeun manggihan informasi Sistim",
+  "Fail to save current user information":
+    "Kalah ka ngahemat informasi pamaké ayeuna",
+  "Please check your network connectivity":
+    "Mangga parios konektipitas jaringan anjeun",
+  "You have enter wrong username or password or server address":
+    "Anjeun boga asupkeun ngaran pamaké salah atawa sandi atawa alamat server",
+  "Please check server address, or contact your help desk":
+    "Mangga parios alamat server, atanapi wartosan meja pitulung anjeun",
+  "Please enter server address, username and password":
+    "Mangga lebetkeun alamat pangladen, ngaran pamaké sarta sandi",
+  "Aggregate metadata": "metadata agrégat",
+  "Discovering SMS commands": "Ngajalajah Paréntah SMS",
+  "SMS commands have been discovered": "Paréntah SMS geus kapanggih",
+  "Saving SMS commands": "Nyimpen Paréntah SMS",
+  "SMS commands have been saved": "Paréntah SMS geus disimpen",
+  "Fail to save SMS commands": "Kalah ka ngahemat Paréntah SMS",
+  "Fail to discover SMS commands": "Gagal pikeun manggihan Paréntah SMS",
+  "Discovering entry forms": "Ngajalajah bentuk Éntri",
+  "Entry forms have been discovered": "bentuk Éntri geus kapanggih",
+  "Saving entry forms": "Nyimpen bentuk Éntri",
+  "Entry forms have been saved": "bentuk Éntri geus disimpen",
+  "Fail to save entry forms": "Kalah ka ngahemat bentuk Éntri",
+  "Fail to discover entry forms": "Gagal pikeun manggihan bentuk Éntri",
+  "Search": "neangan",
+  "There is no local instance to select": "Aya conto lokal pikeun milih",
+  "Discovering available local instances": "Ngajalajah instansi lokal sadia",
+  "Fail to load available local instances":
+    "Kalah ka muka instansi lokal sadia",
+  "Log out": "Kaluar",
+  "About": "kira-kira",
+  "System info": "info sistim",
+  "Discovering current user information": "Ngajalajah informasi pamaké ayeuna",
+  "Discovering app information": "Ngajalajah informasi aplikasi",
+  "Fail to discover current user information":
+    "Gagal pikeun manggihan informasi pamaké ayeuna",
+  "Fail to discover app information":
+    "Gagal pikeun manggihan informasi aplikasi",
+  "Settings": "setélan",
+  "App settings": "setélan aplikasi",
+  "Current language": "basa ayeuna",
+  "Fail to load current user information":
+    "Kalah ka muka informasi pamaké ayeuna",
+  "Fail to set translation": "Gagal pikeun ngeset tarjamah",
+  "SMS gateway": "SMS gateway",
+  "Stop": "Eureun",
+  "Start": "ngamimitian",
+  "Entry forms": "bentuk éntri",
+  "Fail to discover SMS command": "Gagal pikeun manggihan paréntah SMS",
+  "Fail to discover SMS configurations":
+    "Gagal pikeun manggihan konfigurasi SMS"
+}

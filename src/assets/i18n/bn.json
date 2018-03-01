@@ -1,0 +1,67 @@
+{
+  "Innovation in every dimension": "প্রত্যেক মাত্রা মধ্যে ইনোভেশন",
+  "Establishing connection to server": "সার্ভারের সাথে সংযোগ স্থাপন করা হচ্ছে",
+  "Enter server address": "সার্ভার ঠিকানা লিখুন",
+  "Enter username": "ব্যবহারকারীর নাম লিখুন",
+  "Enter password": "পাসওয়ার্ড লিখুন",
+  "Login": "লগইন",
+  "or": "অথবা",
+  "Offline instances": "অফলাইন দৃষ্টান্ত",
+  "Powered by": "দ্বারা প্রস্তুত",
+  "Discovering system information": "আবিষ্কার সিস্টেম তথ্য",
+  "Discovering current user authorities":
+    "বর্তমান ব্যবহারকারীর কর্তৃপক্ষ আবিষ্কার",
+  "Preparing local storage": "স্থানীয় সংগ্রহস্থল প্রস্তুতি",
+  "Fail to prepare local storage": "স্থানীয় সংগ্রহস্থল প্রস্তুতির ব্যর্থ",
+  "Fail to discover user authorities": "ব্যবহারকারী কর্তৃপক্ষ আবিষ্কার ব্যর্থ",
+  "Fail to discover system information": "সিস্টেম তথ্য আবিষ্কার ব্যর্থ",
+  "Fail to save current user information":
+    "বর্তমান ব্যবহারকারীর তথ্য পূরণ ব্যর্থ",
+  "Please check your network connectivity": "আপনার নেটওয়ার্ক সংযোগ চেক করুন",
+  "You have enter wrong username or password or server address":
+    "আপনি ভুল ব্যবহারকারী নাম বা পাসওয়ার্ড বা সার্ভার ঠিকানা লিখুন আছে",
+  "Please check server address, or contact your help desk":
+    "দয়া করে সার্ভার ঠিকানা চেক করুন, অথবা আপনার সাহায্যের ডেস্কে যোগাযোগ",
+  "Please enter server address, username and password":
+    "সার্ভার ঠিকানা, ব্যবহারকারীর নাম এবং পাসওয়ার্ড দিন",
+  "Aggregate metadata": "মোট মেটাডেটা",
+  "Discovering SMS commands": "এসএমএস কমান্ড আবিষ্কার",
+  "SMS commands have been discovered": "এসএমএস কমান্ড আবিষ্কৃত হয়েছে",
+  "Saving SMS commands": "এসএমএস কমান্ড সংরক্ষণ করা হচ্ছে",
+  "SMS commands have been saved": "এসএমএস কমান্ড সংরক্ষণ করা হয়েছে",
+  "Fail to save SMS commands": "এসএমএস কমান্ড সংরক্ষণ করা ব্যর্থ হয়েছে",
+  "Fail to discover SMS commands": "এসএমএস কমান্ড আবিষ্কার ব্যর্থ",
+  "Discovering entry forms": "এন্ট্রি ফর্ম আবিষ্কার",
+  "Entry forms have been discovered": "এণ্ট্রি ফর্ম আবিষ্কৃত হয়েছে",
+  "Saving entry forms": "এন্ট্রি ফর্ম সংরক্ষণ করা হচ্ছে",
+  "Entry forms have been saved": "এণ্ট্রি ফর্ম সংরক্ষণ করা হয়েছে",
+  "Fail to save entry forms": "এন্ট্রি ফর্ম সংরক্ষণ করা ব্যর্থ হয়েছে",
+  "Fail to discover entry forms": "এন্ট্রি ফর্ম আবিষ্কার ব্যর্থ",
+  "Search": "অনুসন্ধান",
+  "There is no local instance to select":
+    "কোন স্থানীয় উদাহরণস্বরূপ নির্বাচন করা হয়",
+  "Discovering available local instances":
+    "প্রাপ্তিসাধ্য স্থানীয় দৃষ্টান্ত আবিষ্কার",
+  "Fail to load available local instances":
+    "প্রাপ্তিসাধ্য স্থানীয় দৃষ্টান্ত লোড করতে ব্যর্থ",
+  "Log out": "প্রস্থান",
+  "About": "সম্পর্কিত",
+  "System info": "সিস্টেমের তথ্য",
+  "Discovering current user information": "বর্তমান ব্যবহারকারীর তথ্য আবিষ্কার",
+  "Discovering app information": "অ্যাপ্লিকেশান তথ্য আবিষ্কার",
+  "Fail to discover current user information":
+    "বর্তমান ব্যবহারকারীর তথ্য খুঁজে বের করতে ব্যর্থ",
+  "Fail to discover app information": "অ্যাপ্লিকেশান তথ্য আবিষ্কার ব্যর্থ",
+  "Settings": "সেটিংস",
+  "App settings": "অ্যাপ সেটিংস",
+  "Current language": "বর্তমান ভাষা",
+  "Fail to load current user information":
+    "বর্তমান ব্যবহারকারীর তথ্য লোড করা ব্যর্থ",
+  "Fail to set translation": "অনুবাদ সেট করতে ব্যর্থ",
+  "SMS gateway": "SMS গেটওয়ে",
+  "Stop": "থামুন",
+  "Start": "শুরু",
+  "Entry forms": "এণ্ট্রি ফরম",
+  "Fail to discover SMS command": "এসএমএস কমান্ড আবিষ্কার ব্যর্থ",
+  "Fail to discover SMS configurations": "এসএমএস কনফিগারেশনের আবিষ্কার ব্যর্থ"
+}

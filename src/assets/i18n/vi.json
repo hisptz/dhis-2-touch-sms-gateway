@@ -1,1 +1,76 @@
-{}
+{
+  "Innovation in every dimension": "Đổi mới trong mọi chiều kích",
+  "Establishing connection to server": "Thiết lập kết nối đến máy chủ",
+  "Enter server address": "Nhập địa chỉ máy chủ",
+  "Enter username": "Điền tên đăng nhập",
+  "Enter password": "Nhập mật khẩu",
+  "Login": "Đăng nhập",
+  "or": "hoặc là",
+  "Offline instances": "trường hợp ẩn",
+  "Powered by": "Powered by",
+  "Discovering system information": "Khám phá hệ thống thông tin",
+  "Discovering current user authorities":
+    "Khám phá chính quyền người dùng hiện hành",
+  "Preparing local storage": "Chuẩn bị lưu trữ địa phương",
+  "Fail to prepare local storage":
+    "Thất bại trong việc chuẩn bị lưu trữ địa phương",
+  "Fail to discover user authorities":
+    "Thất bại trong việc phát hiện ra các cơ quan người dùng",
+  "Fail to discover system information":
+    "Thất bại trong việc khám phá thông tin hệ thống",
+  "Fail to save current user information":
+    "Thất bại trong việc lưu thông tin người dùng hiện tại",
+  "Please check your network connectivity":
+    "Vui lòng kiểm tra kết nối mạng của bạn",
+  "You have enter wrong username or password or server address":
+    "Bạn phải nhập tên tài khoản sai hoặc mật khẩu hoặc địa chỉ máy chủ",
+  "Please check server address, or contact your help desk":
+    "Vui lòng kiểm tra địa chỉ máy chủ, hoặc liên hệ với bộ phận hỗ trợ của bạn",
+  "Please enter server address, username and password":
+    "Vui lòng nhập địa chỉ máy chủ, tên người dùng và mật khẩu",
+  "Aggregate metadata": "siêu dữ liệu tổng hợp",
+  "Discovering SMS commands": "Khám phá các lệnh SMS",
+  "SMS commands have been discovered": "lệnh SMS đã được phát hiện",
+  "Saving SMS commands": "Tiết kiệm các lệnh SMS",
+  "SMS commands have been saved": "lệnh SMS đã được lưu",
+  "Fail to save SMS commands": "Thất bại trong việc lưu các lệnh SMS",
+  "Fail to discover SMS commands":
+    "Thất bại trong việc phát hiện ra các lệnh SMS",
+  "Discovering entry forms": "Khám phá hình thức nhập",
+  "Entry forms have been discovered": "hình thức nhập đã được phát hiện",
+  "Saving entry forms": "Tiết kiệm hình thức nhập",
+  "Entry forms have been saved": "hình thức nhập đã được lưu",
+  "Fail to save entry forms": "Thất bại trong việc tiết kiệm hình thức nhập",
+  "Fail to discover entry forms":
+    "Thất bại trong việc khám phá các hình thức nhập",
+  "Search": "Tìm kiếm",
+  "There is no local instance to select":
+    "Không có trường hợp địa phương để lựa chọn",
+  "Discovering available local instances":
+    "Khám phá các trường hợp địa phương có sẵn",
+  "Fail to load available local instances":
+    "Không thể tải trường hợp địa phương có sẵn",
+  "Log out": "Đăng xuất",
+  "About": "Trong khoảng",
+  "System info": "Thông tin hệ thống",
+  "Discovering current user information":
+    "Khám phá thông tin người dùng hiện tại",
+  "Discovering app information": "Khám phá thông tin ứng dụng",
+  "Fail to discover current user information":
+    "Thất bại trong việc phát hiện ra thông tin người dùng hiện tại",
+  "Fail to discover app information":
+    "Thất bại trong việc khám phá thông tin ứng dụng",
+  "Settings": "Cài đặt",
+  "App settings": "cài đặt ứng dụng",
+  "Current language": "ngôn ngữ hiện tại",
+  "Fail to load current user information":
+    "Không thể tải thông tin người dùng hiện tại",
+  "Fail to set translation": "Thất bại trong việc thiết lập dịch",
+  "SMS gateway": "SMS Gateway",
+  "Stop": "Dừng lại",
+  "Start": "Khởi đầu",
+  "Entry forms": "hình thức nhập",
+  "Fail to discover SMS command": "Thất bại trong việc phát hiện ra lệnh SMS",
+  "Fail to discover SMS configurations":
+    "Thất bại trong việc khám phá cấu hình tin nhắn SMS"
+}

@@ -1,0 +1,73 @@
+{
+  "Innovation in every dimension": "ہر جہت میں انوویشن",
+  "Establishing connection to server": "سرور سے رابطہ قائم",
+  "Enter server address": "سرور کا پتہ درج کریں",
+  "Enter username": "صارف نام درج کریں",
+  "Enter password": "پاس ورڈ درج کریں",
+  "Login": "میں لاگ ان کریں",
+  "or": "یا",
+  "Offline instances": "آف واقعات",
+  "Powered by": "از: وی بلیٹن",
+  "Discovering system information": "دریافت سسٹم کی معلومات",
+  "Discovering current user authorities": "موجودہ صارف کے حکام کی دریافت",
+  "Preparing local storage": "مقامی سٹوریج کی تیاری",
+  "Fail to prepare local storage": "مقامی اسٹوریج تیار کرنے میں ناکام",
+  "Fail to discover user authorities": "صارف حکام کو دریافت کرنے میں ناکام",
+  "Fail to discover system information":
+    "سسٹم کی معلومات کو دریافت کرنے میں ناکام",
+  "Fail to save current user information":
+    "موجودہ صارف کی معلومات کو محفوظ کرنے میں ناکام",
+  "Please check your network connectivity":
+    "آپ کے نیٹ ورک کے رابطے براہ مہربانی چیک کریں",
+  "You have enter wrong username or password or server address":
+    "تم غلط صارف نام یا پاس ورڈ یا سرور کا پتہ درج ہے",
+  "Please check server address, or contact your help desk":
+    "سرور ایڈریس کو چیک کریں، یا آپ کی مدد کے ڈیسک سے رابطہ کریں",
+  "Please enter server address, username and password":
+    "سرور کا پتہ، صارف کا نام اور پاس ورڈ درج کریں",
+  "Aggregate metadata": "مجموعی میٹاڈیٹا",
+  "Discovering SMS commands": "ایس ایم ایس کی کمانڈز کی دریافت",
+  "SMS commands have been discovered":
+    "ایس ایم ایس کے حکم دیتا ہے دریافت کیا گیا ہے",
+  "Saving SMS commands": "ایس ایم ایس کے حکم دیتا ہے محفوظ کر رہا ہے",
+  "SMS commands have been saved": "ایس ایم ایس کے حکم دیتا ہے نجات ملی ہے",
+  "Fail to save SMS commands":
+    "ایس ایم ایس کے حکم دیتا ہے کو بچانے کے لئے میں ناکام رہتے ہیں",
+  "Fail to discover SMS commands":
+    "ایس ایم ایس کے حکم دیتا ہے کو دریافت کرنے میں ناکام",
+  "Discovering entry forms": "اندراج کے فارم کی دریافت",
+  "Entry forms have been discovered": "داخلہ فارم دریافت کیا گیا ہے",
+  "Saving entry forms": "اندراج کے فارم محفوظ کر رہا ہے",
+  "Entry forms have been saved": "داخلہ فارم محفوظ ہوگئی ہیں",
+  "Fail to save entry forms":
+    "اندراج کے فارم کو بچانے کے لئے میں ناکام رہتے ہیں",
+  "Fail to discover entry forms": "لاگ ان فارم کو دریافت کرنے میں ناکام",
+  "Search": "تلاش کریں",
+  "There is no local instance to select":
+    "منتخب کرنے کے لئے کوئی مقامی مثال نہیں ہے",
+  "Discovering available local instances": "آپ کے مقامی واقعات کی دریافت",
+  "Fail to load available local instances":
+    "آپ کے مقامی واقعات لوڈ کرنے میں ناکام",
+  "Log out": "لاگ آوٹ",
+  "About": "کے بارے میں",
+  "System info": "سسٹم کی معلومات",
+  "Discovering current user information": "موجودہ صارف کی معلومات کی دریافت",
+  "Discovering app information": "ایپ معلومات کی دریافت",
+  "Fail to discover current user information":
+    "موجودہ صارف کی معلومات کو دریافت کرنے میں ناکام",
+  "Fail to discover app information":
+    "اے پی پی کی معلومات دریافت کرنے میں ناکام",
+  "Settings": "ترتیبات",
+  "App settings": "اپلی کیشن کی ترتیبات",
+  "Current language": "موجودہ زبان",
+  "Fail to load current user information":
+    "موجودہ صارف کی معلومات کو لوڈ کرنے میں ناکام",
+  "Fail to set translation": "ترجمہ سیٹ کرنے میں ناکام",
+  "SMS gateway": "SMS گیٹ وے",
+  "Stop": "بند کرو",
+  "Start": "شروع کریں",
+  "Entry forms": "داخلہ فارم",
+  "Fail to discover SMS command": "ایس ایم ایس کمانڈ کو دریافت کرنے میں ناکام",
+  "Fail to discover SMS configurations":
+    "ایس ایم ایس کی ترتیب دریافت کرنے میں ناکام"
+}

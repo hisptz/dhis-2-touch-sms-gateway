@@ -1,1 +1,68 @@
-{}
+{
+  "Innovation in every dimension": "हर आयाम में नवाचार",
+  "Establishing connection to server": "सर्वर से कनेक्शन की स्थापना",
+  "Enter server address": "सर्वर पता दर्ज",
+  "Enter username": "उपयोगकर्ता नाम दर्ज करें",
+  "Enter password": "पास वर्ड दर्ज करें",
+  "Login": "लॉग इन करें",
+  "or": "या",
+  "Offline instances": "ऑफलाइन उदाहरणों",
+  "Powered by": "द्वारा संचालित",
+  "Discovering system information": "खोज सिस्टम जानकारी",
+  "Discovering current user authorities":
+    "वर्तमान उपयोगकर्ता के अधिकारियों की खोज",
+  "Preparing local storage": "स्थानीय संग्रहण तैयार",
+  "Fail to prepare local storage": "स्थानीय भंडारण तैयार करने के लिए विफल",
+  "Fail to discover user authorities":
+    "उपयोगकर्ता अधिकारियों की खोज करने में विफल",
+  "Fail to discover system information": "सिस्टम जानकारी की खोज करने में विफल",
+  "Fail to save current user information":
+    "वर्तमान उपयोगकर्ता जानकारी को बचाने के लिए विफल",
+  "Please check your network connectivity":
+    "अपने नेटवर्क कनेक्टिविटी की जांच करें",
+  "You have enter wrong username or password or server address":
+    "तुम गलत उपयोगकर्ता नाम या पासवर्ड या सर्वर पता दर्ज है",
+  "Please check server address, or contact your help desk":
+    "कृपया सर्वर पता जांच करें, या आपकी मदद डेस्क से संपर्क करें",
+  "Please enter server address, username and password":
+    "सर्वर पता, उपयोगकर्ता नाम और पासवर्ड दर्ज करें",
+  "Aggregate metadata": "सकल मेटाडाटा",
+  "Discovering SMS commands": "एसएमएस कमांड की खोज",
+  "SMS commands have been discovered": "एसएमएस कमांड खोज की गई है",
+  "Saving SMS commands": "एसएमएस कमांड सहेजा जा रहा है",
+  "SMS commands have been saved": "एसएमएस कमांड से सहेजा गया है",
+  "Fail to save SMS commands": "एसएमएस कमांड को बचाने के लिए विफल",
+  "Fail to discover SMS commands": "एसएमएस कमांड की खोज करने में विफल",
+  "Discovering entry forms": "प्रविष्टि प्रपत्रों की खोज",
+  "Entry forms have been discovered": "प्रविष्टि प्रपत्रों खोज की गई है",
+  "Saving entry forms": "प्रविष्टि प्रपत्रों सहेजा जा रहा है",
+  "Entry forms have been saved": "प्रविष्टि प्रपत्रों सहेज लिया गया है",
+  "Fail to save entry forms": "प्रविष्टि प्रपत्रों को बचाने के लिए विफल",
+  "Fail to discover entry forms": "प्रविष्टि प्रपत्रों की खोज करने में विफल",
+  "Search": "खोज",
+  "There is no local instance to select":
+    "कोई स्थानीय उदाहरण चयन करने के लिए है",
+  "Discovering available local instances": "उपलब्ध स्थानीय उदाहरणों की खोज",
+  "Fail to load available local instances":
+    "उपलब्ध स्थानीय उदाहरणों को लोड करने में विफल",
+  "Log out": "लोग आउट",
+  "About": "के बारे में",
+  "System info": "व्यवस्था की सूचना",
+  "Discovering current user information": "वर्तमान उपयोगकर्ता जानकारी की खोज",
+  "Discovering app information": "एप्लिकेशन जानकारी की खोज",
+  "Fail to discover current user information":
+    "वर्तमान उपयोगकर्ता जानकारी की खोज करने में विफल",
+  "Fail to discover app information": "एप्लिकेशन जानकारी की खोज करने में विफल",
+  "Settings": "सेटिंग्स",
+  "App settings": "एप्लिकेशन सेटिंग",
+  "Current language": "वर्तमान भाषा",
+  "Fail to load current user information":
+    "वर्तमान उपयोगकर्ता जानकारी लोड करने में विफल",
+  "Fail to set translation": "अनुवाद स्थापित करने के लिए विफल",
+  "SMS gateway": "एसएमएस गेटवे",
+  "Stop": "रुकें",
+  "Start": "प्रारंभ",
+  "Entry forms": "प्रविष्टि प्रपत्रों",
+  "Fail to discover SMS command": "एसएमएस कमांड की खोज करने में विफल",
+  "Fail to discover SMS configurations": "एसएमएस विन्यास की खोज करने में विफल"
+}

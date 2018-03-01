@@ -1,1 +1,71 @@
-{}
+{
+  "Innovation in every dimension": "Inovasi dalam setiap dimensi",
+  "Establishing connection to server": "Membangun koneksi ke server",
+  "Enter server address": "Masukkan alamat server",
+  "Enter username": "Masukkan nama pengguna",
+  "Enter password": "Masukkan kata kunci",
+  "Login": "Masuk",
+  "or": "atau",
+  "Offline instances": "contoh Offline",
+  "Powered by": "Dipersembahkan oleh",
+  "Discovering system information": "sistem informasi menemukan",
+  "Discovering current user authorities": "Menemukan berwenang pengguna saat",
+  "Preparing local storage": "Mempersiapkan penyimpanan lokal",
+  "Fail to prepare local storage":
+    "Gagal untuk mempersiapkan penyimpanan lokal",
+  "Fail to discover user authorities":
+    "Gagal untuk menemukan otoritas pengguna",
+  "Fail to discover system information":
+    "Gagal untuk menemukan sistem informasi",
+  "Fail to save current user information":
+    "Gagal untuk menyimpan informasi pengguna saat ini",
+  "Please check your network connectivity":
+    "Silakan periksa konektivitas jaringan Anda",
+  "You have enter wrong username or password or server address":
+    "Anda memiliki masukkan username yang salah atau password atau alamat server",
+  "Please check server address, or contact your help desk":
+    "Silakan periksa alamat server, atau hubungi meja bantuan Anda",
+  "Please enter server address, username and password":
+    "Masukkan alamat server, username dan password",
+  "Aggregate metadata": "metadata agregat",
+  "Discovering SMS commands": "Menemukan perintah SMS",
+  "SMS commands have been discovered": "perintah SMS telah ditemukan",
+  "Saving SMS commands": "Menyimpan perintah SMS",
+  "SMS commands have been saved": "perintah SMS telah disimpan",
+  "Fail to save SMS commands": "Gagal untuk menyimpan perintah SMS",
+  "Fail to discover SMS commands": "Gagal untuk menemukan perintah SMS",
+  "Discovering entry forms": "Menemukan bentuk entri",
+  "Entry forms have been discovered": "formulir pendaftaran telah ditemukan",
+  "Saving entry forms": "Menyimpan formulir pendaftaran",
+  "Entry forms have been saved": "formulir pendaftaran telah disimpan",
+  "Fail to save entry forms": "Gagal untuk menyimpan formulir pendaftaran",
+  "Fail to discover entry forms": "Gagal untuk menemukan bentuk entri",
+  "Search": "Pencarian",
+  "There is no local instance to select":
+    "Tidak ada contoh lokal untuk memilih",
+  "Discovering available local instances":
+    "Menemukan contoh lokal yang tersedia",
+  "Fail to load available local instances":
+    "Gagal untuk memuat contoh lokal yang tersedia",
+  "Log out": "Keluar",
+  "About": "Tentang",
+  "System info": "Sistem Informasi",
+  "Discovering current user information": "Menemukan informasi pengguna saat",
+  "Discovering app information": "Menemukan informasi aplikasi",
+  "Fail to discover current user information":
+    "Gagal untuk menemukan informasi pengguna saat ini",
+  "Fail to discover app information":
+    "Gagal untuk menemukan informasi aplikasi",
+  "Settings": "pengaturan",
+  "App settings": "Pengaturan aplikasi",
+  "Current language": "bahasa saat ini",
+  "Fail to load current user information":
+    "Gagal memuat informasi pengguna saat ini",
+  "Fail to set translation": "Gagal untuk mengatur terjemahan",
+  "SMS gateway": "SMS gateway",
+  "Stop": "Berhenti",
+  "Start": "Mulai",
+  "Entry forms": "formulir pendaftaran",
+  "Fail to discover SMS command": "Gagal untuk menemukan perintah SMS",
+  "Fail to discover SMS configurations": "Gagal untuk menemukan konfigurasi SMS"
+}

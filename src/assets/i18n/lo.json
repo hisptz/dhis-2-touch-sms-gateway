@@ -1,0 +1,68 @@
+{
+  "Innovation in every dimension": "ຄວາມຄິດສ້າງສັນໃນທຸກມິຕິ",
+  "Establishing connection to server": "ສ້າງການເຊື່ອມຕໍ່ກັບເຄື່ອງແມ່ຂ່າຍຂອງ",
+  "Enter server address": "ກະລຸນາໃສ່ທີ່ຢູ່ຂອງເຄື່ອງແມ່ຂ່າຍ",
+  "Enter username": "ກະລຸນາໃສ່ຊື່ຜູ້ໃຊ້",
+  "Enter password": "ກະລຸນາໃສ່ລະຫັດຜ່ານ",
+  "Login": "ເຂົ້າ​ສູ່​ລະ​ບົບ",
+  "or": "ຫຼື",
+  "Offline instances": "ກໍລະນີ Offline",
+  "Powered by": "ສະ​ຫນັບ​ສະ​ຫນູນ​ໂດຍ",
+  "Discovering system information": "ຂໍ້ມູນຂ່າວສານລະບົບຄົ້ນພົບ",
+  "Discovering current user authorities": "ຄົ້ນພົບອໍານາດການປົກຜູ້ໃຊ້ໃນປະຈຸບັນ",
+  "Preparing local storage": "ກະກຽມການເກັບຮັກສາທ້ອງຖິ່ນ",
+  "Fail to prepare local storage": "ເຊັ່ນການແລກປ່ຽນກະກຽມການເກັບຮັກສາທ້ອງຖິ່ນ",
+  "Fail to discover user authorities":
+    "ເຊັ່ນການແລກປ່ຽນຄົ້ນພົບອໍານາດການປົກຜູ້ໃຊ້",
+  "Fail to discover system information": "ເຊັ່ນການແລກປ່ຽນຄົ້ນພົບຂໍ້ມູນລະບົບ",
+  "Fail to save current user information":
+    "ເຊັ່ນການແລກປ່ຽນບັນທຶກຂໍ້ມູນຂ່າວສານຂອງຜູ້ໃຊ້ໃນປະຈຸບັນ",
+  "Please check your network connectivity":
+    "ກະລຸນາກວດສອບການເຊື່ອມຕໍ່ເຄືອຂ່າຍຂອງທ່ານ",
+  "You have enter wrong username or password or server address":
+    "ທ່ານມີໃສ່ຊື່ຜູ້ໃຊ້ບໍ່ຖືກຕ້ອງຫລືລະຫັດຜ່ານຫຼືທີ່ຢູ່ຂອງເຄື່ອງແມ່ຂ່າຍ",
+  "Please check server address, or contact your help desk":
+    "ກະລຸນາກວດສອບທີ່ຢູ່ຂອງເຄື່ອງແມ່ຂ່າຍຫລືຕິດຕໍ່ແຜນຊ່ວຍເຫຼືອຂອງທ່ານ",
+  "Please enter server address, username and password":
+    "ກະລຸນາໃສ່ທີ່ຢູ່ອີເຄື່ອງແມ່ຂ່າຍ, ຊື່ຜູ້ໃຊ້ແລະລະຫັດຜ່ານ",
+  "Aggregate metadata": "metadata ລວມ",
+  "Discovering SMS commands": "ຄົ້ນພົບຄໍາສັ່ງ SMS",
+  "SMS commands have been discovered": "ຄໍາສັ່ງ SMS ໄດ້ຮັບການຄົ້ນພົບ",
+  "Saving SMS commands": "ກໍາລັງບັນທຶກຄໍາສັ່ງ SMS",
+  "SMS commands have been saved": "ຄໍາສັ່ງ SMS ໄດ້ຮັບການບັນທຶກໄວ້",
+  "Fail to save SMS commands": "ເຊັ່ນການແລກປ່ຽນບັນທຶກຄໍາສັ່ງ SMS",
+  "Fail to discover SMS commands": "ເຊັ່ນການແລກປ່ຽນການຄົ້ນພົບຄໍາສັ່ງ SMS",
+  "Discovering entry forms": "ຄົ້ນພົບຮູບແບບການ",
+  "Entry forms have been discovered": "ຮູບແບບການອອກສຽງໄດ້ຮັບການຄົ້ນພົບ",
+  "Saving entry forms": "ກໍາລັງບັນທຶກຮູບແບບການ",
+  "Entry forms have been saved": "ຮູບແບບການອອກສຽງໄດ້ຮັບການບັນທຶກໄວ້",
+  "Fail to save entry forms": "ເຊັ່ນການແລກປ່ຽນບັນທຶກຮູບແບບການ",
+  "Fail to discover entry forms": "ເຊັ່ນການແລກປ່ຽນການຄົ້ນພົບຮູບແບບການ",
+  "Search": "ຄົ້ນຫາ",
+  "There is no local instance to select":
+    "ບໍ່ມີຕົວຢ່າງໃນທ້ອງຖິ່ນທີ່ຈະເລືອກເປັນ",
+  "Discovering available local instances": "ຄົ້ນພົບກໍລະນີໃນທ້ອງຖິ່ນສາມາດໃຊ້ໄດ້",
+  "Fail to load available local instances":
+    "ເຊັ່ນການແລກປ່ຽນການໂຫຼດກໍລະນີໃນທ້ອງຖິ່ນສາມາດໃຊ້ໄດ້",
+  "Log out": "ອອກ​ຈາກ​ລະ​ບົບ",
+  "About": "ກ່ຽວກັບ",
+  "System info": "ຂໍ້ມູນລະບົບ",
+  "Discovering current user information": "ຄົ້ນພົບຂໍ້ມູນຜູ້ໃຊ້ໃນປະຈຸບັນ",
+  "Discovering app information": "ຄົ້ນພົບຂໍ້ມູນ app",
+  "Fail to discover current user information":
+    "ເຊັ່ນການແລກປ່ຽນຄົ້ນພົບຂໍ້ມູນຜູ້ໃຊ້ໃນປະຈຸບັນ",
+  "Fail to discover app information": "ເຊັ່ນການແລກປ່ຽນຄົ້ນພົບຂໍ້ມູນ app",
+  "Settings": "ການຕັ້ງຄ່າ",
+  "App settings": "ການຕັ້ງຄ່າ app",
+  "Current language": "ພາສາໃນປະຈຸບັນ",
+  "Fail to load current user information":
+    "ເຊັ່ນການແລກປ່ຽນຂໍ້ມູນຂ່າວສານໂຫລດຜູ້ໃຊ້ໃນປະຈຸບັນ",
+  "Fail to set translation": "ເຊັ່ນການແລກປ່ຽນກໍານົດການແປພາສາ",
+  "SMS gateway": "ປະຕູ SMS",
+  "Stop": "ຢຸດ",
+  "Start": "ເລີ່ມຕົ້ນ",
+  "Entry forms": "ຮູບແບບການອອກສຽງ",
+  "Fail to discover SMS command": "ເຊັ່ນການແລກປ່ຽນການຄົ້ນພົບຄໍາສັ່ງ SMS",
+  "Fail to discover SMS configurations":
+    "ເຊັ່ນການແລກປ່ຽນການຄົ້ນພົບການຕັ້ງຄ່າ SMS"
+}

@@ -1,0 +1,70 @@
+{
+  "Innovation in every dimension": "Le popontshwa le leng le le teba",
+  "Establishing connection to server": "Theha mabapi ho seva",
+  "Enter server address": "Kena seva aterese",
+  "Enter username": "Kenya lebitso la mosebedisi",
+  "Enter password": "Kenya phasewete",
+  "Login": "Kena",
+  "or": "kapa",
+  "Offline instances": "Maemong Offline",
+  "Powered by": "E tsamaisoa ke",
+  "Discovering system information": "Ho Fumana tsamaiso ya tshedimosetso",
+  "Discovering current user authorities":
+    "Ho Fumana ba boholong jwale mosebedisi",
+  "Preparing local storage": "Lokisetsa poloko ea moo",
+  "Fail to prepare local storage": "Ba hlōleha ho lokisa polokelo ea moo",
+  "Fail to discover user authorities":
+    "Ba hlōleha ho fumana hore ba boholong mosebedisi",
+  "Fail to discover system information":
+    "Ba hlōleha ho fumana lesedi oona tsamaisong",
+  "Fail to save current user information":
+    "Ba hlōleha ho boloka jwale mosebedisi lesedi",
+  "Please check your network connectivity":
+    "Ka kopo, hlahloba marangrang kgokelo ya hao",
+  "You have enter wrong username or password or server address":
+    "O na le kenye mosebedisi e fosahetseng kapa password ya kapa seva aterese",
+  "Please check server address, or contact your help desk":
+    "Ka kopo, hlahloba seva aterese, kapa ikopanya thuso ea hao deskeng",
+  "Please enter server address, username and password":
+    "Ka kopo, kenya seva aterese, mosebedisi le phasewete",
+  "Aggregate metadata": "phaketse Aggregate",
+  "Discovering SMS commands": "Fumana litaelo SMS",
+  "SMS commands have been discovered": "litaelo SMS 'nile ha fumanoa",
+  "Saving SMS commands": "Pholosang litaelo SMS",
+  "SMS commands have been saved": "litaelo SMS le pholositsoe",
+  "Fail to save SMS commands": "Ba hlōleha ho boloka litaelo tsa SMS",
+  "Fail to discover SMS commands": "Ba hlōleha ho fumana litaelo SMS",
+  "Discovering entry forms": "Fumana diforomo tsa ho kena",
+  "Entry forms have been discovered": "Ho kena liforomo 'nile ha fumanoa",
+  "Saving entry forms": "Pholosang liforomo kena",
+  "Entry forms have been saved": "Ho kena diforomo le pholositsoe",
+  "Fail to save entry forms": "Ba hlōleha ho boloka liforomo kena",
+  "Fail to discover entry forms": "Ba hlōleha ho fumana diforomo kena",
+  "Search": "Search",
+  "There is no local instance to select": "Ha ho na mohlala ea moo ho khetha",
+  "Discovering available local instances":
+    "Ho Fumana fumanehang maemong a ea moo",
+  "Fail to load available local instances":
+    "Hlōleha ho laela fumanehang maemong a ea moo",
+  "Log out": "Loka tsoa",
+  "About": "About",
+  "System info": "System Info",
+  "Discovering current user information":
+    "Ho Fumana morao-rao mosebedisi lesedi",
+  "Discovering app information": "Ho Fumana lesedi app e",
+  "Fail to discover current user information":
+    "Ba hlōleha ho fumana tsa morao-rao mosebedisi lesedi",
+  "Fail to discover app information": "Ba hlōleha ho fumana lesedi app e",
+  "Settings": "Litlhophiso",
+  "App settings": "Litlhophiso tsa App",
+  "Current language": "puo jwale",
+  "Fail to load current user information":
+    "Hlōleha ho laela jwale mosebedisi lesedi",
+  "Fail to set translation": "Ba hlōleha ho beha phetolelo",
+  "SMS gateway": "SMS heke",
+  "Stop": "Ema",
+  "Start": "Qala",
+  "Entry forms": "liforomo kena",
+  "Fail to discover SMS command": "Ba hlōleha ho fumana SMS taelo ea",
+  "Fail to discover SMS configurations": "Ba hlōleha ho fumana diphetolo SMS"
+}

@@ -1,1 +1,67 @@
-{}
+{
+  "Innovation in every dimension": "Innovation katika kila mwelekeo",
+  "Establishing connection to server": "Kuanzisha uhusiano na server",
+  "Enter server address": "Weka anwani ya seva",
+  "Enter username": "Ingiza jina",
+  "Enter password": "Weka nenosiri",
+  "Login": "Ingia",
+  "or": "au",
+  "Offline instances": "matukio ya nje ya mtandao",
+  "Powered by": "Kinatumia",
+  "Discovering system information": "Kugundua maelezo ya mtambo",
+  "Discovering current user authorities":
+    "Kugundua mamlaka ya sasa ya mtumiaji",
+  "Preparing local storage": "Maandalizi ya hifadhi ya ndani",
+  "Fail to prepare local storage": "Kushindwa kujiandaa hifadhi ya ndani",
+  "Fail to discover user authorities": "Kushindwa kugundua mamlaka user",
+  "Fail to discover system information": "Kushindwa kutambua maelezo ya mfumo",
+  "Fail to save current user information":
+    "Imeshindwa kuhifadhi sasa ya mtumiaji habari",
+  "Please check your network connectivity":
+    "Tafadhali angalia muunganisho wa mtandao wako",
+  "You have enter wrong username or password or server address":
+    "Una kuingiza jina sahihi au nenosiri au seva ya mahali",
+  "Please check server address, or contact your help desk":
+    "Tafadhali angalia anwani ya seva, au wasiliana na msaada wako dawati",
+  "Please enter server address, username and password":
+    "Tafadhali weka anwani ya seva, jina la mtumiaji na nenosiri",
+  "Aggregate metadata": "metadata jumla ya mabao",
+  "Discovering SMS commands": "Kugundua Amri za SMS",
+  "SMS commands have been discovered": "Amri za SMS imegundulika",
+  "Saving SMS commands": "Kuokoa Amri za SMS",
+  "SMS commands have been saved": "Amri za SMS yamehifadhiwa",
+  "Fail to save SMS commands": "Imeshindwa kuhifadhi amri SMS",
+  "Fail to discover SMS commands": "Kushindwa kugundua Amri za SMS",
+  "Discovering entry forms": "Kugundua aina ya kuingia",
+  "Entry forms have been discovered": "Kuingia fomu imegundulika",
+  "Saving entry forms": "Kuokoa aina ya kuingia",
+  "Entry forms have been saved": "Kuingia fomu yamehifadhiwa",
+  "Fail to save entry forms": "Imeshindwa kuhifadhi aina ya kuingia",
+  "Fail to discover entry forms": "Kushindwa kugundua aina ya kuingia",
+  "Search": "Search",
+  "There is no local instance to select": "Hakuna mfano wa ndani ya kuchagua",
+  "Discovering available local instances":
+    "Kugundua inapatikana matukio ya ndani",
+  "Fail to load available local instances":
+    "Imeshindwa kupakia inapatikana matukio ya ndani",
+  "Log out": "ondoka kwenye",
+  "About": "kuhusu",
+  "System info": "System info",
+  "Discovering current user information": "Kugundua sasa ya mtumiaji habari",
+  "Discovering app information": "Kugundua maelezo ya programu",
+  "Fail to discover current user information":
+    "Kushindwa kugundua sasa ya mtumiaji habari",
+  "Fail to discover app information": "Kushindwa kutambua maelezo ya programu",
+  "Settings": "mipangilio",
+  "App settings": "mipangilio ya programu",
+  "Current language": "lugha kwa sasa",
+  "Fail to load current user information":
+    "Imeshindwa kupakia mtumiaji wa sasa na maelezo",
+  "Fail to set translation": "Kushindwa kuweka tafsiri",
+  "SMS gateway": "SMS gateway",
+  "Stop": "Acha",
+  "Start": "Start",
+  "Entry forms": "aina ya kuingia",
+  "Fail to discover SMS command": "Kushindwa kugundua SMS amri",
+  "Fail to discover SMS configurations": "Kushindwa kugundua usanidi SMS"
+}

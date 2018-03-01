@@ -1,0 +1,73 @@
+{
+  "Innovation in every dimension": "Инновации в каждом измерении",
+  "Establishing connection to server": "Установление соединения с сервером",
+  "Enter server address": "Введите адрес сервера",
+  "Enter username": "Введите имя пользователя",
+  "Enter password": "Введите пароль",
+  "Login": "Авторизоваться",
+  "or": "или",
+  "Offline instances": "Offline экземпляры",
+  "Powered by": "Питаться от",
+  "Discovering system information": "Обнаружив информационную систему",
+  "Discovering current user authorities":
+    "Обнаружив нынешние власти пользователей",
+  "Preparing local storage": "Подготовка локального хранения",
+  "Fail to prepare local storage": "Не удалось подготовить локальное хранилище",
+  "Fail to discover user authorities":
+    "Не удалось обнаружить пользовательскую власть",
+  "Fail to discover system information":
+    "Не удалось обнаружить информацию о системе",
+  "Fail to save current user information":
+    "Не удалось сохранить текущую информацию о пользователе",
+  "Please check your network connectivity":
+    "Пожалуйста, проверьте подключение к сети",
+  "You have enter wrong username or password or server address":
+    "Вы должны ввести неправильный логин или пароль или адрес сервера",
+  "Please check server address, or contact your help desk":
+    "Пожалуйста, проверьте адрес сервера, или обратитесь к справочной службе",
+  "Please enter server address, username and password":
+    "Пожалуйста, введите адрес сервера, имя пользователя и пароль",
+  "Aggregate metadata": "Совокупные метаданные",
+  "Discovering SMS commands": "Обнаружив SMS-команды",
+  "SMS commands have been discovered": "SMS команда была обнаружена",
+  "Saving SMS commands": "Сохранение SMS-команд",
+  "SMS commands have been saved": "SMS команды были сохранены",
+  "Fail to save SMS commands": "Не удалось сохранить SMS-команды",
+  "Fail to discover SMS commands": "Не удалось открыть SMS-команды",
+  "Discovering entry forms": "Обнаружив формы ввода",
+  "Entry forms have been discovered": "Заявки были обнаружены",
+  "Saving entry forms": "Сохранение форм ввода",
+  "Entry forms have been saved": "Заявки были сохранены",
+  "Fail to save entry forms": "Не удалось сохранить формы ввода",
+  "Fail to discover entry forms": "Не удалось обнаружить формы ввода",
+  "Search": "Поиск",
+  "There is no local instance to select":
+    "Там нет локального экземпляра, чтобы выбрать",
+  "Discovering available local instances":
+    "Обнаружив доступные локальные экземпляры",
+  "Fail to load available local instances":
+    "Не удалось загрузить доступные локальные экземпляры",
+  "Log out": "Выйти",
+  "About": "Около",
+  "System info": "Системная информация",
+  "Discovering current user information":
+    "Обнаружив текущую информацию о пользователе",
+  "Discovering app information": "Обнаружив приложение информации",
+  "Fail to discover current user information":
+    "Не удалось обнаружить текущую информацию о пользователе",
+  "Fail to discover app information":
+    "Не удалось открыть приложение информации",
+  "Settings": "настройки",
+  "App settings": "настройки приложения",
+  "Current language": "Текущий язык",
+  "Fail to load current user information":
+    "Не удалось загрузить текущую информацию о пользователе",
+  "Fail to set translation": "Не удалось установить перевод",
+  "SMS gateway": "SMS-шлюз",
+  "Stop": "Стоп",
+  "Start": "Начало",
+  "Entry forms": "Заявочные формы",
+  "Fail to discover SMS command": "Не удалось обнаружить команду SMS",
+  "Fail to discover SMS configurations":
+    "Не удалось обнаружить SMS конфигурации"
+}

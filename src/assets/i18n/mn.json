@@ -1,0 +1,70 @@
+{
+  "Innovation in every dimension": "хэмжээс бүрт шинэтгэлийн",
+  "Establishing connection to server": "сервертэй холболт тогтоох",
+  "Enter server address": "сервер хаягаа оруулна уу",
+  "Enter username": "Хэрэглэгчийн нэрээ оруулна уу",
+  "Enter password": "Нууц үгээ оруулна",
+  "Login": "Нэвтрэх",
+  "or": "эсвэл",
+  "Offline instances": "Offline тохиолдол",
+  "Powered by": "Powered хамт",
+  "Discovering system information": "Олж мэдэх системийн мэдээлэл",
+  "Discovering current user authorities":
+    "Одоогийн хэрэглэгчийн эрх баригчдад олж мэдэх",
+  "Preparing local storage": "Орон нутгийн хадгалах бэлдэх нь",
+  "Fail to prepare local storage": "Орон нутгийн хадгалах бэлтгэж чадахгүй",
+  "Fail to discover user authorities":
+    "хэрэглэгчийн эрх баригчдад олж чадахгүй",
+  "Fail to discover system information": "системийн мэдээллийг олж чадаагүй",
+  "Fail to save current user information":
+    "Одоогийн хэрэглэгчийн мэдээллийг аварч чадахгүй",
+  "Please check your network connectivity":
+    "Өөрийн сүлжээний холболтыг шалгана уу",
+  "You have enter wrong username or password or server address":
+    "Та буруу хэрэглэгчийн нэр юмуу нууц үг эсвэл сервер хаягаа оруулна байна",
+  "Please check server address, or contact your help desk":
+    "сервер хаягаа шалгана уу, эсвэл таны тусламж ширээ холбоо барина уу",
+  "Please enter server address, username and password":
+    "серверийн хаяг, хэрэглэгчийн нэр болон нууц үгээ оруулна уу",
+  "Aggregate metadata": "Нийт мета өгөгдлийг",
+  "Discovering SMS commands": "SMS тушаалуудыг олж мэдэх",
+  "SMS commands have been discovered": "SMS тушаалууд нь илэрсэн байна",
+  "Saving SMS commands": "SMS тушаалуудыг хадгалах",
+  "SMS commands have been saved": "SMS тушаалууд нь аврагдсан байна",
+  "Fail to save SMS commands": "SMS тушаалуудыг аварч чадахгүй",
+  "Fail to discover SMS commands": "SMS тушаалуудыг олж чадахгүй",
+  "Discovering entry forms": "нэвтрэх хэлбэрийг олж мэдэх",
+  "Entry forms have been discovered": "Элсэлтийн маягт илэрсэн байна",
+  "Saving entry forms": "нэвтрэх хэлбэрийг хадгалах",
+  "Entry forms have been saved": "Элсэлтийн маягт аврагдсан байна",
+  "Fail to save entry forms": "нэвтрэх хэлбэрийг аварч чадахгүй",
+  "Fail to discover entry forms": "нэвтрэх хэлбэрийг олж чадахгүй",
+  "Search": "хайх",
+  "There is no local instance to select":
+    "сонгохын тулд ямар ч орон нутгийн жишээ байдаг",
+  "Discovering available local instances":
+    "боломжтой, орон нутгийн тохиолдлыг олж мэдэх",
+  "Fail to load available local instances":
+    "байгаа нь орон нутгийн тохиолдлыг дуудаж чадахгүй",
+  "Log out": "Гарах",
+  "About": "тухай",
+  "System info": "Системийн мэдээлэл",
+  "Discovering current user information":
+    "Одоогийн хэрэглэгчийн мэдээллийг олж мэдэх",
+  "Discovering app information": "апп мэдээллийг олж мэдэх",
+  "Fail to discover current user information":
+    "Одоогийн хэрэглэгчийн мэдээллийг олж чадаагүй",
+  "Fail to discover app information": "апп мэдээллийг олж чадаагүй",
+  "Settings": "Тохиргоо",
+  "App settings": "App тохиргоо",
+  "Current language": "Одоогийн хэл",
+  "Fail to load current user information":
+    "Одоогийн хэрэглэгчийн мэдээллийг ачаалж чадахгүй",
+  "Fail to set translation": "орчуулгыг тогтоосон чадахгүй",
+  "SMS gateway": "SMS гарц",
+  "Stop": "Зогс",
+  "Start": "Start",
+  "Entry forms": "Элсэлтийн маягт",
+  "Fail to discover SMS command": "SMS тушаалыг олж чадахгүй",
+  "Fail to discover SMS configurations": "SMS тохиргоонуудыг олж чадахгүй"
+}

@@ -1,0 +1,69 @@
+{
+  "Innovation in every dimension": "Innovation i alle dimensioner",
+  "Establishing connection to server": "Etablering forbindelse til serveren",
+  "Enter server address": "Indtast serveradressen",
+  "Enter username": "Indtast brugernavn",
+  "Enter password": "Indtast adgangskode",
+  "Login": "Log på",
+  "or": "eller",
+  "Offline instances": "offline forekomster",
+  "Powered by": "Drevet af",
+  "Discovering system information": "Opdage informationssystem",
+  "Discovering current user authorities":
+    "Opdage de nuværende brugergrupper myndigheder",
+  "Preparing local storage": "Fremstilling lokal lagring",
+  "Fail to prepare local storage": "Undlader at fremstille lokal lagring",
+  "Fail to discover user authorities": "Fail at opdage brugerens myndigheder",
+  "Fail to discover system information": "Fail at opdage systeminformation",
+  "Fail to save current user information":
+    "Fail at gemme den aktuelle brugeroplysninger",
+  "Please check your network connectivity":
+    "Kontroller din netværksforbindelse",
+  "You have enter wrong username or password or server address":
+    "Du indtaster forkert brugernavn eller kodeord eller server adresse",
+  "Please check server address, or contact your help desk":
+    "Kontroller serveradresse, eller kontakt din helpdesk",
+  "Please enter server address, username and password":
+    "Indtast serveradresse, brugernavn og adgangskode",
+  "Aggregate metadata": "Samlet metadata",
+  "Discovering SMS commands": "Opdage SMS-kommandoer",
+  "SMS commands have been discovered": "SMS-kommandoer er blevet opdaget",
+  "Saving SMS commands": "Besparelse SMS-kommandoer",
+  "SMS commands have been saved": "SMS-kommandoer er blevet gemt",
+  "Fail to save SMS commands": "Fail at spare SMS-kommandoer",
+  "Fail to discover SMS commands": "Fail at opdage SMS-kommandoer",
+  "Discovering entry forms": "Opdage blanketter",
+  "Entry forms have been discovered":
+    "er blevet opdaget Adgangskrav formularer",
+  "Saving entry forms": "Lagring af blanketter",
+  "Entry forms have been saved": "Adgangskrav former er blevet gemt",
+  "Fail to save entry forms": "Fail at spare blanketter",
+  "Fail to discover entry forms": "Fail at opdage blanketter",
+  "Search": "Søg",
+  "There is no local instance to select":
+    "Der er ingen lokal instans til at vælge",
+  "Discovering available local instances":
+    "Opdage tilgængelige lokale instanser",
+  "Fail to load available local instances":
+    "Fail at indlæse tilgængelige lokale instanser",
+  "Log out": "Log ud",
+  "About": "Om",
+  "System info": "System info",
+  "Discovering current user information": "Opdage aktuelle brugeroplysninger",
+  "Discovering app information": "Opdage app information",
+  "Fail to discover current user information":
+    "Fail at opdage aktuelle brugeroplysninger",
+  "Fail to discover app information": "Fail at opdage app oplysninger",
+  "Settings": "Indstillinger",
+  "App settings": "indstillinger App",
+  "Current language": "Nuværende sprog",
+  "Fail to load current user information":
+    "Fail at indlæse aktuelle brugeroplysninger",
+  "Fail to set translation": "Fail at sætte oversættelse",
+  "SMS gateway": "SMS gateway",
+  "Stop": "Hold op",
+  "Start": "Start",
+  "Entry forms": "Adgangskrav formularer",
+  "Fail to discover SMS command": "Fail at opdage SMS-kommando",
+  "Fail to discover SMS configurations": "Fail at opdage SMS konfigurationer"
+}

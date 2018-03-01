@@ -1,0 +1,74 @@
+{
+  "Innovation in every dimension": "Inovação em todas as dimensões",
+  "Establishing connection to server": "Estabelecer conexão com o servidor",
+  "Enter server address": "Digite o endereço do servidor",
+  "Enter username": "Insira nome de usuário",
+  "Enter password": "Digite a senha",
+  "Login": "Entrar",
+  "or": "ou",
+  "Offline instances": "casos offline",
+  "Powered by": "Distribuído por",
+  "Discovering system information": "Descobrir informações do sistema",
+  "Discovering current user authorities":
+    "Descobrir autoridades do usuário atual",
+  "Preparing local storage": "Preparando armazenamento local",
+  "Fail to prepare local storage": "Não se prepararem armazenamento local",
+  "Fail to discover user authorities":
+    "Não conseguem descobrir autoridades de usuários",
+  "Fail to discover system information":
+    "Não conseguem descobrir informações do sistema",
+  "Fail to save current user information":
+    "Falha ao salvar as informações do usuário atual",
+  "Please check your network connectivity":
+    "Verifique sua conectividade de rede",
+  "You have enter wrong username or password or server address":
+    "Você tem inserir nome de usuário ou senha incorreta ou endereço do servidor",
+  "Please check server address, or contact your help desk":
+    "Por favor, verifique o endereço do servidor, ou contacte o seu help desk",
+  "Please enter server address, username and password":
+    "Por favor, indique servidor endereço, nome de usuário e senha",
+  "Aggregate metadata": "metadados agregado",
+  "Discovering SMS commands": "Descobrir comandos SMS",
+  "SMS commands have been discovered": "comandos SMS foram descobertos",
+  "Saving SMS commands": "Salvando comandos SMS",
+  "SMS commands have been saved": "comandos SMS foram salvos",
+  "Fail to save SMS commands": "São incapazes de salvar comandos SMS",
+  "Fail to discover SMS commands": "Não conseguem descobrir comandos SMS",
+  "Discovering entry forms": "Descobrir formas de entrada",
+  "Entry forms have been discovered":
+    "Os formulários de inscrição foram descobertos",
+  "Saving entry forms": "Salvando formulários de inscrição",
+  "Entry forms have been saved": "Os formulários de inscrição foram salvos",
+  "Fail to save entry forms": "Falha ao salvar formulários de inscrição",
+  "Fail to discover entry forms": "Não conseguem descobrir formas de entrada",
+  "Search": "Pesquisa",
+  "There is no local instance to select":
+    "Não há nenhuma instância local para selecionar",
+  "Discovering available local instances":
+    "Descobrir instâncias locais disponíveis",
+  "Fail to load available local instances":
+    "Falhar ao carregar instâncias locais disponíveis",
+  "Log out": "Sair",
+  "About": "Sobre",
+  "System info": "Informação do sistema",
+  "Discovering current user information":
+    "Descobrir informações do usuário atual",
+  "Discovering app information": "Descobrir informações aplicativo",
+  "Fail to discover current user information":
+    "Não conseguem descobrir informações do usuário atual",
+  "Fail to discover app information":
+    "Não conseguem descobrir informações aplicativo",
+  "Settings": "Configurações",
+  "App settings": "Configurações do aplicativo",
+  "Current language": "idioma atual",
+  "Fail to load current user information":
+    "Falhar ao carregar informações do usuário atual",
+  "Fail to set translation": "Falha ao definir tradução",
+  "SMS gateway": "gateway SMS",
+  "Stop": "Pare",
+  "Start": "Começar",
+  "Entry forms": "Os formulários de inscrição",
+  "Fail to discover SMS command": "Não conseguem descobrir comando SMS",
+  "Fail to discover SMS configurations":
+    "Não conseguem descobrir configurações SMS"
+}

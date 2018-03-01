@@ -1,34 +1,76 @@
 {
-  "innovation_in_every_dimension": "L'innovation dans toutes les dimensions",
-  "establishing_connection_to_server": "Établir une connexion au serveur",
-  "aggregate_metadata": "Métadonnées agrégées",
-  "Event_and_tracker_metadata": "Métadonnées d'événement et de suivi",
-  "report_metadata": "Signaler les métadonnées",
-  "enter_server_address": "Entrez l'adresse du serveur",
-  "enter_username": "Saisissez votre nom d'utilisateur",
-  "enter_password": "Entrer le mot de passe",
-  "login": "S'identifier",
-  "powered_by": "Alimenté par",
-  "offline_instances": "Instances hors connexion",
+  "Innovation in every dimension": "L'innovation dans toutes les dimensions",
+  "Establishing connection to server":
+    "Établissement d'une connexion au serveur",
+  "Enter server address": "Entrez l'adresse du serveur",
+  "Enter username": "Saisissez votre nom d'utilisateur",
+  "Enter password": "Entrer le mot de passe",
+  "Login": "S'identifier",
   "or": "ou",
-  "loading_system_information": "Discovering system information",
-  "loading_current_user_authorities": "Discovering current user authorities",
-  "preparing_local_storage": "Préparation du stockage local",
-  "loading": "Discovering",
-  "log_out": "Log out",
-  "dashboard": "Dashboard",
-  "there_no_dashboard_found": "There are no dashboard found",
-  "search_dashboard_by_name": "Search dashboard by name",
-  "dashboard_list": "Dashboard list",
-  "loading_dashboard": "Discovering dashboards",
-  "there_no_dashboard_item_found": "There are no dashboard items found",
-  "loading_visualization": "Discovering visualization data",
-  "about": "About",
-  "system_info": "System info",
-  "loading_app_information": "Discovering app information",
-  "settings": "Settings",
-  "loading_current_user_information": "Discovering user information",
-  "loading_settings": "Discovering settings",
-  "app_settings": "App setting",
-  "current_language": "Current language"
+  "Offline instances": "instances hors ligne",
+  "Powered by": "Alimenté par",
+  "Discovering system information": "A la découverte des informations système",
+  "Discovering current user authorities":
+    "A la découverte des autorités de l'utilisateur actuel",
+  "Preparing local storage": "Préparation de stockage local",
+  "Fail to prepare local storage": "Défaut de préparer le stockage local",
+  "Fail to discover user authorities":
+    "Défaut de découvrir les autorités de l'utilisateur",
+  "Fail to discover system information":
+    "Défaut de découvrir des informations système",
+  "Fail to save current user information":
+    "Fail pour enregistrer les informations de l'utilisateur actuel",
+  "Please check your network connectivity":
+    "S'il vous plaît vérifier votre connectivité réseau",
+  "You have enter wrong username or password or server address":
+    "Vous avez entrez un code incorrect nom d'utilisateur ou mot de passe ou l'adresse du serveur",
+  "Please check server address, or contact your help desk":
+    "S'il vous plaît vérifier l'adresse du serveur, ou communiquez avec votre bureau d'aide",
+  "Please enter server address, username and password":
+    "S'il vous plaît entrer l'adresse du serveur, nom d'utilisateur et mot de passe",
+  "Aggregate metadata": "métadonnées agrégats",
+  "Discovering SMS commands": "Découvrir les commandes SMS",
+  "SMS commands have been discovered": "Les commandes SMS ont été découverts",
+  "Saving SMS commands": "Enregistrement des commandes SMS",
+  "SMS commands have been saved": "Les commandes SMS ont été enregistrés",
+  "Fail to save SMS commands": "Echec à la sauvegarde des commandes SMS",
+  "Fail to discover SMS commands": "Défaut de découvrir les commandes SMS",
+  "Discovering entry forms": "Découverte de formulaires d'inscription",
+  "Entry forms have been discovered":
+    "Les formulaires d'inscription ont été découverts",
+  "Saving entry forms": "Enregistrement formulaires d'inscription",
+  "Entry forms have been saved":
+    "Les formulaires d'inscription ont été enregistrés",
+  "Fail to save entry forms": "Echec à la sauvegarde des formes d'entrée",
+  "Fail to discover entry forms": "Défaut de découvrir des formes d'entrée",
+  "Search": "Chercher",
+  "There is no local instance to select":
+    "Il n'y a aucune instance locale pour sélectionner",
+  "Discovering available local instances":
+    "A la découverte des instances locales disponibles",
+  "Fail to load available local instances":
+    "Défaut de charger les instances locales disponibles",
+  "Log out": "Connectez - Out",
+  "About": "Sur",
+  "System info": "Information système",
+  "Discovering current user information":
+    "Découverte de l'information de l'utilisateur actuel",
+  "Discovering app information": "A la découverte d'informations application",
+  "Fail to discover current user information":
+    "Défaut de découvrir des informations utilisateur en cours",
+  "Fail to discover app information":
+    "Défaut de découvrir des informations application",
+  "Settings": "Paramètres",
+  "App settings": "Paramètres de l'application",
+  "Current language": "Langue courante",
+  "Fail to load current user information":
+    "Défaut de charger les informations de l'utilisateur en cours",
+  "Fail to set translation": "Défaut de définir la traduction",
+  "SMS gateway": "passerelle SMS",
+  "Stop": "Arrêtez",
+  "Start": "Début",
+  "Entry forms": "Les formulaires d'inscription",
+  "Fail to discover SMS command": "Défaut de découvrir commande SMS",
+  "Fail to discover SMS configurations":
+    "Défaut de découvrir les configurations SMS"
 }

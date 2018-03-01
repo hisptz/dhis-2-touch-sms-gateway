@@ -1,0 +1,71 @@
+{
+  "Innovation in every dimension": "Innovasie in elke dimensie",
+  "Establishing connection to server": "Stigting verbinding met bediener",
+  "Enter server address": "Tik bediener adres",
+  "Enter username": "Tik gebruikersnaam",
+  "Enter password": "Sleutel wagwoord in",
+  "Login": "Teken aan",
+  "or": "of",
+  "Offline instances": "op die regte pad gevalle",
+  "Powered by": "Aangedryf deur",
+  "Discovering system information": "Ontdekking stelsel inligting",
+  "Discovering current user authorities":
+    "Die ontdekking van die huidige gebruiker owerhede",
+  "Preparing local storage": "Voorbereiding plaaslike stoor",
+  "Fail to prepare local storage": "Versuim om plaaslike stoor voor te berei",
+  "Fail to discover user authorities": "Versuim om gebruikers owerhede ontdek",
+  "Fail to discover system information":
+    "Versuim om stelsel inligting te ontdek",
+  "Fail to save current user information":
+    "Versuim om huidige gebruiker inligting te red",
+  "Please check your network connectivity":
+    "Gaan asseblief jou netwerkverbinding",
+  "You have enter wrong username or password or server address":
+    "Jy het te gaan verkeerd gebruikersnaam of wagwoord of bediener adres",
+  "Please check server address, or contact your help desk":
+    "Gaan asseblief die bediener adres, of kontak jou hulptoonbank",
+  "Please enter server address, username and password":
+    "Voer die bediener adres, gebruikersnaam en wagwoord",
+  "Aggregate metadata": "totaal metadata",
+  "Discovering SMS commands": "Die ontdekking van SMS bevele",
+  "SMS commands have been discovered": "SMS bevele ontdek",
+  "Saving SMS commands": "Spaar SMS bevele",
+  "SMS commands have been saved": "SMS bevele gered",
+  "Fail to save SMS commands": "Versuim om SMS bevele te red",
+  "Fail to discover SMS commands": "Versuim om SMS bevele ontdek",
+  "Discovering entry forms": "Ontdek inskrywingsvorms",
+  "Entry forms have been discovered": "Inskrywingsvorms is ontdek",
+  "Saving entry forms": "Spaar inskrywingsvorms",
+  "Entry forms have been saved": "Inskrywingsvorms is gered",
+  "Fail to save entry forms": "Versuim om inskrywingsvorms te red",
+  "Fail to discover entry forms": "Versuim om inskrywingsvorms te ontdek",
+  "Search": "Soek",
+  "There is no local instance to select":
+    "Daar is geen plaaslike instansie te kies",
+  "Discovering available local instances":
+    "Ontdek beskikbaar plaaslike gevalle",
+  "Fail to load available local instances":
+    "Versuim om beskikbare plaaslike gevalle laai",
+  "Log out": "Teken uit",
+  "About": "oor",
+  "System info": "stelsel info",
+  "Discovering current user information":
+    "Die ontdekking van die huidige gebruiker inligting",
+  "Discovering app information": "Ontdekking app inligting",
+  "Fail to discover current user information":
+    "Versuim om huidige gebruiker inligting te ontdek",
+  "Fail to discover app information":
+    "Versuim om inligting inligting te ontdek",
+  "Settings": "instellings",
+  "App settings": "app instellings",
+  "Current language": "Huidige taal",
+  "Fail to load current user information":
+    "Versuim om huidige gebruiker inligting te laai",
+  "Fail to set translation": "Versuim om vertaling te stel",
+  "SMS gateway": "SMS gateway",
+  "Stop": "stop",
+  "Start": "begin",
+  "Entry forms": "inskrywingsvorms",
+  "Fail to discover SMS command": "Versuim om SMS opdrag ontdek",
+  "Fail to discover SMS configurations": "Versuim om SMS konfigurasies ontdek"
+}

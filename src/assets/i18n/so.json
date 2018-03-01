@@ -1,0 +1,75 @@
+{
+  "Innovation in every dimension": "Innovation in aragti kasta",
+  "Establishing connection to server": "Dhisidda xiriir si server",
+  "Enter server address": "Ku qor cinwaanka server",
+  "Enter username": "Ku qor username",
+  "Enter password": "Ku qor password",
+  "Login": "login",
+  "or": "ama",
+  "Offline instances": "mararka offline",
+  "Powered by": "Powered by",
+  "Discovering system information": "La qabsashada macluumaadka nidaamka",
+  "Discovering current user authorities": "La qabsashada maamulka user hadda",
+  "Preparing local storage": "Diyaarinta kaydinta degaanka",
+  "Fail to prepare local storage":
+    "Guul daraystaan ​​in ay diyaariyaan kaydinta degaanka",
+  "Fail to discover user authorities":
+    "Ku guuldareysato inay ogaadaan maamulka user",
+  "Fail to discover system information":
+    "Guul daraystaan ​​in ay ogaadaan macluumaadka nidaamka",
+  "Fail to save current user information":
+    "Guul daraystaan ​​in ay badbaadin macluumaad user hadda",
+  "Please check your network connectivity":
+    "Fadlan hubi isku xirnaanta shabakad",
+  "You have enter wrong username or password or server address":
+    "Waxaad leedahay geli username qaldan ama password ama cinwaanka server",
+  "Please check server address, or contact your help desk":
+    "Fadlan hubi cinwaanka server, ama la xiriir caawimaad miiska",
+  "Please enter server address, username and password":
+    "Fadlan qor ciwaanka server, magacaaga iyo isgarad-",
+  "Aggregate metadata": "metadata wadar",
+  "Discovering SMS commands": "La qabsashada amarrada SMS",
+  "SMS commands have been discovered": "amarrada SMS ayaa laga helay",
+  "Saving SMS commands": "Badbaadinta amarrada SMS",
+  "SMS commands have been saved": "amarrada SMS ayaa la badbaadiyey",
+  "Fail to save SMS commands": "Guul daraystaan ​​in ay badbaadin amarrada SMS",
+  "Fail to discover SMS commands":
+    "Guul daraystaan ​​in ay ogaadaan amarrada SMS",
+  "Discovering entry forms": "La qabsashada foomamka soo galo",
+  "Entry forms have been discovered": "Foomamka Entry ayaa laga helay",
+  "Saving entry forms": "Badbaadinta foomamka soo galo",
+  "Entry forms have been saved": "Foomamka Entry ku badbaaddeen",
+  "Fail to save entry forms":
+    "Guul daraystaan ​​in ay badbaadin noocyada entry",
+  "Fail to discover entry forms":
+    "Guul daraystaan ​​in ay ogaadaan foomamka soo galo",
+  "Search": "Search",
+  "There is no local instance to select":
+    "Ma jiro tusaale ahaan degaanka in ay doortaan",
+  "Discovering available local instances":
+    "La qabsashada xaaladaha deegaanka ee laga",
+  "Fail to load available local instances":
+    "Guul daraystaan ​​in ay ku shuban mararka deegaanka ee laga",
+  "Log out": "Ka bax",
+  "About": "About",
+  "System info": "System info",
+  "Discovering current user information": "La qabsashada macluumaad user hadda",
+  "Discovering app information": "La qabsashada macluumaad app",
+  "Fail to discover current user information":
+    "Guul daraystaan ​​in ay ogaadaan macluumaadka user hadda",
+  "Fail to discover app information":
+    "Guul daraystaan ​​in ay ogaadaan macluumaadka app",
+  "Settings": "Settings",
+  "App settings": "goobaha app",
+  "Current language": "luqadda hadda",
+  "Fail to load current user information":
+    "Guul daraystaan ​​in ay ku shuban macluumaad user hadda",
+  "Fail to set translation": "Ku dhisan waayaan turjumaad",
+  "SMS gateway": "albaab SMS",
+  "Stop": "Jooji",
+  "Start": "Start",
+  "Entry forms": "foomamka Entry",
+  "Fail to discover SMS command": "Guul daraystaan ​​in ay ogaadaan SMS amarka",
+  "Fail to discover SMS configurations":
+    "Guul daraystaan ​​in ay ogaadaan gaadmada ah SMS"
+}

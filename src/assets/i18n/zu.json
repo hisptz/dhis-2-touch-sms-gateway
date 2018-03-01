@@ -1,0 +1,70 @@
+{
+  "Innovation in every dimension": "Ukuqamba kuzo zonke ubukhulu",
+  "Establishing connection to server": "Isungula ukuxhumeka kwiseva",
+  "Enter server address": "Faka ikheli leseva",
+  "Enter username": "Faka igama lomsebenzisi",
+  "Enter password": "Faka iphasiwedi",
+  "Login": "Ngena ngemvume",
+  "or": "noma",
+  "Offline instances": "izimo ungaxhumekile ku-intanethi",
+  "Powered by": "Inikezwe amandla yi",
+  "Discovering system information": "Ukuthola ulwazi uhlelo",
+  "Discovering current user authorities":
+    "Ukuthola iziphathimandla umsebenzisi wamanje",
+  "Preparing local storage": "Ilungiselela isitoreji wendawo",
+  "Fail to prepare local storage":
+    "Ukuhluleka ukulungiselela isitoreji sendawo",
+  "Fail to discover user authorities":
+    "Ukuhluleka ukuthola iziphathimandla umsebenzisi",
+  "Fail to discover system information": "Ukuhluleka ukuthola ulwazi uhlelo",
+  "Fail to save current user information":
+    "Ukuhluleka ukulondoloza ulwazi lomsebenzisi zamanje",
+  "Please check your network connectivity":
+    "Sicela uhlole ukuxhumana kwenethiwekhi yakho",
+  "You have enter wrong username or password or server address":
+    "Une ufake igama okungalungile noma iphasiwedi noma ikheli leseva",
+  "Please check server address, or contact your help desk":
+    "Sicela uhlole ikheli leseva, noma uxhumane usizo lwakho edeskini",
+  "Please enter server address, username and password":
+    "Sicela ufake ikheli leseva, igama lomsebenzisi nephasiwedi",
+  "Aggregate metadata": "imethadatha ezihlanganisiwe",
+  "Discovering SMS commands": "Ukuthola imiyalo SMS",
+  "SMS commands have been discovered": "imiyalo SMS ziye zatholakala",
+  "Saving SMS commands": "Igcina imiyalo SMS",
+  "SMS commands have been saved": "imiyalo SMS nisindisiwe",
+  "Fail to save SMS commands": "Ukuhluleka ukulondoloza imiyalo SMS",
+  "Fail to discover SMS commands": "Ukuhluleka ukuthola imiyalo SMS",
+  "Discovering entry forms": "Ukuthola amafomu ukungena",
+  "Entry forms have been discovered": "Amafomu entry ziye zatholakala",
+  "Saving entry forms": "Igcina amafomu ukungena",
+  "Entry forms have been saved": "Amafomu entry nisindisiwe",
+  "Fail to save entry forms": "Ukuhluleka ukulondoloza amafomu ukungena",
+  "Fail to discover entry forms": "Ukuhluleka ukuthola amafomu ukungena",
+  "Search": "Ukucinga",
+  "There is no local instance to select":
+    "Akukho Ngokwesibonelo bendawo ukuze ukhethe",
+  "Discovering available local instances":
+    "Ukuthola izimo zendawo etholakalayo",
+  "Fail to load available local instances":
+    "Ukuhluleka ukulayisha izimo zendawo etholakalayo",
+  "Log out": "Phuma",
+  "About": "mayelana",
+  "System info": "info System",
+  "Discovering current user information": "Ukuthola ulwazi umsebenzisi wamanje",
+  "Discovering app information": "Ukuthola ulwazi lokusebenza",
+  "Fail to discover current user information":
+    "Ukuhluleka ukuthola ulwazi umsebenzisi wamanje",
+  "Fail to discover app information": "Ukuhluleka ukuthola ulwazi lokusebenza",
+  "Settings": "Amasethingi",
+  "App settings": "izilungiselelo zohlelo lokusebenza",
+  "Current language": "ulimi yamanje",
+  "Fail to load current user information":
+    "Ukuhluleka ukulayisha ulwazi umsebenzisi wamanje",
+  "Fail to set translation": "Ukuhluleka setha translation",
+  "SMS gateway": "SMS lomasango",
+  "Stop": "Ima",
+  "Start": "Qala",
+  "Entry forms": "amafomu entry",
+  "Fail to discover SMS command": "Ukuhluleka ukuthola umyalo SMS",
+  "Fail to discover SMS configurations": "Ukuhluleka ukuthola ukucupha SMS"
+}
