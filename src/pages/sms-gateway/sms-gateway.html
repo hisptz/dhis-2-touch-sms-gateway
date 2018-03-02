@@ -54,7 +54,7 @@
           </div>
 
           <button ion-button full [disabled]="!shouldEnableSYncButton" [color]="(isSyncActive)? 'danger': 'primary'" (click)="startOrStopSync()">
-            {{ (isSyncActive)? 'Stop': 'Start' |translate }}
+            {{ (isSyncActive)? ('Stop' |translate): ('Start' |translate) }}
           </button>
         </div>
       </ion-col>

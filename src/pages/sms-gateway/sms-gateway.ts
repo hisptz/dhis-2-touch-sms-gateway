@@ -69,11 +69,17 @@ export class SmsGatewayPage implements OnInit {
   }
 
   loadingCurrentUserInformation() {
-    this.loadingMessage = 'Discovering current user information';
+    let key = 'Discovering current user information';
+    this.loadingMessage = this.translationMapper[key]
+      ? this.translationMapper[key]
+      : key;
     this.userProvider.getCurrentUser().subscribe((currentUser: CurrentUser) => {
       currentUser.password = this.encryption.decode(currentUser.password);
       this.currentUser = currentUser;
-      this.loadingMessage = 'Discovering entry forms';
+      key = 'Discovering entry forms';
+      this.loadingMessage = this.translationMapper[key]
+        ? this.translationMapper[key]
+        : key;
       this.dataSetProvider.getAllDataSets(currentUser).subscribe(
         (dataSets: Array<DataSet>) => {
           this.toggleGatewayContents(this.gatewayContents[0]);
@@ -91,7 +97,10 @@ export class SmsGatewayPage implements OnInit {
               });
               this.updateSelectedItems();
               this.isSyncActive = smsConfigurations.isStarted;
-              this.loadingMessage = 'Discovering SMS commands';
+              key = 'Discovering SMS commands';
+              this.loadingMessage = this.translationMapper[key]
+                ? this.translationMapper[key]
+                : key;
               this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
                 smsCommandMapper => {
                   if (smsConfigurations.isStarted) {
