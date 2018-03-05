@@ -19,6 +19,7 @@
           <loading [loadingMessage]="loadingMessage" [loadingSize]="'large'"></loading>
         </div>
         <div *ngIf="!isLoading">
+          {{ currentUser.isLogin |json }}
           <div class="item-card" *ngFor="let gatewayContent of gatewayContents">
             <ion-row (tap)="toggleGatewayContents(gatewayContent)">
               <ion-col col-11>

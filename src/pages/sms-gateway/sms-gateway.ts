@@ -218,6 +218,58 @@ export class SmsGatewayPage implements OnInit {
     );
   }
 
+  downloadingSmsCommands() {
+    let key = 'Discovering SMS commands';
+    this.smsCommand.getSmsCommandFromServer(this.currentUser).subscribe(
+      (smsCommands: any) => {
+        let key = 'Saving SMS commands';
+        this.smsCommand
+          .savingSmsCommand(smsCommands, this.currentUser.currentDatabase)
+          .subscribe(
+            () => {
+              key = 'SMS commands have been saved';
+            },
+            error => {
+              console.log(JSON.stringify(error));
+              this.appProvider.setNormalNotification(
+                'Fail to save SMS commands'
+              );
+            }
+          );
+      },
+      error => {
+        console.log(JSON.stringify(error));
+        this.appProvider.setNormalNotification('Fail to discover SMS commands');
+      }
+    );
+  }
+
+  downloadingDataSets() {
+    let key = 'Discovering entry forms';
+    this.dataSetProvider.downloadDataSetsFromServer(this.currentUser).subscribe(
+      (dataSets: any) => {
+        key = 'Saving entry forms';
+        this.dataSetProvider
+          .saveDataSetsFromServer(dataSets, this.currentUser)
+          .subscribe(
+            () => {
+              key = 'Entry forms have been saved';
+            },
+            error => {
+              console.log(JSON.stringify(error));
+              this.appProvider.setNormalNotification(
+                'Fail to save entry forms'
+              );
+            }
+          );
+      },
+      error => {
+        console.log(JSON.stringify(error));
+        this.appProvider.setNormalNotification('Fail to discover entry forms');
+      }
+    );
+  }
+
   getValuesToTranslate() {
     return [
       'Discovering current user information',
