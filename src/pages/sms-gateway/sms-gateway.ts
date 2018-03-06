@@ -28,12 +28,9 @@ export class SmsGatewayPage implements OnInit {
   isLoading: boolean;
   loadingMessage: string;
   dataSets: Array<any>;
-  gatewayContents: Array<{ id: string; name: string; icon: string }>;
-  isGatewayContentOpened: any;
   isSyncActive: boolean;
   smsCommandMapper: any;
   translationMapper: any;
-  shouldEnableSYncButton: boolean;
 
   constructor(
     private encryption: EncryptionProvider,
@@ -50,13 +47,10 @@ export class SmsGatewayPage implements OnInit {
 
   ngOnInit() {
     this.menu.enable(true);
-    this.isGatewayContentOpened = {};
-    this.smsCommandMapper = {};
     this.isSyncActive = false;
-    this.gatewayContents = this.getGatewayContents();
     this.isLoading = true;
     this.translationMapper = {};
-    this.shouldEnableSYncButton = false;
+    this.smsCommandMapper = {};
     this.appTranslation.getTransalations(this.getValuesToTranslate()).subscribe(
       (data: any) => {
         this.translationMapper = data;
@@ -80,9 +74,6 @@ export class SmsGatewayPage implements OnInit {
         this.loadingData(currentUser);
       } else {
         this.downloadingSmsCommands();
-        //loading sms codes form data store
-        //loading data sets
-        //checking for sms codes regenerates
       }
     });
   }
@@ -193,45 +184,6 @@ export class SmsGatewayPage implements OnInit {
     ];
   }
 
-  startOrStopSync() {
-    this.isSyncActive = !this.isSyncActive;
-    let dataSetIds = [];
-    this.dataSets.map((dataSet: any) => {
-      if (dataSet.status) {
-        dataSetIds.push(dataSet.id);
-      }
-    });
-    this.smsGateway.getSmsConfigurations(this.currentUser).subscribe(
-      (smsConfiguration: SmsConfiguration) => {
-        const newSmsConfiguration: SmsConfiguration = {
-          dataSetIds: dataSetIds,
-          isStarted: this.isSyncActive,
-          syncedSMSIds: smsConfiguration.syncedSMSIds
-        };
-        this.smsGateway
-          .setSmsConfigurations(this.currentUser, newSmsConfiguration)
-          .subscribe(
-            () => {
-              if (this.isSyncActive) {
-                this.smsGateway.startWatchingSms(
-                  this.smsCommandMapper,
-                  newSmsConfiguration,
-                  this.currentUser
-                );
-              } else {
-                this.smsGateway.stopWatchingSms();
-              }
-              console.log('configurations has been updated');
-            },
-            error => {
-              console.log('Error : ' + JSON.stringify(error));
-            }
-          );
-      },
-      erro => {}
-    );
-  }
-
   loadingData(currentUser) {
     let key = 'Discovering entry forms';
     this.loadingMessage = this.translationMapper[key]
@@ -239,36 +191,34 @@ export class SmsGatewayPage implements OnInit {
       : key;
     this.dataSetProvider.getAllDataSets(currentUser).subscribe(
       (dataSets: Array<DataSet>) => {
-        this.toggleGatewayContents(this.gatewayContents[0]);
         this.smsGateway.getSmsConfigurations(currentUser).subscribe(
           (smsConfigurations: SmsConfiguration) => {
             dataSets.map((dataSet: DataSet) => {
               this.dataSets.push({
                 id: dataSet.id,
                 name: dataSet.name,
-                status:
-                  smsConfigurations.dataSetIds.indexOf(dataSet.id) > -1
-                    ? true
-                    : false
+                status: true
               });
+              if (smsConfigurations.dataSetIds.indexOf(dataSet.id) == -1) {
+                smsConfigurations.dataSetIds.push(dataSet.id);
+              }
             });
-            this.updateSelectedItems();
-            this.isSyncActive = smsConfigurations.isStarted;
             key = 'Discovering SMS commands';
             this.loadingMessage = this.translationMapper[key]
               ? this.translationMapper[key]
               : key;
             this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
               smsCommandMapper => {
-                if (smsConfigurations.isStarted) {
-                  this.smsGateway.startWatchingSms(
-                    smsCommandMapper,
-                    smsConfigurations,
-                    this.currentUser
-                  );
-                }
-                this.isLoading = false;
+                this.smsGateway.startWatchingSms(
+                  smsCommandMapper,
+                  smsConfigurations,
+                  this.currentUser
+                );
                 this.smsCommandMapper = smsCommandMapper;
+                this.isLoading = false;
+                this.appProvider.setTopNotification(
+                  'SMS gatway is now listening for incoming SMS'
+                );
               },
               error => {
                 this.isLoading = false;
@@ -294,42 +244,5 @@ export class SmsGatewayPage implements OnInit {
         this.appProvider.setNormalNotification('Fail to discover entry forms');
       }
     );
-  }
-
-  toggleGatewayContents(content) {
-    if (content && content.id) {
-      if (this.isGatewayContentOpened[content.id]) {
-        this.isGatewayContentOpened[content.id] = false;
-      } else {
-        Object.keys(this.isGatewayContentOpened).forEach(id => {
-          this.isGatewayContentOpened[id] = false;
-        });
-        this.isGatewayContentOpened[content.id] = true;
-      }
-    }
-  }
-
-  updateSelectedItems() {
-    let result = false;
-    this.dataSets.map((dataSet: any) => {
-      if (dataSet.status) {
-        result = true;
-      }
-    });
-    if (this.shouldEnableSYncButton != result) {
-      this.shouldEnableSYncButton = result;
-    }
-  }
-
-  getGatewayContents() {
-    let gatewayContents = [
-      { id: 'entry_forms', name: 'Entry forms', icon: 'assets/icon/form.png' }
-      // {
-      //   id: "program_without_registration",
-      //   name: "program_without_registration",
-      //   icon: "assets/icon/form.png"
-      // }
-    ];
-    return gatewayContents;
   }
 }

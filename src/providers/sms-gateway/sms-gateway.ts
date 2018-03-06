@@ -76,7 +76,6 @@ export class SmsGatewayProvider {
   getDefaultConfigurations(): SmsConfiguration {
     let defaultConfigurations: SmsConfiguration = {
       dataSetIds: [],
-      isStarted: false,
       syncedSMSIds: []
     };
     return defaultConfigurations;
@@ -89,29 +88,36 @@ export class SmsGatewayProvider {
   ) {
     if (SMS) {
       this.backgroundMode.enable();
-      this.synchronizationWatcher = setInterval(() => {
-        SMS.listSMS({}, (data: any) => {
-          if (data && data.length > 0) {
-            data.map((smsData: any) => {
-              if (smsConfigurations.syncedSMSIds.indexOf(smsData._id) == -1) {
-                const smsResponse = {
-                  _id: smsData._id,
-                  address: smsData.address,
-                  body: smsData.body
-                };
-                this.processMessage(
-                  smsResponse,
-                  smsCommandObjects,
-                  smsConfigurations,
-                  currentUser
-                );
-              }
-            });
-          } else {
-            console.log('on sms found');
+      setInterval(() => {
+        SMS.listSMS(
+          {},
+          (data: any) => {
+            if (data && data.length > 0) {
+              data.map((smsData: any) => {
+                console.log(JSON.stringify(smsData.body));
+                if (smsConfigurations.syncedSMSIds.indexOf(smsData._id) == -1) {
+                  const smsResponse = {
+                    _id: smsData._id,
+                    address: smsData.address,
+                    body: smsData.body
+                  };
+                  this.processMessage(
+                    smsResponse,
+                    smsCommandObjects,
+                    smsConfigurations,
+                    currentUser
+                  );
+                }
+              });
+            }
+          },
+          error => {
+            console.log('Error on list sms : ' + JSON.stringify(error));
           }
-        });
-      }, 60 * 1000);
+        );
+      }, 5 * 1000);
+    } else {
+      console.log('No sms variable');
     }
   }
 
@@ -206,11 +212,14 @@ export class SmsGatewayProvider {
                     }
                   },
                   error => {
+                    console.log(
+                      'Here w are on error : ' + JSON.stringify(error)
+                    );
                     observer.error(error);
                   }
                 );
               } else {
-                observer.error('Data set is has not beeing set for sync');
+                observer.error('Data set is has not being set for sync');
               }
             } else {
               observer.error('Missing data values from received sms');
@@ -278,6 +287,9 @@ export class SmsGatewayProvider {
             }
           },
           error => {
+            console.log(
+              'Error of fetching user : ' + url + ' :: ' + JSON.stringify(error)
+            );
             observer.error(error);
           }
         );
