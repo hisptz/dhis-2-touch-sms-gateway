@@ -76,107 +76,121 @@ export class SmsGatewayPage implements OnInit {
     this.userProvider.getCurrentUser().subscribe((currentUser: CurrentUser) => {
       currentUser.password = this.encryption.decode(currentUser.password);
       this.currentUser = currentUser;
-      key = 'Discovering entry forms';
-      this.loadingMessage = this.translationMapper[key]
-        ? this.translationMapper[key]
-        : key;
-      this.dataSetProvider.getAllDataSets(currentUser).subscribe(
-        (dataSets: Array<DataSet>) => {
-          this.toggleGatewayContents(this.gatewayContents[0]);
-          this.smsGateway.getSmsConfigurations(currentUser).subscribe(
-            (smsConfigurations: SmsConfiguration) => {
-              dataSets.map((dataSet: DataSet) => {
-                this.dataSets.push({
-                  id: dataSet.id,
-                  name: dataSet.name,
-                  status:
-                    smsConfigurations.dataSetIds.indexOf(dataSet.id) > -1
-                      ? true
-                      : false
-                });
-              });
-              this.updateSelectedItems();
-              this.isSyncActive = smsConfigurations.isStarted;
-              key = 'Discovering SMS commands';
+      if (currentUser.isLogin) {
+        this.loadingData(currentUser);
+      } else {
+        this.downloadingSmsCommands();
+        //loading sms codes form data store
+        //loading data sets
+        //checking for sms codes regenerates
+      }
+    });
+  }
+
+  downloadingSmsCommands() {
+    let key = 'Discovering SMS commands';
+    this.smsCommand.getSmsCommandFromServer(this.currentUser).subscribe(
+      (smsCommands: any) => {
+        let key = 'Saving SMS commands';
+        this.smsCommand
+          .savingSmsCommand(smsCommands, this.currentUser.currentDatabase)
+          .subscribe(
+            () => {
+              key = 'SMS commands have been saved';
               this.loadingMessage = this.translationMapper[key]
                 ? this.translationMapper[key]
                 : key;
-              this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
-                smsCommandMapper => {
-                  if (smsConfigurations.isStarted) {
-                    this.smsGateway.startWatchingSms(
-                      smsCommandMapper,
-                      smsConfigurations,
-                      this.currentUser
-                    );
-                  }
-                  this.isLoading = false;
-                  this.smsCommandMapper = smsCommandMapper;
-                },
-                error => {
-                  this.isLoading = false;
-                  this.appProvider.setNormalNotification(
-                    'Fail to discover SMS commands'
-                  );
-                }
-              );
+              this.downloadingDataSets();
             },
             error => {
-              this.isLoading = false;
-              console.log(
-                'Error on loading sms configurations ' + JSON.stringify(error)
-              );
+              console.log(JSON.stringify(error));
               this.appProvider.setNormalNotification(
-                'Fail to discover SMS configurations'
+                'Fail to save SMS commands'
               );
             }
           );
-        },
-        error => {
-          console.log(JSON.stringify(error));
-          this.appProvider.setNormalNotification(
-            'Fail to discover entry forms'
+      },
+      error => {
+        console.log(JSON.stringify(error));
+        this.appProvider.setNormalNotification('Fail to discover SMS commands');
+      }
+    );
+  }
+
+  downloadingDataSets() {
+    let key = 'Discovering entry forms';
+    this.dataSetProvider.downloadDataSetsFromServer(this.currentUser).subscribe(
+      (dataSets: any) => {
+        key = 'Saving entry forms';
+        this.loadingMessage = this.translationMapper[key]
+          ? this.translationMapper[key]
+          : key;
+        this.dataSetProvider
+          .saveDataSetsFromServer(dataSets, this.currentUser)
+          .subscribe(
+            () => {
+              key = 'Entry forms have been saved';
+              this.loadingMessage = this.translationMapper[key]
+                ? this.translationMapper[key]
+                : key;
+              key = 'Checking and updating missed SMS commands';
+              this.loadingMessage = this.translationMapper[key]
+                ? this.translationMapper[key]
+                : key;
+              this.smsCommand
+                .checkAndGenerateSmsCommands(this.currentUser)
+                .subscribe(
+                  data => {
+                    key = 'Updating current user information';
+                    this.loadingMessage = this.translationMapper[key]
+                      ? this.translationMapper[key]
+                      : key;
+                    this.currentUser.isLogin = true;
+                    this.userProvider
+                      .setCurrentUser(this.currentUser)
+                      .subscribe(
+                        () => {
+                          this.loadingData(this.currentUser);
+                        },
+                        error => {
+                          console.log(JSON.stringify(error));
+                          this.appProvider.setNormalNotification(
+                            'Fail to update current user information'
+                          );
+                        }
+                      );
+                  },
+                  error => {
+                    console.log(JSON.stringify(error));
+                    this.appProvider.setNormalNotification(
+                      'Fail to check and update missed SMS commands'
+                    );
+                  }
+                );
+            },
+            error => {
+              console.log(JSON.stringify(error));
+              this.appProvider.setNormalNotification(
+                'Fail to save entry forms'
+              );
+            }
           );
-        }
-      );
-    });
-  }
-
-  toggleGatewayContents(content) {
-    if (content && content.id) {
-      if (this.isGatewayContentOpened[content.id]) {
-        this.isGatewayContentOpened[content.id] = false;
-      } else {
-        Object.keys(this.isGatewayContentOpened).forEach(id => {
-          this.isGatewayContentOpened[id] = false;
-        });
-        this.isGatewayContentOpened[content.id] = true;
+      },
+      error => {
+        console.log(JSON.stringify(error));
+        this.appProvider.setNormalNotification('Fail to discover entry forms');
       }
-    }
+    );
   }
 
-  updateSelectedItems() {
-    let result = false;
-    this.dataSets.map((dataSet: any) => {
-      if (dataSet.status) {
-        result = true;
-      }
-    });
-    if (this.shouldEnableSYncButton != result) {
-      this.shouldEnableSYncButton = result;
-    }
-  }
-
-  getGatewayContents() {
-    let gatewayContents = [
-      { id: 'entry_forms', name: 'Entry forms', icon: 'assets/icon/form.png' }
-      // {
-      //   id: "program_without_registration",
-      //   name: "program_without_registration",
-      //   icon: "assets/icon/form.png"
-      // }
+  getValuesToTranslate() {
+    return [
+      'Discovering current user information',
+      'Discovering entry forms',
+      'Discovering SMS commands',
+      'Checking and updating missed SMS commands',
+      'Updating current user information'
     ];
-    return gatewayContents;
   }
 
   startOrStopSync() {
@@ -218,50 +232,62 @@ export class SmsGatewayPage implements OnInit {
     );
   }
 
-  downloadingSmsCommands() {
-    let key = 'Discovering SMS commands';
-    this.smsCommand.getSmsCommandFromServer(this.currentUser).subscribe(
-      (smsCommands: any) => {
-        let key = 'Saving SMS commands';
-        this.smsCommand
-          .savingSmsCommand(smsCommands, this.currentUser.currentDatabase)
-          .subscribe(
-            () => {
-              key = 'SMS commands have been saved';
-            },
-            error => {
-              console.log(JSON.stringify(error));
-              this.appProvider.setNormalNotification(
-                'Fail to save SMS commands'
-              );
-            }
-          );
-      },
-      error => {
-        console.log(JSON.stringify(error));
-        this.appProvider.setNormalNotification('Fail to discover SMS commands');
-      }
-    );
-  }
-
-  downloadingDataSets() {
+  loadingData(currentUser) {
     let key = 'Discovering entry forms';
-    this.dataSetProvider.downloadDataSetsFromServer(this.currentUser).subscribe(
-      (dataSets: any) => {
-        key = 'Saving entry forms';
-        this.dataSetProvider
-          .saveDataSetsFromServer(dataSets, this.currentUser)
-          .subscribe(
-            () => {
-              key = 'Entry forms have been saved';
-            },
-            error => {
-              console.log(JSON.stringify(error));
-              this.appProvider.setNormalNotification(
-                'Fail to save entry forms'
-              );
-            }
-          );
+    this.loadingMessage = this.translationMapper[key]
+      ? this.translationMapper[key]
+      : key;
+    this.dataSetProvider.getAllDataSets(currentUser).subscribe(
+      (dataSets: Array<DataSet>) => {
+        this.toggleGatewayContents(this.gatewayContents[0]);
+        this.smsGateway.getSmsConfigurations(currentUser).subscribe(
+          (smsConfigurations: SmsConfiguration) => {
+            dataSets.map((dataSet: DataSet) => {
+              this.dataSets.push({
+                id: dataSet.id,
+                name: dataSet.name,
+                status:
+                  smsConfigurations.dataSetIds.indexOf(dataSet.id) > -1
+                    ? true
+                    : false
+              });
+            });
+            this.updateSelectedItems();
+            this.isSyncActive = smsConfigurations.isStarted;
+            key = 'Discovering SMS commands';
+            this.loadingMessage = this.translationMapper[key]
+              ? this.translationMapper[key]
+              : key;
+            this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
+              smsCommandMapper => {
+                if (smsConfigurations.isStarted) {
+                  this.smsGateway.startWatchingSms(
+                    smsCommandMapper,
+                    smsConfigurations,
+                    this.currentUser
+                  );
+                }
+                this.isLoading = false;
+                this.smsCommandMapper = smsCommandMapper;
+              },
+              error => {
+                this.isLoading = false;
+                this.appProvider.setNormalNotification(
+                  'Fail to discover SMS commands'
+                );
+              }
+            );
+          },
+          error => {
+            this.isLoading = false;
+            console.log(
+              'Error on loading sms configurations ' + JSON.stringify(error)
+            );
+            this.appProvider.setNormalNotification(
+              'Fail to discover SMS configurations'
+            );
+          }
+        );
       },
       error => {
         console.log(JSON.stringify(error));
@@ -270,11 +296,40 @@ export class SmsGatewayPage implements OnInit {
     );
   }
 
-  getValuesToTranslate() {
-    return [
-      'Discovering current user information',
-      'Discovering entry forms',
-      'Discovering SMS commands'
+  toggleGatewayContents(content) {
+    if (content && content.id) {
+      if (this.isGatewayContentOpened[content.id]) {
+        this.isGatewayContentOpened[content.id] = false;
+      } else {
+        Object.keys(this.isGatewayContentOpened).forEach(id => {
+          this.isGatewayContentOpened[id] = false;
+        });
+        this.isGatewayContentOpened[content.id] = true;
+      }
+    }
+  }
+
+  updateSelectedItems() {
+    let result = false;
+    this.dataSets.map((dataSet: any) => {
+      if (dataSet.status) {
+        result = true;
+      }
+    });
+    if (this.shouldEnableSYncButton != result) {
+      this.shouldEnableSYncButton = result;
+    }
+  }
+
+  getGatewayContents() {
+    let gatewayContents = [
+      { id: 'entry_forms', name: 'Entry forms', icon: 'assets/icon/form.png' }
+      // {
+      //   id: "program_without_registration",
+      //   name: "program_without_registration",
+      //   icon: "assets/icon/form.png"
+      // }
     ];
+    return gatewayContents;
   }
 }
