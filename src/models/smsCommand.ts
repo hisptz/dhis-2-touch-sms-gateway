@@ -16,3 +16,5 @@ export interface SmsConfiguration {
   dataSetIds: Array<any>;
   syncedSMSIds: Array<any>;
 }
+
+export interface SmsGateWayLogs {}

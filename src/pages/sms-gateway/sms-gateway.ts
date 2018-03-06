@@ -27,7 +27,6 @@ export class SmsGatewayPage implements OnInit {
   currentUser: CurrentUser;
   isLoading: boolean;
   loadingMessage: string;
-  dataSets: Array<any>;
   isSyncActive: boolean;
   smsCommandMapper: any;
   translationMapper: any;
@@ -41,9 +40,7 @@ export class SmsGatewayPage implements OnInit {
     private dataSetProvider: DataSetsProvider,
     private userProvider: UserProvider,
     private appTranslation: AppTranslationProvider
-  ) {
-    this.dataSets = [];
-  }
+  ) {}
 
   ngOnInit() {
     this.menu.enable(true);
@@ -141,7 +138,29 @@ export class SmsGatewayPage implements OnInit {
                       .setCurrentUser(this.currentUser)
                       .subscribe(
                         () => {
-                          this.loadingData(this.currentUser);
+                          this.smsGateway
+                            .getSmsConfigurations(this.currentUser)
+                            .subscribe(
+                              (smsConfigurations: SmsConfiguration) => {
+                                if (smsConfigurations.dataSetIds.length == 0) {
+                                  dataSets.map((dataSet: any) => {
+                                    if (
+                                      smsConfigurations.dataSetIds.indexOf(
+                                        dataSet.id
+                                      ) == -1
+                                    ) {
+                                      smsConfigurations.dataSetIds.push(
+                                        dataSet.id
+                                      );
+                                    }
+                                  });
+                                }
+                                this.loadingData(this.currentUser);
+                              },
+                              error => {
+                                this.loadingData(this.currentUser);
+                              }
+                            );
                         },
                         error => {
                           console.log(JSON.stringify(error));
@@ -185,63 +204,59 @@ export class SmsGatewayPage implements OnInit {
   }
 
   loadingData(currentUser) {
-    let key = 'Discovering entry forms';
+    // let key = 'Discovering entry forms';
+    // this.loadingMessage = this.translationMapper[key]
+    //   ? this.translationMapper[key]
+    //   : key;
+    // this.dataSetProvider.getAllDataSets(currentUser).subscribe(
+    //   (dataSets: Array<DataSet>) => {
+
+    //   },
+    //   error => {
+    //     console.log(JSON.stringify(error));
+    //     this.appProvider.setNormalNotification('Fail to discover entry forms');
+    //   }
+    // );
+    let key = 'Discovering SMS configurations';
     this.loadingMessage = this.translationMapper[key]
       ? this.translationMapper[key]
       : key;
-    this.dataSetProvider.getAllDataSets(currentUser).subscribe(
-      (dataSets: Array<DataSet>) => {
-        this.smsGateway.getSmsConfigurations(currentUser).subscribe(
-          (smsConfigurations: SmsConfiguration) => {
-            dataSets.map((dataSet: DataSet) => {
-              this.dataSets.push({
-                id: dataSet.id,
-                name: dataSet.name,
-                status: true
-              });
-              if (smsConfigurations.dataSetIds.indexOf(dataSet.id) == -1) {
-                smsConfigurations.dataSetIds.push(dataSet.id);
-              }
-            });
-            key = 'Discovering SMS commands';
-            this.loadingMessage = this.translationMapper[key]
-              ? this.translationMapper[key]
-              : key;
-            this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
-              smsCommandMapper => {
-                this.smsGateway.startWatchingSms(
-                  smsCommandMapper,
-                  smsConfigurations,
-                  this.currentUser
-                );
-                this.smsCommandMapper = smsCommandMapper;
-                this.isLoading = false;
-                this.appProvider.setTopNotification(
-                  'SMS gatway is now listening for incoming SMS'
-                );
-              },
-              error => {
-                this.isLoading = false;
-                this.appProvider.setNormalNotification(
-                  'Fail to discover SMS commands'
-                );
-              }
+    this.smsGateway.getSmsConfigurations(currentUser).subscribe(
+      (smsConfigurations: SmsConfiguration) => {
+        key = 'Discovering SMS commands';
+        this.loadingMessage = this.translationMapper[key]
+          ? this.translationMapper[key]
+          : key;
+        console.log(smsConfigurations.dataSetIds);
+        this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
+          smsCommandMapper => {
+            this.smsGateway.startWatchingSms(
+              smsCommandMapper,
+              smsConfigurations,
+              this.currentUser
+            );
+            this.smsCommandMapper = smsCommandMapper;
+            this.isLoading = false;
+            this.appProvider.setTopNotification(
+              'SMS gatway is now listening for incoming SMS'
             );
           },
           error => {
             this.isLoading = false;
-            console.log(
-              'Error on loading sms configurations ' + JSON.stringify(error)
-            );
             this.appProvider.setNormalNotification(
-              'Fail to discover SMS configurations'
+              'Fail to discover SMS commands'
             );
           }
         );
       },
       error => {
-        console.log(JSON.stringify(error));
-        this.appProvider.setNormalNotification('Fail to discover entry forms');
+        this.isLoading = false;
+        console.log(
+          'Error on loading sms configurations ' + JSON.stringify(error)
+        );
+        this.appProvider.setNormalNotification(
+          'Fail to discover SMS configurations'
+        );
       }
     );
   }

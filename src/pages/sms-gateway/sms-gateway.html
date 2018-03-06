@@ -22,10 +22,6 @@
           <div class="item-card">
             Logs for all actions on background process
           </div>
-
-          <button ion-button full [disabled]="!shouldEnableSYncButton" [color]="(isSyncActive)? 'danger': 'primary'" (click)="startOrStopSync()">
-            {{ (isSyncActive)? ('Stop' |translate): ('Start' |translate) }}
-          </button>
         </div>
       </ion-col>
     </ion-row>
