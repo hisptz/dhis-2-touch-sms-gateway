@@ -11,6 +11,10 @@ import { AppProvider } from '../../providers/app/app';
 import { SmsCommandProvider } from '../../providers/sms-command/sms-command';
 import { AppTranslationProvider } from '../../providers/app-translation/app-translation';
 import { AppPermissionProvider } from '../../providers/app-permission/app-permission';
+import { ApplicationState } from '../../store/reducers';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import * as logsSelectors from '../../store/selectors/smsGatewayLogs.selectors';
 
 /**
  * Generated class for the SmsGatewayPage page.
@@ -32,6 +36,9 @@ export class SmsGatewayPage implements OnInit {
   smsCommandMapper: any;
   translationMapper: any;
 
+  //observer
+  smsLogs$: Observable<any>;
+
   constructor(
     private encryption: EncryptionProvider,
     private appProvider: AppProvider,
@@ -41,8 +48,11 @@ export class SmsGatewayPage implements OnInit {
     private dataSetProvider: DataSetsProvider,
     private userProvider: UserProvider,
     private appTranslation: AppTranslationProvider,
-    private appPermisssion: AppPermissionProvider
-  ) {}
+    private appPermisssion: AppPermissionProvider,
+    private store: Store<ApplicationState>
+  ) {
+    this.smsLogs$ = store.select(logsSelectors.getCurrentSmsGatewayLogs);
+  }
 
   ngOnInit() {
     this.menu.enable(true);

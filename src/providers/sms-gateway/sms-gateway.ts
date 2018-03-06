@@ -272,7 +272,7 @@ export class SmsGatewayProvider {
       if (smsResponse && smsResponse.address) {
         let number = smsResponse.address.replace('+', '');
         let url =
-          'users.json?fields=organisationUnits&filter=phoneNumber:ilike:' +
+          'users.json?fields=organisationUnits[id,name]&filter=phoneNumber:ilike:' +
           number;
         this.http.get(url, true).subscribe(
           (response: any) => {

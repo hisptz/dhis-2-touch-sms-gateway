@@ -17,4 +17,18 @@ export interface SmsConfiguration {
   syncedSMSIds: Array<any>;
 }
 
-export interface SmsGateWayLogs {}
+export interface SmsGateWayLogs {
+  _id?: string;
+  isSuccess: boolean;
+  dataSetId?: string;
+  organisationUnitid?: string;
+  organisationUnitName?: string;
+  date: string;
+  message?: ReceivedSms;
+}
+
+export interface ReceivedSms {
+  _id: string;
+  body: string;
+  address: string;
+}
