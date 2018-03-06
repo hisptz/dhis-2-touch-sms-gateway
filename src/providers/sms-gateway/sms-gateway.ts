@@ -94,7 +94,6 @@ export class SmsGatewayProvider {
           (data: any) => {
             if (data && data.length > 0) {
               data.map((smsData: any) => {
-                console.log(JSON.stringify(smsData.body));
                 if (smsConfigurations.syncedSMSIds.indexOf(smsData._id) == -1) {
                   const smsResponse = {
                     _id: smsData._id,

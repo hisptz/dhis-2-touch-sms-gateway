@@ -68,7 +68,7 @@ export class SmsGatewayPage implements OnInit {
       currentUser.password = this.encryption.decode(currentUser.password);
       this.currentUser = currentUser;
       if (currentUser.isLogin) {
-        this.loadingData(currentUser);
+        this.loadingConfigurationAndStartGateway(currentUser);
       } else {
         this.downloadingSmsCommands();
       }
@@ -154,11 +154,25 @@ export class SmsGatewayPage implements OnInit {
                                       );
                                     }
                                   });
+                                  this.smsGateway
+                                    .setSmsConfigurations(
+                                      this.currentUser,
+                                      smsConfigurations
+                                    )
+                                    .subscribe(
+                                      () => {
+                                        this.loadingConfigurationAndStartGateway(
+                                          this.currentUser
+                                        );
+                                      },
+                                      error => {}
+                                    );
                                 }
-                                this.loadingData(this.currentUser);
                               },
                               error => {
-                                this.loadingData(this.currentUser);
+                                this.loadingConfigurationAndStartGateway(
+                                  this.currentUser
+                                );
                               }
                             );
                         },
@@ -193,30 +207,7 @@ export class SmsGatewayPage implements OnInit {
     );
   }
 
-  getValuesToTranslate() {
-    return [
-      'Discovering current user information',
-      'Discovering entry forms',
-      'Discovering SMS commands',
-      'Checking and updating missed SMS commands',
-      'Updating current user information'
-    ];
-  }
-
-  loadingData(currentUser) {
-    // let key = 'Discovering entry forms';
-    // this.loadingMessage = this.translationMapper[key]
-    //   ? this.translationMapper[key]
-    //   : key;
-    // this.dataSetProvider.getAllDataSets(currentUser).subscribe(
-    //   (dataSets: Array<DataSet>) => {
-
-    //   },
-    //   error => {
-    //     console.log(JSON.stringify(error));
-    //     this.appProvider.setNormalNotification('Fail to discover entry forms');
-    //   }
-    // );
+  loadingConfigurationAndStartGateway(currentUser) {
     let key = 'Discovering SMS configurations';
     this.loadingMessage = this.translationMapper[key]
       ? this.translationMapper[key]
@@ -227,7 +218,6 @@ export class SmsGatewayPage implements OnInit {
         this.loadingMessage = this.translationMapper[key]
           ? this.translationMapper[key]
           : key;
-        console.log(smsConfigurations.dataSetIds);
         this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
           smsCommandMapper => {
             this.smsGateway.startWatchingSms(
@@ -259,5 +249,15 @@ export class SmsGatewayPage implements OnInit {
         );
       }
     );
+  }
+
+  getValuesToTranslate() {
+    return [
+      'Discovering current user information',
+      'Discovering entry forms',
+      'Discovering SMS commands',
+      'Checking and updating missed SMS commands',
+      'Updating current user information'
+    ];
   }
 }
