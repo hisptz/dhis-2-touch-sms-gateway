@@ -17,6 +17,7 @@ import { Network } from '@ionic-native/network';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { IonicStorageModule } from '@ionic/storage';
 import { SMS } from '@ionic-native/sms';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
 
 //translations
 export function createTranslateLoader(http: Http) {
@@ -67,6 +68,7 @@ import { AppPermissionProvider } from '../providers/app-permission/app-permissio
   providers: [
     StatusBar,
     SQLite,
+    AndroidPermissions,
     SMS,
     SplashScreen,
     HTTP,

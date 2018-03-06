@@ -10,6 +10,7 @@ import { SmsConfiguration } from '../../models/smsCommand';
 import { AppProvider } from '../../providers/app/app';
 import { SmsCommandProvider } from '../../providers/sms-command/sms-command';
 import { AppTranslationProvider } from '../../providers/app-translation/app-translation';
+import { AppPermissionProvider } from '../../providers/app-permission/app-permission';
 
 /**
  * Generated class for the SmsGatewayPage page.
@@ -39,7 +40,8 @@ export class SmsGatewayPage implements OnInit {
     private menu: MenuController,
     private dataSetProvider: DataSetsProvider,
     private userProvider: UserProvider,
-    private appTranslation: AppTranslationProvider
+    private appTranslation: AppTranslationProvider,
+    private appPermisssion: AppPermissionProvider
   ) {}
 
   ngOnInit() {
@@ -68,7 +70,7 @@ export class SmsGatewayPage implements OnInit {
       currentUser.password = this.encryption.decode(currentUser.password);
       this.currentUser = currentUser;
       if (currentUser.isLogin) {
-        this.loadingConfigurationAndStartGateway(currentUser);
+        this.loadingConfiguration(currentUser);
       } else {
         this.downloadingSmsCommands();
       }
@@ -77,9 +79,15 @@ export class SmsGatewayPage implements OnInit {
 
   downloadingSmsCommands() {
     let key = 'Discovering SMS commands';
+    this.loadingMessage = this.translationMapper[key]
+      ? this.translationMapper[key]
+      : key;
     this.smsCommand.getSmsCommandFromServer(this.currentUser).subscribe(
       (smsCommands: any) => {
-        let key = 'Saving SMS commands';
+        key = 'Saving SMS commands';
+        this.loadingMessage = this.translationMapper[key]
+          ? this.translationMapper[key]
+          : key;
         this.smsCommand
           .savingSmsCommand(smsCommands, this.currentUser.currentDatabase)
           .subscribe(
@@ -107,6 +115,9 @@ export class SmsGatewayPage implements OnInit {
 
   downloadingDataSets() {
     let key = 'Discovering entry forms';
+    this.loadingMessage = this.translationMapper[key]
+      ? this.translationMapper[key]
+      : key;
     this.dataSetProvider.downloadDataSetsFromServer(this.currentUser).subscribe(
       (dataSets: any) => {
         key = 'Saving entry forms';
@@ -161,7 +172,7 @@ export class SmsGatewayPage implements OnInit {
                                     )
                                     .subscribe(
                                       () => {
-                                        this.loadingConfigurationAndStartGateway(
+                                        this.loadingConfiguration(
                                           this.currentUser
                                         );
                                       },
@@ -170,9 +181,7 @@ export class SmsGatewayPage implements OnInit {
                                 }
                               },
                               error => {
-                                this.loadingConfigurationAndStartGateway(
-                                  this.currentUser
-                                );
+                                this.loadingConfiguration(this.currentUser);
                               }
                             );
                         },
@@ -207,7 +216,7 @@ export class SmsGatewayPage implements OnInit {
     );
   }
 
-  loadingConfigurationAndStartGateway(currentUser) {
+  loadingConfiguration(currentUser) {
     let key = 'Discovering SMS configurations';
     this.loadingMessage = this.translationMapper[key]
       ? this.translationMapper[key]
@@ -220,15 +229,9 @@ export class SmsGatewayPage implements OnInit {
           : key;
         this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
           smsCommandMapper => {
-            this.smsGateway.startWatchingSms(
+            this.checkPermisionsAndStartGateway(
               smsCommandMapper,
-              smsConfigurations,
-              this.currentUser
-            );
-            this.smsCommandMapper = smsCommandMapper;
-            this.isLoading = false;
-            this.appProvider.setTopNotification(
-              'SMS gatway is now listening for incoming SMS'
+              smsConfigurations
             );
           },
           error => {
@@ -249,6 +252,27 @@ export class SmsGatewayPage implements OnInit {
         );
       }
     );
+  }
+
+  checkPermisionsAndStartGateway(smsCommandMapper, smsConfigurations) {
+    this.appPermisssion.requestSMSPermission().subscribe(
+      response => {
+        console.log(JSON.stringify(response));
+      },
+      error => {
+        console.log(error);
+      }
+    );
+    // this.smsGateway.startWatchingSms(
+    //   smsCommandMapper,
+    //   smsConfigurations,
+    //   this.currentUser
+    // );
+    // this.smsCommandMapper = smsCommandMapper;
+    // this.isLoading = false;
+    // this.appProvider.setTopNotification(
+    //   'SMS gatway is now listening for incoming SMS'
+    // );
   }
 
   getValuesToTranslate() {
