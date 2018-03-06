@@ -43,6 +43,7 @@ import { SettingsProvider } from '../providers/settings/settings';
 import { DataSetsProvider } from '../providers/data-sets/data-sets';
 import { SmsGatewayProvider } from '../providers/sms-gateway/sms-gateway';
 import { AboutProvider } from '../providers/about/about';
+import { AppPermissionProvider } from '../providers/app-permission/app-permission';
 
 @NgModule({
   declarations: [MyApp, LauncherPage],
@@ -85,7 +86,8 @@ import { AboutProvider } from '../providers/about/about';
     HttpClientProvider,
     AppTranslationProvider,
     DataSetsProvider,
-    SmsGatewayProvider
+    SmsGatewayProvider,
+    AppPermissionProvider
   ]
 })
 export class AppModule {}
