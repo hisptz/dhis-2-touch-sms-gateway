@@ -257,22 +257,22 @@ export class SmsGatewayPage implements OnInit {
   checkPermisionsAndStartGateway(smsCommandMapper, smsConfigurations) {
     this.appPermisssion.requestSMSPermission().subscribe(
       response => {
-        console.log(JSON.stringify(response));
+        this.smsGateway.startWatchingSms(
+          smsCommandMapper,
+          smsConfigurations,
+          this.currentUser
+        );
+        this.smsCommandMapper = smsCommandMapper;
+        this.isLoading = false;
+        this.appProvider.setTopNotification(
+          'SMS gatway is now listening for incoming SMS'
+        );
       },
       error => {
-        console.log(error);
+        this.isLoading = false;
+        console.log(JSON.stringify(error));
       }
     );
-    // this.smsGateway.startWatchingSms(
-    //   smsCommandMapper,
-    //   smsConfigurations,
-    //   this.currentUser
-    // );
-    // this.smsCommandMapper = smsCommandMapper;
-    // this.isLoading = false;
-    // this.appProvider.setTopNotification(
-    //   'SMS gatway is now listening for incoming SMS'
-    // );
   }
 
   getValuesToTranslate() {
