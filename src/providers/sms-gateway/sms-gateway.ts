@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Storage } from "@ionic/storage";
-import { Observable } from "rxjs/Observable";
-import { SmsConfiguration } from "../../models/smsCommand";
-import { BackgroundMode } from "@ionic-native/background-mode";
-import { HttpClientProvider } from "../http-client/http-client";
+import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage';
+import { Observable } from 'rxjs/Observable';
+import { SmsConfiguration } from '../../models/smsCommand';
+import { BackgroundMode } from '@ionic-native/background-mode';
+import { HttpClientProvider } from '../http-client/http-client';
 
 declare var SMS: any;
 
@@ -30,7 +30,7 @@ export class SmsGatewayProvider {
    */
   getSmsConfigurations(currentUser): Observable<SmsConfiguration> {
     return new Observable(observer => {
-      let key = "sms-configuration-" + currentUser.currentDatabase;
+      let key = 'sms-configuration-' + currentUser.currentDatabase;
       this.storage
         .get(key)
         .then((configuration: any) => {
@@ -55,7 +55,7 @@ export class SmsGatewayProvider {
    */
   setSmsConfigurations(currentUser, configuration: any): Observable<any> {
     return new Observable(observer => {
-      let key = "sms-configuration-" + currentUser.currentDatabase;
+      let key = 'sms-configuration-' + currentUser.currentDatabase;
       configuration = JSON.stringify(configuration);
       this.storage
         .set(key, configuration)
@@ -76,7 +76,6 @@ export class SmsGatewayProvider {
   getDefaultConfigurations(): SmsConfiguration {
     let defaultConfigurations: SmsConfiguration = {
       dataSetIds: [],
-      isStarted: false,
       syncedSMSIds: []
     };
     return defaultConfigurations;
@@ -89,29 +88,35 @@ export class SmsGatewayProvider {
   ) {
     if (SMS) {
       this.backgroundMode.enable();
-      this.synchronizationWatcher = setInterval(() => {
-        SMS.listSMS({}, (data: any) => {
-          if (data && data.length > 0) {
-            data.map((smsData: any) => {
-              if (smsConfigurations.syncedSMSIds.indexOf(smsData._id) == -1) {
-                const smsResponse = {
-                  _id: smsData._id,
-                  address: smsData.address,
-                  body: smsData.body
-                };
-                this.processMessage(
-                  smsResponse,
-                  smsCommandObjects,
-                  smsConfigurations,
-                  currentUser
-                );
-              }
-            });
-          } else {
-            console.log("on sms found");
+      setInterval(() => {
+        SMS.listSMS(
+          {},
+          (data: any) => {
+            if (data && data.length > 0) {
+              data.map((smsData: any) => {
+                if (smsConfigurations.syncedSMSIds.indexOf(smsData._id) == -1) {
+                  const smsResponse = {
+                    _id: smsData._id,
+                    address: smsData.address,
+                    body: smsData.body
+                  };
+                  this.processMessage(
+                    smsResponse,
+                    smsCommandObjects,
+                    smsConfigurations,
+                    currentUser
+                  );
+                }
+              });
+            }
+          },
+          error => {
+            console.log('Error on list sms : ' + JSON.stringify(error));
           }
-        });
-      }, 60 * 1000);
+        );
+      }, 5 * 1000);
+    } else {
+      console.log('No sms variable');
     }
   }
 
@@ -135,7 +140,7 @@ export class SmsGatewayProvider {
       smsConfigurations
     ).subscribe(
       (payload: any) => {
-        let url = "/api/25/dataValueSets";
+        let url = '/api/25/dataValueSets';
         this.http.defaultPost(url, payload).subscribe(
           response => {
             this.marksSyncedSMS(
@@ -143,16 +148,16 @@ export class SmsGatewayProvider {
               smsConfigurations,
               currentUser
             );
-            console.log("Success import data value");
+            console.log('Success import data value');
             console.log(JSON.stringify(response));
           },
           error => {
-            console.log("Error on post data : " + JSON.stringify(error));
+            console.log('Error on post data : ' + JSON.stringify(error));
           }
         );
       },
       error => {
-        console.log("Error : on get payload : " + JSON.stringify(error));
+        console.log('Error : on get payload : ' + JSON.stringify(error));
       }
     );
   }
@@ -167,8 +172,8 @@ export class SmsGatewayProvider {
         let availableSmsCodes = Object.keys(smsCommandObjects);
         let orgUnit, period, dataSet, dataValues;
         let smsResponseArray = [];
-        smsResponse.body.split(" ").map((content: string) => {
-          if (content && content.trim() != "") {
+        smsResponse.body.split(' ').map((content: string) => {
+          if (content && content.trim() != '') {
             smsResponseArray.push(content.trim());
           }
         });
@@ -202,39 +207,42 @@ export class SmsGatewayProvider {
                       };
                       observer.next(payload);
                     } else {
-                      observer.error("User has not assinged organisation unit");
+                      observer.error('User has not assinged organisation unit');
                     }
                   },
                   error => {
+                    console.log(
+                      'Here w are on error : ' + JSON.stringify(error)
+                    );
                     observer.error(error);
                   }
                 );
               } else {
-                observer.error("Data set is has not beeing set for sync");
+                observer.error('Data set is has not being set for sync');
               }
             } else {
-              observer.error("Missing data values from received sms");
+              observer.error('Missing data values from received sms');
             }
           } else {
-            observer.error("Sms command is not set up");
+            observer.error('Sms command is not set up');
           }
         } else {
-          observer.error("SMS received is not from dhis 2 touch");
+          observer.error('SMS received is not from dhis 2 touch');
         }
       } else {
-        observer.error("Sms content has not found from received sms");
+        observer.error('Sms content has not found from received sms');
       }
     });
   }
 
   getCompletenessDate() {
     let date = new Date();
-    return date.toISOString().split("T")[0];
+    return date.toISOString().split('T')[0];
   }
 
   getSmsCodeToValueMapper(smsCodeValueContents, separator) {
     let mapper = {};
-    smsCodeValueContents.split("|").map((content: any) => {
+    smsCodeValueContents.split('|').map((content: any) => {
       let smsCodeValueArray = content.split(separator);
       if (smsCodeValueArray.length == 2) {
         mapper[smsCodeValueArray[0]] = smsCodeValueArray[1];
@@ -262,9 +270,9 @@ export class SmsGatewayProvider {
   getUserOrganisationUnits(smsResponse): Observable<any> {
     return new Observable(observer => {
       if (smsResponse && smsResponse.address) {
-        let number = smsResponse.address.replace("+", "");
+        let number = smsResponse.address.replace('+', '');
         let url =
-          "users.json?fields=organisationUnits&filter=phoneNumber:ilike:" +
+          'users.json?fields=organisationUnits&filter=phoneNumber:ilike:' +
           number;
         this.http.get(url, true).subscribe(
           (response: any) => {
@@ -273,22 +281,24 @@ export class SmsGatewayProvider {
               observer.complete();
             } else {
               observer.error(
-                "There is no user with mobile number " + smsResponse.address
+                'There is no user with mobile number ' + smsResponse.address
               );
             }
           },
           error => {
+            console.log(
+              'Error of fetching user : ' + url + ' :: ' + JSON.stringify(error)
+            );
             observer.error(error);
           }
         );
       } else {
-        observer.error("Sender phone number is not found");
+        observer.error('Sender phone number is not found');
       }
     });
   }
 
   stopWatchingSms() {
-    console.log(JSON.stringify(this.synchronizationWatcher));
     clearInterval(this.synchronizationWatcher);
   }
 }

@@ -239,8 +239,6 @@ export class LoginPage implements OnInit {
                                   () => {
                                     this.updateProgressTracker(resource);
                                     this.hasUserAuthenticated = true;
-                                    this.downloadingSmsCommands();
-                                    this.downloadingDataSets();
                                   },
                                   error => {
                                     this.cancelLoginProcess(
@@ -333,105 +331,6 @@ export class LoginPage implements OnInit {
     }
   }
 
-  downloadingSmsCommands() {
-    if (this.isLoginProcessActive) {
-      let resource = 'smsCommand';
-      let currentResourceType = 'entryForm';
-      this.progressTracker[currentResourceType].message =
-        'Discovering SMS commands';
-      if (this.completedTrackedProcess.indexOf(resource) > -1) {
-        this.progressTracker[currentResourceType].message =
-          'SMS commands have been discovered';
-        this.updateProgressTracker(resource);
-      } else {
-        this.smsCommandProvider
-          .getSmsCommandFromServer(this.currentUser)
-          .subscribe(
-            (smsCommands: any) => {
-              if (this.isLoginProcessActive) {
-                this.progressTracker[currentResourceType].message =
-                  'Saving SMS commands';
-                this.smsCommandProvider
-                  .savingSmsCommand(
-                    smsCommands,
-                    this.currentUser.currentDatabase
-                  )
-                  .subscribe(
-                    () => {
-                      this.progressTracker[currentResourceType].message =
-                        'SMS commands have been saved';
-                      this.updateProgressTracker(resource);
-                    },
-                    error => {
-                      this.cancelLoginProcess(this.cancelLoginProcessData);
-                      console.log(JSON.stringify(error));
-                      this.AppProvider.setNormalNotification(
-                        'Fail to save SMS commands'
-                      );
-                    }
-                  );
-              }
-            },
-            error => {
-              this.cancelLoginProcess(this.cancelLoginProcessData);
-              console.log(JSON.stringify(error));
-              this.AppProvider.setNormalNotification(
-                'Fail to discover SMS commands'
-              );
-            }
-          );
-      }
-    }
-  }
-
-  downloadingDataSets() {
-    if (this.isLoginProcessActive) {
-      let resource = 'dataSets';
-      let currentResourceType = 'entryForm';
-      this.progressTracker[currentResourceType].message =
-        'Discovering entry forms';
-      if (this.completedTrackedProcess.indexOf(resource) > -1) {
-        this.progressTracker[currentResourceType].message =
-          'Entry forms have been discovered';
-        this.updateProgressTracker(resource);
-      } else {
-        this.dataSetsProvider
-          .downloadDataSetsFromServer(this.currentUser)
-          .subscribe(
-            (dataSets: any) => {
-              if (this.isLoginProcessActive) {
-                this.progressTracker[currentResourceType].message =
-                  'Saving entry forms';
-                this.dataSetsProvider
-                  .saveDataSetsFromServer(dataSets, this.currentUser)
-                  .subscribe(
-                    () => {
-                      this.progressTracker[currentResourceType].message =
-                        'Entry forms have been saved';
-                      this.updateProgressTracker(resource);
-                    },
-                    error => {
-                      this.cancelLoginProcess(this.cancelLoginProcessData);
-                      console.log(JSON.stringify(error));
-                      this.AppProvider.setNormalNotification(
-                        'Fail to save entry forms'
-                      );
-                    }
-                  );
-              }
-            },
-            error => {
-              this.cancelLoginProcess(this.cancelLoginProcessData);
-              console.log(JSON.stringify(error));
-              this.AppProvider.setNormalNotification(
-                'Fail to discover entry forms'
-              );
-            }
-          );
-      }
-    }
-  }
-
   cancelLoginProcess(data) {
     this.animationEffect.progressBar = 'animated fadeOut';
     this.animationEffect.loginForm = 'animated fadeIn';
@@ -466,7 +365,7 @@ export class LoginPage implements OnInit {
   }
 
   setLandingPage(currentUser: CurrentUser) {
-    currentUser.isLogin = true;
+    //currentUser.isLogin = true;
     this.reCheckingAppSetting(currentUser);
     this.smsCommandProvider
       .checkAndGenerateSmsCommands(currentUser)

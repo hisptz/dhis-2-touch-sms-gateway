@@ -19,43 +19,9 @@
           <loading [loadingMessage]="loadingMessage" [loadingSize]="'large'"></loading>
         </div>
         <div *ngIf="!isLoading">
-          <div class="item-card" *ngFor="let gatewayContent of gatewayContents">
-            <ion-row (tap)="toggleGatewayContents(gatewayContent)">
-              <ion-col col-11>
-                <img class="side-menu-icon" [src]="gatewayContent.icon" />&nbsp;&nbsp;
-                <span ion-text [color]="(isGatewayContentOpened[gatewayContent.id]) ?'current' : 'font-color'">
-                  <span [translate]="gatewayContent.name"></span>
-                </span>
-              </ion-col>
-              <ion-col col-1 item>
-                <div style="text-align: center;">
-                  <ion-icon [color]="(isGatewayContentOpened[gatewayContent.id]) ?'current' : 'font-color'" *ngIf="!(isGatewayContentOpened[gatewayContent.id])"
-                    name="ios-arrow-down" item-right></ion-icon>
-                  <ion-icon [color]="(isGatewayContentOpened[gatewayContent.id]) ?'current' : 'font-color'" *ngIf="(isGatewayContentOpened[gatewayContent.id])"
-                    name="ios-arrow-up" item-right></ion-icon>
-                </div>
-              </ion-col>
-            </ion-row>
-            <div *ngIf="(isGatewayContentOpened[gatewayContent.id])">
-              <hr>
-              <div *ngIf="gatewayContent.id == 'entry_forms'">
-                <div *ngFor="let dataSet of dataSets">
-                  <ion-item no-lines>
-                    <ion-checkbox color="blue" [(ngModel)]="dataSet.status" (ionChange)="updateSelectedItems()" disabled="{{(isSyncActive)?'true':'false'}}"></ion-checkbox>
-                    <ion-label> {{ dataSet.name }} </ion-label>
-                  </ion-item>
-                </div>
-              </div>
-              <div *ngIf="gatewayContent.id == 'program_without_registration'">
-                coming soon
-              </div>
-
-            </div>
+          <div class="item-card">
+            Logs for all actions on background process
           </div>
-
-          <button ion-button full [disabled]="!shouldEnableSYncButton" [color]="(isSyncActive)? 'danger': 'primary'" (click)="startOrStopSync()">
-            {{ (isSyncActive)? ('Stop' |translate): ('Start' |translate) }}
-          </button>
         </div>
       </ion-col>
     </ion-row>
