@@ -35,7 +35,7 @@ export class SmsGatewayPage implements OnInit {
   isSyncActive: boolean;
   smsCommandMapper: any;
   translationMapper: any;
-
+  icons: any;
   //observer
   smsLogs$: Observable<any>;
 
@@ -52,6 +52,11 @@ export class SmsGatewayPage implements OnInit {
     private store: Store<ApplicationState>
   ) {
     this.smsLogs$ = store.select(logsSelectors.getCurrentSmsGatewayLogs);
+    this.icons = {
+      danger: 'assets/icon/danger.png',
+      info: 'assets/icon/info.png',
+      warning: 'assets/icon/warning.png'
+    };
   }
 
   ngOnInit() {
@@ -69,6 +74,10 @@ export class SmsGatewayPage implements OnInit {
         this.loadingCurrentUserInformation();
       }
     );
+  }
+
+  viewLogsByStatus(status) {
+    this.appProvider.setTopNotification('View logs status coming soon');
   }
 
   loadingCurrentUserInformation() {

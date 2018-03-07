@@ -1,3 +1,4 @@
-<div>
-  {{ smsLog.time + " : " + smsLog.logMessage }}
+<div class="animated fadeIn" class="logs-container">
+  <img class="side-menu-icon" [src]="icons[smsLog.type]" />&nbsp;&nbsp;
+  <span>{{ smsLog.time + " : " + smsLog.logMessage }}</span>
 </div>

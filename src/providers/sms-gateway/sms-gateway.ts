@@ -111,7 +111,7 @@ export class SmsGatewayProvider {
                         body: smsData.body
                       };
                       const log: SmsGateWayLogs = {
-                        isSuccess: true,
+                        type: 'info',
                         time: this.getSMSGatewayLogTime(),
                         _id: smsResponse._id,
                         message: smsResponse,
@@ -213,11 +213,11 @@ export class SmsGatewayProvider {
       currentUser
     ).subscribe(
       (payload: any) => {
-        let dataSetName = ' ';
+        let dataSetName = ' form name ';
         const orgUnitName = payload.orgUnitName;
         delete payload.orgUnitName;
         const log: SmsGateWayLogs = {
-          isSuccess: true,
+          type: 'info',
           time: this.getSMSGatewayLogTime(),
           _id: smsResponse._id,
           message: smsResponse,
@@ -241,7 +241,7 @@ export class SmsGatewayProvider {
           response => {
             this.markAsSyncedSMS(smsResponse._id, currentUser);
             const log: SmsGateWayLogs = {
-              isSuccess: true,
+              type: 'info',
               time: this.getSMSGatewayLogTime(),
               _id: smsResponse._id,
               message: smsResponse,
@@ -251,7 +251,7 @@ export class SmsGatewayProvider {
               dataSetId: payload.dataSet,
               logMessage:
                 payload.dataValues.length +
-                'for organisation unit ' +
+                ' data values for organisation unit ' +
                 orgUnitName +
                 ', form ' +
                 dataSetName +
@@ -263,7 +263,7 @@ export class SmsGatewayProvider {
           },
           error => {
             const log: SmsGateWayLogs = {
-              isSuccess: false,
+              type: 'danger',
               time: this.getSMSGatewayLogTime(),
               _id: smsResponse._id,
               message: smsResponse,
@@ -349,7 +349,7 @@ export class SmsGatewayProvider {
                     } else {
                       this.markAsNotSyncedSMS(smsResponse._id, currentUser);
                       const log: SmsGateWayLogs = {
-                        isSuccess: false,
+                        type: 'warning',
                         time: this.getSMSGatewayLogTime(),
                         _id: smsResponse._id,
                         message: smsResponse,
@@ -371,7 +371,7 @@ export class SmsGatewayProvider {
               } else {
                 this.markAsNotSyncedSMS(smsResponse._id, currentUser);
                 const log: SmsGateWayLogs = {
-                  isSuccess: false,
+                  type: 'warning',
                   time: this.getSMSGatewayLogTime(),
                   _id: smsResponse._id,
                   message: smsResponse,
@@ -385,7 +385,7 @@ export class SmsGatewayProvider {
             } else {
               this.markAsNotSyncedSMS(smsResponse._id, currentUser);
               const log: SmsGateWayLogs = {
-                isSuccess: false,
+                type: 'warning',
                 time: this.getSMSGatewayLogTime(),
                 _id: smsResponse._id,
                 message: smsResponse,
@@ -399,7 +399,7 @@ export class SmsGatewayProvider {
           } else {
             this.markAsNotSyncedSMS(smsResponse._id, currentUser);
             const log: SmsGateWayLogs = {
-              isSuccess: false,
+              type: 'warning',
               time: this.getSMSGatewayLogTime(),
               _id: smsResponse._id,
               message: smsResponse,
@@ -413,7 +413,7 @@ export class SmsGatewayProvider {
         } else {
           this.markAsSkippedSMS(smsResponse._id, currentUser);
           const log: SmsGateWayLogs = {
-            isSuccess: false,
+            type: 'warning',
             time: this.getSMSGatewayLogTime(),
             _id: smsResponse._id,
             message: smsResponse,
@@ -428,7 +428,7 @@ export class SmsGatewayProvider {
       } else {
         this.markAsSkippedSMS(smsResponse._id, currentUser);
         const log: SmsGateWayLogs = {
-          isSuccess: false,
+          type: 'warning',
           time: this.getSMSGatewayLogTime(),
           _id: smsResponse._id,
           message: smsResponse,
@@ -488,7 +488,7 @@ export class SmsGatewayProvider {
             } else {
               this.markAsNotSyncedSMS(smsResponse._id, currentUser);
               const log: SmsGateWayLogs = {
-                isSuccess: false,
+                type: 'warning',
                 time: this.getSMSGatewayLogTime(),
                 _id: smsResponse._id,
                 logMessage:
@@ -504,7 +504,7 @@ export class SmsGatewayProvider {
           error => {
             this.markAsNotSyncedSMS(smsResponse._id, currentUser);
             const log: SmsGateWayLogs = {
-              isSuccess: false,
+              type: 'danger',
               time: this.getSMSGatewayLogTime(),
               message: smsResponse,
               _id: smsResponse._id,
@@ -521,7 +521,7 @@ export class SmsGatewayProvider {
       } else {
         this.markAsSkippedSMS(smsResponse._id, currentUser);
         const log: SmsGateWayLogs = {
-          isSuccess: false,
+          type: 'warning',
           _id: smsResponse._id,
           time: this.getSMSGatewayLogTime(),
           logMessage: 'Missing phone number of the sender',

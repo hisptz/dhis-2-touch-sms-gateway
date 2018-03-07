@@ -8,20 +8,32 @@
     </ion-title>
   </ion-navbar>
 </ion-header>
-
 <ion-content>
-
   <ion-grid>
     <ion-row>
       <ion-col>
-
         <div *ngIf="isLoading">
           <loading [loadingMessage]="loadingMessage" [loadingSize]="'large'"></loading>
         </div>
         <div *ngIf="!isLoading">
+          <div text-right class="animated fadeIn">
+            <button ion-button outline color="font-color" text-capitalize (click)="viewLogsByStatus('info')">
+              <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
+              <span>0</span>
+            </button>
+            <button ion-button outline color="font-color" text-capitalize (click)="viewLogsByStatus('warning')">
+              <img class="side-menu-icon" [src]="icons.warning" />&nbsp;&nbsp;
+              <span>0</span>
+            </button>
+            <button ion-button outline color="font-color" text-capitalize (click)="viewLogsByStatus('danger')">
+              <img class="side-menu-icon" [src]="icons.danger" />&nbsp;&nbsp;
+              <span>0</span>
+            </button>
+          </div>
           <div class="item-card">
-            <div *ngIf="(smsLogs$ |async).length == 0">
-              Listening to SMS
+            <div *ngIf="(smsLogs$ |async).length == 0" text-center padding>
+              <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
+              <span class="animated fadeIn" [translate]="'SMS gatway is now listening for incoming SMS'"> </span>
             </div>
             <div *ngFor="let smsLog of smsLogs$ |async;trackBy: trackByFn">
               <sms-logs-list-card [smsLog]="smsLog"></sms-logs-list-card>

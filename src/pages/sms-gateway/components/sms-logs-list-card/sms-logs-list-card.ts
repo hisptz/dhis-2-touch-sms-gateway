@@ -16,9 +16,9 @@ export class SmsLogsListCardComponent {
   icons: any;
   constructor() {
     this.icons = {
-      danger: 'assests/icon/danger.png',
-      info: 'assests/icon/info.png',
-      warning: 'assests/icon/warning.png'
+      danger: 'assets/icon/danger.png',
+      info: 'assets/icon/info.png',
+      warning: 'assets/icon/warning.png'
     };
   }
 }

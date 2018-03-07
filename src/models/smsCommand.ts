@@ -22,7 +22,7 @@ export interface SmsConfiguration {
 export interface SmsGateWayLogs {
   _id?: string;
   time: string;
-  isSuccess: boolean;
+  type: string;
   dataSetId?: string;
   periodIso?: string;
   logMessage: string;
