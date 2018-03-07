@@ -188,6 +188,8 @@ export class SmsGatewayPage implements OnInit {
                                       },
                                       error => {}
                                     );
+                                } else {
+                                  this.loadingConfiguration(this.currentUser);
                                 }
                               },
                               error => {
