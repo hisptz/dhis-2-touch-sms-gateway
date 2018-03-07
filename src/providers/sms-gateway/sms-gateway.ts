@@ -91,11 +91,7 @@ export class SmsGatewayProvider {
     return defaultConfigurations;
   }
 
-  startWatchingSms(
-    smsCommandObjects,
-    smsConfigurations: SmsConfiguration,
-    currentUser
-  ) {
+  startWatchingSms(smsCommandObjects, currentUser) {
     if (SMS) {
       this.backgroundMode.enable();
       setInterval(() => {
@@ -104,30 +100,39 @@ export class SmsGatewayProvider {
           {},
           (data: any) => {
             if (data && data.length > 0) {
-              //@chingalo loading sms configurations
-
-              data.map((smsData: any) => {
-                if (smsConfigurations.syncedSMSIds.indexOf(smsData._id) == -1) {
-                  const smsResponse: ReceivedSms = {
-                    _id: smsData._id,
-                    address: smsData.address,
-                    body: smsData.body
-                  };
-                  const log: SmsGateWayLogs = {
+              this.getSmsConfigurations(currentUser).subscribe(
+                (smsConfigurations: SmsConfiguration) => {
+                  data.map((smsData: any) => {
+                    console.log(JSON.stringify(smsConfigurations));
+                    if (this.shouldProcessSMS(smsConfigurations, smsData._id)) {
+                      const smsResponse: ReceivedSms = {
+                        _id: smsData._id,
+                        address: smsData.address,
+                        body: smsData.body
+                      };
+                      const log: SmsGateWayLogs = {
+                        isSuccess: false,
+                        time: this.getCompletenessDate(),
+                        logMessage: ''
+                        //dataSetId periodIso organisationUnitId organisationUnitName _id message
+                      };
+                      this.processMessage(
+                        smsResponse,
+                        smsCommandObjects,
+                        smsConfigurations,
+                        currentUser
+                      );
+                    }
+                  });
+                },
+                error => {
+                  const logs: SmsGateWayLogs = {
                     isSuccess: false,
-                    time: this.getCompletenessDate(),
-                    logMessage: ''
-                    //dataSetId periodIso organisationUnitId organisationUnitName _id message
+                    time: new Date().toISOString().split('T')[0],
+                    logMessage: 'Error on list sms : ' + JSON.stringify(error)
                   };
-
-                  this.processMessage(
-                    smsResponse,
-                    smsCommandObjects,
-                    smsConfigurations,
-                    currentUser
-                  );
                 }
-              });
+              );
             }
           },
           error => {
@@ -146,11 +151,51 @@ export class SmsGatewayProvider {
     }
   }
 
-  marksSyncedSMS(smsId, smsConfigurations, currentUser) {
-    smsConfigurations.syncedSMSIds.push(smsId);
-    this.setSmsConfigurations(currentUser, smsConfigurations).subscribe(
-      () => {},
-      error => {}
+  shouldProcessSMS(smsConfigurations, smsId) {
+    let result = true;
+    if (
+      smsConfigurations.syncedSMSIds.indexOf(smsId) > -1 ||
+      smsConfigurations.notSyncedSMSIds.indexOf(smsId) > -1 ||
+      smsConfigurations.skippedSMSIds.indexOf(smsId) > -1
+    ) {
+      result = false;
+    }
+    return result;
+  }
+
+  marksSyncedSMS(smsId, currentUser) {
+    this.getSmsConfigurations(currentUser).subscribe(
+      (smsConfigurations: SmsConfiguration) => {
+        smsConfigurations.syncedSMSIds.push(smsId);
+        this.setSmsConfigurations(currentUser, smsConfigurations).subscribe(
+          () => {},
+          error => {}
+        );
+      }
+    );
+  }
+
+  markUnSyncedSMS(smsId, currentUser) {
+    this.getSmsConfigurations(currentUser).subscribe(
+      (smsConfigurations: SmsConfiguration) => {
+        smsConfigurations.notSyncedSMSIds.push(smsId);
+        this.setSmsConfigurations(currentUser, smsConfigurations).subscribe(
+          () => {},
+          error => {}
+        );
+      }
+    );
+  }
+
+  markSkippedSMS(smsId, currentUser) {
+    this.getSmsConfigurations(currentUser).subscribe(
+      (smsConfigurations: SmsConfiguration) => {
+        smsConfigurations.skippedSMSIds.push(smsId);
+        this.setSmsConfigurations(currentUser, smsConfigurations).subscribe(
+          () => {},
+          error => {}
+        );
+      }
     );
   }
 
@@ -163,18 +208,15 @@ export class SmsGatewayProvider {
     this.getSmsToDataValuePayload(
       smsResponse,
       smsCommandObjects,
-      smsConfigurations
+      smsConfigurations,
+      currentUser
     ).subscribe(
       (payload: any) => {
         console.log(JSON.stringify(payload));
         let url = '/api/25/dataValueSets';
         this.http.defaultPost(url, payload).subscribe(
           response => {
-            this.marksSyncedSMS(
-              smsResponse._id,
-              smsConfigurations,
-              currentUser
-            );
+            this.marksSyncedSMS(smsResponse._id, currentUser);
             //@chingalo
             console.log('Success import data value');
             console.log(JSON.stringify(response));
@@ -200,13 +242,6 @@ export class SmsGatewayProvider {
         );
       },
       error => {
-        //@chingalo
-        const log: SmsGateWayLogs = {
-          isSuccess: false,
-          time: this.getCompletenessDate(),
-          logMessage: ''
-          //dataSetId periodIso organisationUnitId organisationUnitName _id message
-        };
         console.log('Error : on get payload : ' + JSON.stringify(error));
       }
     );
@@ -225,7 +260,8 @@ export class SmsGatewayProvider {
   getSmsToDataValuePayload(
     smsResponse,
     smsCommandObjects,
-    smsConfigurations
+    smsConfigurations,
+    currentUser
   ): Observable<any> {
     return new Observable(observer => {
       if (smsResponse.body) {
@@ -307,12 +343,14 @@ export class SmsGatewayProvider {
               logMessage: ''
               //dataSetId periodIso organisationUnitId organisationUnitName _id message
             };
-            observer.error('Sms command is not set up');
+            observer.error('Sms command is not set up' + smsResponse.body);
           }
         } else {
+          this.markSkippedSMS(smsResponse._id, currentUser);
           observer.error('SMS received is not from dhis 2 touch');
         }
       } else {
+        this.markSkippedSMS(smsResponse._id, currentUser);
         observer.error('Sms content has not found from received sms');
       }
     });

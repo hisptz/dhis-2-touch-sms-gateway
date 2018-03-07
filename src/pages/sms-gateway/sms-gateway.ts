@@ -242,10 +242,7 @@ export class SmsGatewayPage implements OnInit {
           : key;
         this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
           smsCommandMapper => {
-            this.checkPermisionsAndStartGateway(
-              smsCommandMapper,
-              smsConfigurations
-            );
+            this.checkPermisionsAndStartGateway(smsCommandMapper);
           },
           error => {
             this.isLoading = false;
@@ -267,14 +264,10 @@ export class SmsGatewayPage implements OnInit {
     );
   }
 
-  checkPermisionsAndStartGateway(smsCommandMapper, smsConfigurations) {
+  checkPermisionsAndStartGateway(smsCommandMapper) {
     this.appPermisssion.requestSMSPermission().subscribe(
       response => {
-        this.smsGateway.startWatchingSms(
-          smsCommandMapper,
-          smsConfigurations,
-          this.currentUser
-        );
+        this.smsGateway.startWatchingSms(smsCommandMapper, this.currentUser);
         this.smsCommandMapper = smsCommandMapper;
         this.isLoading = false;
         if (response) {
