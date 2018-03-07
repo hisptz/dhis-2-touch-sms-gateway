@@ -69,7 +69,7 @@ export class SmsGatewayProvider {
         .set(key, configuration)
         .then(() => {
           observer.next();
-          //observer.complete();
+          observer.complete();
         })
         .catch(error => {
           observer.error(error);
@@ -84,7 +84,9 @@ export class SmsGatewayProvider {
   getDefaultConfigurations(): SmsConfiguration {
     let defaultConfigurations: SmsConfiguration = {
       dataSetIds: [],
-      syncedSMSIds: []
+      syncedSMSIds: [],
+      notSyncedSMSIds: [],
+      skippedSMSIds: []
     };
     return defaultConfigurations;
   }
@@ -102,6 +104,8 @@ export class SmsGatewayProvider {
           {},
           (data: any) => {
             if (data && data.length > 0) {
+              //@chingalo loading sms configurations
+
               data.map((smsData: any) => {
                 if (smsConfigurations.syncedSMSIds.indexOf(smsData._id) == -1) {
                   const smsResponse: ReceivedSms = {
@@ -109,6 +113,13 @@ export class SmsGatewayProvider {
                     address: smsData.address,
                     body: smsData.body
                   };
+                  const log: SmsGateWayLogs = {
+                    isSuccess: false,
+                    time: this.getCompletenessDate(),
+                    logMessage: ''
+                    //dataSetId periodIso organisationUnitId organisationUnitName _id message
+                  };
+
                   this.processMessage(
                     smsResponse,
                     smsCommandObjects,
@@ -122,7 +133,7 @@ export class SmsGatewayProvider {
           error => {
             const logs: SmsGateWayLogs = {
               isSuccess: false,
-              date: new Date().toISOString().split('T')[0],
+              time: new Date().toISOString().split('T')[0],
               logMessage: 'Error on list sms : ' + JSON.stringify(error)
             };
             this.store.dispatch(new logsActions.FailToLoadLogs(logs));
@@ -155,6 +166,7 @@ export class SmsGatewayProvider {
       smsConfigurations
     ).subscribe(
       (payload: any) => {
+        console.log(JSON.stringify(payload));
         let url = '/api/25/dataValueSets';
         this.http.defaultPost(url, payload).subscribe(
           response => {
@@ -163,18 +175,51 @@ export class SmsGatewayProvider {
               smsConfigurations,
               currentUser
             );
+            //@chingalo
             console.log('Success import data value');
             console.log(JSON.stringify(response));
+            const log: SmsGateWayLogs = {
+              isSuccess: false,
+              time: this.getCompletenessDate(),
+              logMessage: ''
+
+              //dataSetId periodIso organisationUnitId organisationUnitName _id message
+            };
           },
           error => {
+            //@chingalo
+            const log: SmsGateWayLogs = {
+              isSuccess: false,
+              time: this.getCompletenessDate(),
+              logMessage: '',
+              dataSetId: ''
+              //dataSetId periodIso organisationUnitId organisationUnitName _id message
+            };
             console.log('Error on post data : ' + JSON.stringify(error));
           }
         );
       },
       error => {
+        //@chingalo
+        const log: SmsGateWayLogs = {
+          isSuccess: false,
+          time: this.getCompletenessDate(),
+          logMessage: ''
+          //dataSetId periodIso organisationUnitId organisationUnitName _id message
+        };
         console.log('Error : on get payload : ' + JSON.stringify(error));
       }
     );
+  }
+
+  getSmsResponseArray(smsResponse) {
+    let smsResponseArray = [];
+    smsResponse.body.split(' ').map((content: string) => {
+      if (content && content.trim() != '') {
+        smsResponseArray.push(content.trim());
+      }
+    });
+    return smsResponseArray;
   }
 
   getSmsToDataValuePayload(
@@ -186,12 +231,7 @@ export class SmsGatewayProvider {
       if (smsResponse.body) {
         let availableSmsCodes = Object.keys(smsCommandObjects);
         let orgUnit, period, dataSet, dataValues;
-        let smsResponseArray = [];
-        smsResponse.body.split(' ').map((content: string) => {
-          if (content && content.trim() != '') {
-            smsResponseArray.push(content.trim());
-          }
-        });
+        let smsResponseArray = this.getSmsResponseArray(smsResponse);
         if (smsResponseArray.length == 3) {
           let smsCommand = smsResponseArray[0];
           if (availableSmsCodes.indexOf(smsCommand) > -1) {
@@ -222,10 +262,18 @@ export class SmsGatewayProvider {
                       };
                       observer.next(payload);
                     } else {
+                      //@chingalo
                       observer.error('User has not assinged organisation unit');
                     }
                   },
                   error => {
+                    //@chingalo
+                    const log: SmsGateWayLogs = {
+                      isSuccess: false,
+                      time: this.getCompletenessDate(),
+                      logMessage: ''
+                      //dataSetId periodIso organisationUnitId organisationUnitName _id message
+                    };
                     console.log(
                       'Here w are on error : ' + JSON.stringify(error)
                     );
@@ -233,18 +281,32 @@ export class SmsGatewayProvider {
                   }
                 );
               } else {
+                //@chingalo
+                const log: SmsGateWayLogs = {
+                  isSuccess: false,
+                  time: this.getCompletenessDate(),
+                  logMessage: ''
+                  //dataSetId periodIso organisationUnitId organisationUnitName _id message
+                };
                 observer.error('Data set is has not being set for sync');
               }
             } else {
+              const log: SmsGateWayLogs = {
+                isSuccess: false,
+                time: this.getCompletenessDate(),
+                logMessage: ''
+                //dataSetId periodIso organisationUnitId organisationUnitName _id message
+              };
+              //@chingalo
               observer.error('Missing data values from received sms');
             }
           } else {
-            const logs: SmsGateWayLogs = {
+            const log: SmsGateWayLogs = {
               isSuccess: false,
-              date: new Date().toISOString().split('T')[0],
-              logMessage: 'Sms command is not set up'
+              time: this.getCompletenessDate(),
+              logMessage: ''
+              //dataSetId periodIso organisationUnitId organisationUnitName _id message
             };
-            this.store.dispatch(new logsActions.FailToLoadLogs(logs));
             observer.error('Sms command is not set up');
           }
         } else {

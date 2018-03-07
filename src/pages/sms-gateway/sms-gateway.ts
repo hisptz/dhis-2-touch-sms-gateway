@@ -149,7 +149,7 @@ export class SmsGatewayPage implements OnInit {
               this.smsCommand
                 .checkAndGenerateSmsCommands(this.currentUser)
                 .subscribe(
-                  data => {
+                  () => {
                     key = 'Updating current user information';
                     this.loadingMessage = this.translationMapper[key]
                       ? this.translationMapper[key]
@@ -235,6 +235,7 @@ export class SmsGatewayPage implements OnInit {
       : key;
     this.smsGateway.getSmsConfigurations(currentUser).subscribe(
       (smsConfigurations: SmsConfiguration) => {
+        console.log(JSON.stringify(smsConfigurations));
         key = 'Discovering SMS commands';
         this.loadingMessage = this.translationMapper[key]
           ? this.translationMapper[key]
@@ -276,9 +277,11 @@ export class SmsGatewayPage implements OnInit {
         );
         this.smsCommandMapper = smsCommandMapper;
         this.isLoading = false;
-        this.appProvider.setTopNotification(
-          'SMS gatway is now listening for incoming SMS'
-        );
+        if (response) {
+          this.appProvider.setTopNotification(
+            'SMS gatway is now listening for incoming SMS'
+          );
+        }
       },
       error => {
         this.isLoading = false;

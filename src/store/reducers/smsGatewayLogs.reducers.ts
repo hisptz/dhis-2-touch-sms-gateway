@@ -1,15 +1,15 @@
-import { SmsGateWayLogs } from '../../models/smsCommand';
+import { SmsGateWayLogs, SmsGateWayLogsError } from '../../models/smsCommand';
 import * as fromSmsGatewayLogsAction from '../actions/smsGatewayLogs.action';
 
 export interface SmsGatewayLogsState {
-  data: Array<SmsGateWayLogs>;
+  logs: Array<SmsGateWayLogs>;
+  error: Array<SmsGateWayLogsError>;
   isLoading: boolean;
-  isLoaded: boolean;
 }
 
 export const initialState: SmsGatewayLogsState = {
-  data: [],
-  isLoaded: false,
+  logs: [],
+  error: [],
   isLoading: false
 };
 
@@ -19,23 +19,23 @@ export function smsGatewayLogsReducer(
 ) {
   switch (action.type) {
     case fromSmsGatewayLogsAction.LOADING_LOGS: {
-      console.log(JSON.stringify(state));
-      return { ...state, isLoaded: false, isLoading: true };
+      return { ...state, isLoading: true };
     }
     case fromSmsGatewayLogsAction.LOGS_HAVE_BEEN_LOADED: {
-      let data = state.data;
-      data.unshift(action.payload);
-      return { data, isLoaded: true, isLoading: false };
+      let logs = state.logs;
+      logs.unshift(action.payload);
+      return { ...state, logs, isLoading: false };
     }
     case fromSmsGatewayLogsAction.FAIL_TO_LOAD_LOGS: {
-      let data = state.data;
-      data.unshift(action.payload);
-      return { data, isLoaded: true, isLoading: false };
+      let error = state.error;
+      error.unshift(action.payload);
+      return { ...state, error, isLoading: false };
     }
   }
   return state;
 }
 
 export const getLoadingStatus = (state: SmsGatewayLogsState) => state.isLoading;
-export const getLoadedStatus = (state: SmsGatewayLogsState) => state.isLoaded;
-export const getSmsGatewayLogsData = (state: SmsGatewayLogsState) => state.data;
+export const getSmsGatewayLogsData = (state: SmsGatewayLogsState) => state.logs;
+export const getSmsGatewayLogsError = (state: SmsGatewayLogsState) =>
+  state.error;
