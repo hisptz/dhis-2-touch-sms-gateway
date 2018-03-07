@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { SmsGateWayLogs } from '../../models/smsCommand';
+import { SmsGateWayLogs, SmsGateWayLogsError } from '../../models/smsCommand';
 
 //loading logs actions
 export const LOADING_LOGS = '[SMS GateWay Logs] Loading logs';
@@ -17,7 +17,7 @@ export class LogsHaveBeenLoaded implements Action {
 
 export class FailToLoadLogs implements Action {
   readonly type = FAIL_TO_LOAD_LOGS;
-  constructor(public payload: SmsGateWayLogs) {}
+  constructor(public payload: SmsGateWayLogsError) {}
 }
 
 export type SmsGateWayLogsActions =

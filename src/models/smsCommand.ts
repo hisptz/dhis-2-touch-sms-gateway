@@ -37,4 +37,7 @@ export interface ReceivedSms {
   address: string;
 }
 
-export interface SmsGateWayLogsError {}
+export interface SmsGateWayLogsError {
+  time: string;
+  logMessage: string;
+}

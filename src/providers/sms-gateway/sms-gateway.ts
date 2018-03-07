@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import {
   SmsConfiguration,
   SmsGateWayLogs,
+  SmsGateWayLogsError,
   ReceivedSms
 } from '../../models/smsCommand';
 import { BackgroundMode } from '@ionic-native/background-mode';
@@ -103,7 +104,6 @@ export class SmsGatewayProvider {
               this.getSmsConfigurations(currentUser).subscribe(
                 (smsConfigurations: SmsConfiguration) => {
                   data.map((smsData: any) => {
-                    console.log(JSON.stringify(smsConfigurations));
                     if (this.shouldProcessSMS(smsConfigurations, smsData._id)) {
                       const smsResponse: ReceivedSms = {
                         _id: smsData._id,
@@ -111,10 +111,13 @@ export class SmsGatewayProvider {
                         body: smsData.body
                       };
                       const log: SmsGateWayLogs = {
-                        isSuccess: false,
-                        time: this.getCompletenessDate(),
-                        logMessage: ''
-                        //dataSetId periodIso organisationUnitId organisationUnitName _id message
+                        isSuccess: true,
+                        time: this.getSMSGatewayLogTime(),
+                        _id: smsResponse._id,
+                        message: smsResponse,
+                        logMessage:
+                          'Starting processing message from ' +
+                          smsResponse.address
                       };
                       this.processMessage(
                         smsResponse,
@@ -126,26 +129,21 @@ export class SmsGatewayProvider {
                   });
                 },
                 error => {
-                  const logs: SmsGateWayLogs = {
-                    isSuccess: false,
-                    time: new Date().toISOString().split('T')[0],
-                    logMessage: 'Error on list sms : ' + JSON.stringify(error)
-                  };
+                  console.log(JSON.stringify(error));
                 }
               );
             }
           },
           error => {
-            const logs: SmsGateWayLogs = {
-              isSuccess: false,
-              time: new Date().toISOString().split('T')[0],
+            const logs: SmsGateWayLogsError = {
+              time: this.getSMSGatewayLogTime(),
               logMessage: 'Error on list sms : ' + JSON.stringify(error)
             };
             this.store.dispatch(new logsActions.FailToLoadLogs(logs));
             console.log('Error on list sms : ' + JSON.stringify(error));
           }
         );
-      }, 5 * 1000);
+      }, 10 * 1000);
     } else {
       console.log('No sms variable');
     }
@@ -163,7 +161,7 @@ export class SmsGatewayProvider {
     return result;
   }
 
-  marksSyncedSMS(smsId, currentUser) {
+  markAsSyncedSMS(smsId, currentUser) {
     this.getSmsConfigurations(currentUser).subscribe(
       (smsConfigurations: SmsConfiguration) => {
         smsConfigurations.syncedSMSIds.push(smsId);
@@ -175,7 +173,7 @@ export class SmsGatewayProvider {
     );
   }
 
-  markUnSyncedSMS(smsId, currentUser) {
+  markAsNotSyncedSMS(smsId, currentUser) {
     this.getSmsConfigurations(currentUser).subscribe(
       (smsConfigurations: SmsConfiguration) => {
         smsConfigurations.notSyncedSMSIds.push(smsId);
@@ -187,7 +185,7 @@ export class SmsGatewayProvider {
     );
   }
 
-  markSkippedSMS(smsId, currentUser) {
+  markAsSkippedSMS(smsId, currentUser) {
     this.getSmsConfigurations(currentUser).subscribe(
       (smsConfigurations: SmsConfiguration) => {
         smsConfigurations.skippedSMSIds.push(smsId);
@@ -212,31 +210,78 @@ export class SmsGatewayProvider {
       currentUser
     ).subscribe(
       (payload: any) => {
-        console.log(JSON.stringify(payload));
+        let dataSetName = ' ';
+        const orgUnitName = payload.orgUnitName;
+        delete payload.orgUnitName;
+        const log: SmsGateWayLogs = {
+          isSuccess: true,
+          time: this.getSMSGatewayLogTime(),
+          _id: smsResponse._id,
+          message: smsResponse,
+          organisationUnitId: payload.orgUnit,
+          organisationUnitName: orgUnitName,
+          periodIso: payload.period,
+          dataSetId: payload.dataSet,
+          logMessage:
+            'Uploading ' +
+            payload.dataValues.length +
+            ' data values to the server for organisation unit ' +
+            orgUnitName +
+            ', form ' +
+            dataSetName +
+            ' for period ' +
+            payload.period
+        };
+        this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+
         let url = '/api/25/dataValueSets';
         this.http.defaultPost(url, payload).subscribe(
           response => {
-            this.marksSyncedSMS(smsResponse._id, currentUser);
-            //@chingalo
-            console.log('Success import data value');
-            console.log(JSON.stringify(response));
+            this.markAsSyncedSMS(smsResponse._id, currentUser);
             const log: SmsGateWayLogs = {
-              isSuccess: false,
-              time: this.getCompletenessDate(),
-              logMessage: ''
-
-              //dataSetId periodIso organisationUnitId organisationUnitName _id message
+              isSuccess: true,
+              time: this.getSMSGatewayLogTime(),
+              _id: smsResponse._id,
+              message: smsResponse,
+              organisationUnitId: payload.orgUnit,
+              organisationUnitName: orgUnitName,
+              periodIso: payload.period,
+              dataSetId: payload.dataSet,
+              logMessage:
+                payload.dataValues.length +
+                'for organisation unit ' +
+                orgUnitName +
+                ', form ' +
+                dataSetName +
+                ' for period ' +
+                payload.period +
+                ' data values haved uploaded successfully'
             };
+            this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
           },
           error => {
-            //@chingalo
             const log: SmsGateWayLogs = {
               isSuccess: false,
-              time: this.getCompletenessDate(),
-              logMessage: '',
-              dataSetId: ''
-              //dataSetId periodIso organisationUnitId organisationUnitName _id message
+              time: this.getSMSGatewayLogTime(),
+              _id: smsResponse._id,
+              message: smsResponse,
+              organisationUnitId: payload.orgUnit,
+              organisationUnitName: orgUnitName,
+              periodIso: payload.period,
+              dataSetId: payload.dataSet,
+              logMessage:
+                'Fail to upload ' +
+                payload.dataValues.length +
+                ' data values to the server for organisation unit ' +
+                orgUnitName +
+                ', form ' +
+                dataSetName +
+                ' for period ' +
+                payload.period +
+                ' :: ' +
+                JSON.stringify(error)
             };
+            this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
             console.log('Error on post data : ' + JSON.stringify(error));
           }
         );
@@ -258,7 +303,7 @@ export class SmsGatewayProvider {
   }
 
   getSmsToDataValuePayload(
-    smsResponse,
+    smsResponse: ReceivedSms,
     smsCommandObjects,
     smsConfigurations,
     currentUser
@@ -284,8 +329,10 @@ export class SmsGatewayProvider {
                 smsCodeToValueMapper
               );
               if (smsConfigurations.dataSetIds.indexOf(dataSet) > -1) {
-                //@todo handling if payload saving if user is not found
-                this.getUserOrganisationUnits(smsResponse).subscribe(
+                this.getUserOrganisationUnits(
+                  smsResponse,
+                  currentUser
+                ).subscribe(
                   (organisationUnits: any) => {
                     if (organisationUnits && organisationUnits.length > 0) {
                       orgUnit = organisationUnits[0].id;
@@ -298,67 +345,100 @@ export class SmsGatewayProvider {
                       };
                       observer.next(payload);
                     } else {
-                      //@chingalo
+                      this.markAsNotSyncedSMS(smsResponse._id, currentUser);
+                      const log: SmsGateWayLogs = {
+                        isSuccess: false,
+                        time: this.getSMSGatewayLogTime(),
+                        _id: smsResponse._id,
+                        message: smsResponse,
+                        logMessage:
+                          'Missing organisation unit assignemnts for user with phone number ' +
+                          smsResponse.address
+                      };
+                      this.store.dispatch(
+                        new logsActions.LogsHaveBeenLoaded(log)
+                      );
                       observer.error('User has not assinged organisation unit');
                     }
                   },
                   error => {
-                    //@chingalo
-                    const log: SmsGateWayLogs = {
-                      isSuccess: false,
-                      time: this.getCompletenessDate(),
-                      logMessage: ''
-                      //dataSetId periodIso organisationUnitId organisationUnitName _id message
-                    };
-                    console.log(
-                      'Here w are on error : ' + JSON.stringify(error)
-                    );
+                    console.log('On fetching : ' + JSON.stringify(error));
                     observer.error(error);
                   }
                 );
               } else {
-                //@chingalo
+                this.markAsNotSyncedSMS(smsResponse._id, currentUser);
                 const log: SmsGateWayLogs = {
                   isSuccess: false,
-                  time: this.getCompletenessDate(),
-                  logMessage: ''
-                  //dataSetId periodIso organisationUnitId organisationUnitName _id message
+                  time: this.getSMSGatewayLogTime(),
+                  _id: smsResponse._id,
+                  message: smsResponse,
+                  logMessage:
+                    'Missing SMS configurations on received SMS from ' +
+                    smsResponse.address
                 };
+                this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
                 observer.error('Data set is has not being set for sync');
               }
             } else {
+              this.markAsNotSyncedSMS(smsResponse._id, currentUser);
               const log: SmsGateWayLogs = {
                 isSuccess: false,
-                time: this.getCompletenessDate(),
-                logMessage: ''
-                //dataSetId periodIso organisationUnitId organisationUnitName _id message
+                time: this.getSMSGatewayLogTime(),
+                _id: smsResponse._id,
+                message: smsResponse,
+                logMessage:
+                  'Missing data values on received SMS from + ' +
+                  smsResponse.address
               };
-              //@chingalo
+              this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
               observer.error('Missing data values from received sms');
             }
           } else {
+            this.markAsNotSyncedSMS(smsResponse._id, currentUser);
             const log: SmsGateWayLogs = {
               isSuccess: false,
-              time: this.getCompletenessDate(),
-              logMessage: ''
-              //dataSetId periodIso organisationUnitId organisationUnitName _id message
+              time: this.getSMSGatewayLogTime(),
+              _id: smsResponse._id,
+              message: smsResponse,
+              logMessage:
+                'Message from ' +
+                smsResponse.address +
+                ' has been marked as unsynced due to incorrect formatting'
             };
-            observer.error('Sms command is not set up' + smsResponse.body);
+            this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
           }
         } else {
-          this.markSkippedSMS(smsResponse._id, currentUser);
+          this.markAsSkippedSMS(smsResponse._id, currentUser);
+          const log: SmsGateWayLogs = {
+            isSuccess: false,
+            time: this.getSMSGatewayLogTime(),
+            _id: smsResponse._id,
+            message: smsResponse,
+            logMessage:
+              'Message from ' +
+              smsResponse.address +
+              ' has been marked as skipped due to incorrect formatting'
+          };
+          this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
           observer.error('SMS received is not from dhis 2 touch');
         }
       } else {
-        this.markSkippedSMS(smsResponse._id, currentUser);
+        this.markAsSkippedSMS(smsResponse._id, currentUser);
+        const log: SmsGateWayLogs = {
+          isSuccess: false,
+          time: this.getSMSGatewayLogTime(),
+          _id: smsResponse._id,
+          message: smsResponse,
+          logMessage:
+            'Message from ' +
+            smsResponse.address +
+            ' has been skipped due to missing SMS contents'
+        };
+        this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
         observer.error('Sms content has not found from received sms');
       }
     });
-  }
-
-  getCompletenessDate() {
-    let date = new Date();
-    return date.toISOString().split('T')[0];
   }
 
   getSmsCodeToValueMapper(smsCodeValueContents, separator) {
@@ -388,7 +468,10 @@ export class SmsGatewayProvider {
     return dataValues;
   }
 
-  getUserOrganisationUnits(smsResponse): Observable<any> {
+  getUserOrganisationUnits(
+    smsResponse: ReceivedSms,
+    currentUser
+  ): Observable<any> {
     return new Observable(observer => {
       if (smsResponse && smsResponse.address) {
         let number = smsResponse.address.replace('+', '');
@@ -401,22 +484,61 @@ export class SmsGatewayProvider {
               observer.next(response.users[0].organisationUnits);
               observer.complete();
             } else {
+              this.markAsNotSyncedSMS(smsResponse._id, currentUser);
+              const log: SmsGateWayLogs = {
+                isSuccess: false,
+                time: this.getSMSGatewayLogTime(),
+                _id: smsResponse._id,
+                logMessage:
+                  'There is no user with phone number ' + smsResponse.address,
+                message: smsResponse
+              };
+              this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
               observer.error(
                 'There is no user with mobile number ' + smsResponse.address
               );
             }
           },
           error => {
-            console.log(
-              'Error of fetching user : ' + url + ' :: ' + JSON.stringify(error)
-            );
-            observer.error(error);
+            this.markAsNotSyncedSMS(smsResponse._id, currentUser);
+            const log: SmsGateWayLogs = {
+              isSuccess: false,
+              time: this.getSMSGatewayLogTime(),
+              message: smsResponse,
+              _id: smsResponse._id,
+              logMessage:
+                'Fail to fetching user with phone number ' +
+                smsResponse.address +
+                ' : ' +
+                JSON.stringify(error)
+            };
+            this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+            observer.error('Error on fetching user : ' + JSON.stringify(error));
           }
         );
       } else {
+        this.markAsSkippedSMS(smsResponse._id, currentUser);
+        const log: SmsGateWayLogs = {
+          isSuccess: false,
+          _id: smsResponse._id,
+          time: this.getSMSGatewayLogTime(),
+          logMessage: 'Missing phone number of the sender',
+          message: smsResponse
+        };
+        this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
         observer.error('Sender phone number is not found');
       }
     });
+  }
+
+  getCompletenessDate() {
+    let date = new Date();
+    return date.toISOString().split('T')[0];
+  }
+
+  getSMSGatewayLogTime() {
+    let date = new Date();
+    return date.toISOString().split('T')[0] + ' ' + date.toLocaleTimeString();
   }
 
   stopWatchingSms() {
