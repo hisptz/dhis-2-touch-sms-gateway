@@ -20,12 +20,15 @@
         </div>
         <div *ngIf="!isLoading">
           <div class="item-card">
-            Logs for all actions on background process
-            <br> {{ smsLogs$ |async |json }}
+            <div *ngIf="(smsLogs$ |async).length == 0">
+              Listening to SMS
+            </div>
+            <div *ngFor="let smsLog of smsLogs$ |async;trackBy: trackByFn">
+              <sms-logs-list-card [smsLog]="smsLog"></sms-logs-list-card>
+            </div>
           </div>
         </div>
       </ion-col>
     </ion-row>
   </ion-grid>
-
 </ion-content>

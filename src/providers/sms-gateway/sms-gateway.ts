@@ -119,6 +119,9 @@ export class SmsGatewayProvider {
                           'Starting processing message from ' +
                           smsResponse.address
                       };
+                      this.store.dispatch(
+                        new logsActions.LogsHaveBeenLoaded(log)
+                      );
                       this.processMessage(
                         smsResponse,
                         smsCommandObjects,
@@ -233,7 +236,6 @@ export class SmsGatewayProvider {
             payload.period
         };
         this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
-
         let url = '/api/25/dataValueSets';
         this.http.defaultPost(url, payload).subscribe(
           response => {
