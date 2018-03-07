@@ -283,6 +283,10 @@ export class SmsGatewayPage implements OnInit {
     );
   }
 
+  trackByFn(index, item) {
+    return index;
+  }
+
   getValuesToTranslate() {
     return [
       'Discovering current user information',

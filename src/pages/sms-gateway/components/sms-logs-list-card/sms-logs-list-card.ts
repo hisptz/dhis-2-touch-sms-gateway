@@ -13,6 +13,12 @@ import { SmsGateWayLogs } from '../../../../models/smsCommand';
 })
 export class SmsLogsListCardComponent {
   @Input() smsLog: SmsGateWayLogs;
-
-  constructor() {}
+  icons: any;
+  constructor() {
+    this.icons = {
+      danger: 'assests/icon/danger.png',
+      info: 'assests/icon/info.png',
+      warning: 'assests/icon/warning.png'
+    };
+  }
 }
