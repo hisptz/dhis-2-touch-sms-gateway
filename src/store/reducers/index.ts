@@ -21,4 +21,4 @@ export const getCurrentUserState = createFeatureSelector<CurrentUserState>(
 
 export const getSmsGatewayLogsState = createFeatureSelector<
   SmsGatewayLogsState
->('smsGatewayLogs');
+>('smsLogs');

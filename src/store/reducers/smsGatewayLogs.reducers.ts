@@ -19,6 +19,7 @@ export function smsGatewayLogsReducer(
 ) {
   switch (action.type) {
     case fromSmsGatewayLogsAction.LOADING_LOGS: {
+      console.log(JSON.stringify(state));
       return { ...state, isLoaded: false, isLoading: true };
     }
     case fromSmsGatewayLogsAction.LOGS_HAVE_BEEN_LOADED: {
@@ -27,7 +28,9 @@ export function smsGatewayLogsReducer(
       return { data, isLoaded: true, isLoading: false };
     }
     case fromSmsGatewayLogsAction.FAIL_TO_LOAD_LOGS: {
-      return { ...state, isLoaded: false, isLoading: true };
+      let data = state.data;
+      data.unshift(action.payload);
+      return { data, isLoaded: true, isLoading: false };
     }
   }
   return state;

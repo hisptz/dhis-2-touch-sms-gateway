@@ -25,6 +25,7 @@ export interface SmsGateWayLogs {
   organisationUnitName?: string;
   date: string;
   message?: ReceivedSms;
+  logMessage: string;
 }
 
 export interface ReceivedSms {

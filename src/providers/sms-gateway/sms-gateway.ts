@@ -1,9 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs/Observable';
-import { SmsConfiguration } from '../../models/smsCommand';
+import {
+  SmsConfiguration,
+  SmsGateWayLogs,
+  ReceivedSms
+} from '../../models/smsCommand';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { HttpClientProvider } from '../http-client/http-client';
+import * as logsActions from '../../store/actions/smsGatewayLogs.action';
+import { Store } from '@ngrx/store';
+import { ApplicationState } from '../../store/reducers';
 
 declare var SMS: any;
 
@@ -20,7 +27,8 @@ export class SmsGatewayProvider {
   constructor(
     private storage: Storage,
     private http: HttpClientProvider,
-    private backgroundMode: BackgroundMode
+    private backgroundMode: BackgroundMode,
+    private store: Store<ApplicationState>
   ) {}
 
   /**
@@ -89,13 +97,14 @@ export class SmsGatewayProvider {
     if (SMS) {
       this.backgroundMode.enable();
       setInterval(() => {
+        this.store.dispatch(new logsActions.LoadingLogs());
         SMS.listSMS(
           {},
           (data: any) => {
             if (data && data.length > 0) {
               data.map((smsData: any) => {
                 if (smsConfigurations.syncedSMSIds.indexOf(smsData._id) == -1) {
-                  const smsResponse = {
+                  const smsResponse: ReceivedSms = {
                     _id: smsData._id,
                     address: smsData.address,
                     body: smsData.body
@@ -111,6 +120,12 @@ export class SmsGatewayProvider {
             }
           },
           error => {
+            const logs: SmsGateWayLogs = {
+              isSuccess: false,
+              date: new Date().toISOString().split('T')[0],
+              logMessage: 'Error on list sms : ' + JSON.stringify(error)
+            };
+            this.store.dispatch(new logsActions.FailToLoadLogs(logs));
             console.log('Error on list sms : ' + JSON.stringify(error));
           }
         );
@@ -224,6 +239,12 @@ export class SmsGatewayProvider {
               observer.error('Missing data values from received sms');
             }
           } else {
+            const logs: SmsGateWayLogs = {
+              isSuccess: false,
+              date: new Date().toISOString().split('T')[0],
+              logMessage: 'Sms command is not set up'
+            };
+            this.store.dispatch(new logsActions.FailToLoadLogs(logs));
             observer.error('Sms command is not set up');
           }
         } else {
