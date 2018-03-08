@@ -12,6 +12,9 @@ import { HttpClientProvider } from '../http-client/http-client';
 import * as logsActions from '../../store/actions/smsGatewayLogs.action';
 import { Store } from '@ngrx/store';
 import { ApplicationState } from '../../store/reducers';
+import { SqlLiteProvider } from '../sql-lite/sql-lite';
+import { UserProvider } from '../user/user';
+import { CurrentUser } from '../../models/currentUser';
 
 declare var SMS: any;
 
@@ -29,8 +32,64 @@ export class SmsGatewayProvider {
     private storage: Storage,
     private http: HttpClientProvider,
     private backgroundMode: BackgroundMode,
-    private store: Store<ApplicationState>
+    private store: Store<ApplicationState>,
+    private sqlLiteProvider: SqlLiteProvider,
+    private userProvider: UserProvider
   ) {}
+
+  saveSmsLogs(smsLogs: Array<SmsGateWayLogs>): Observable<any> {
+    const resource = 'smsLogs';
+    let data = [];
+    smsLogs.map((smsLog: SmsGateWayLogs) => {
+      let log = smsLog;
+      log['id'] = smsLog._id;
+      data.push(log);
+    });
+    return new Observable(observer => {
+      this.userProvider.getCurrentUser().subscribe(
+        (currentUser: CurrentUser) => {
+          this.sqlLiteProvider
+            .insertBulkDataOnTable(resource, data, currentUser.currentDatabase)
+            .subscribe(
+              () => {
+                observer.next(smsLogs);
+                observer.complete();
+              },
+              error => {
+                observer.error(error);
+              }
+            );
+        },
+        error => {
+          observer.error(error);
+        }
+      );
+    });
+  }
+
+  getAllSavedSmsLogs(): Observable<any> {
+    const resource = 'smsLogs';
+    return new Observable(observer => {
+      this.userProvider.getCurrentUser().subscribe(
+        (currentUser: CurrentUser) => {
+          this.sqlLiteProvider
+            .getAllDataFromTable(resource, currentUser.currentDatabase)
+            .subscribe(
+              (smsLogs: Array<SmsGateWayLogs>) => {
+                observer.next(smsLogs);
+                observer.complete();
+              },
+              error => {
+                observer.error(error);
+              }
+            );
+        },
+        error => {
+          observer.error(error);
+        }
+      );
+    });
+  }
 
   /**
    *

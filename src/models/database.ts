@@ -39,5 +39,24 @@ export const DATABASE_STRUCTURE = {
     batchSize: 20,
     displayName: 'Data Sets',
     dependentTable: []
+  },
+  smsLogs: {
+    columns: [
+      { value: 'id', type: 'TEXT' },
+      { value: 'time', type: 'TEXT' },
+      { value: 'type', type: 'TEXT' },
+      { value: 'dataSetId', type: 'TEXT' },
+      { value: 'periodIso', type: 'TEXT' },
+      { value: 'organisationUnitName', type: 'TEXT' },
+      { value: 'organisationUnitId', type: 'TEXT' },
+      { value: 'logMessage', type: 'TEXT' },
+      { value: 'message', type: 'TEXT' }
+    ],
+    fields: '',
+    isMetadata: true,
+    resourceType: '',
+    batchSize: 100,
+    displayName: 'Data Sets',
+    dependentTable: []
   }
 };
