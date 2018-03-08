@@ -15,6 +15,8 @@ import { ApplicationState } from '../../store/reducers';
 import { SqlLiteProvider } from '../sql-lite/sql-lite';
 import { UserProvider } from '../user/user';
 import { CurrentUser } from '../../models/currentUser';
+import { DataSetsProvider } from '../data-sets/data-sets';
+import { DataSet } from '../../models/dataSet';
 
 declare var SMS: any;
 
@@ -34,7 +36,8 @@ export class SmsGatewayProvider {
     private backgroundMode: BackgroundMode,
     private store: Store<ApplicationState>,
     private sqlLiteProvider: SqlLiteProvider,
-    private userProvider: UserProvider
+    private userProvider: UserProvider,
+    private dataSetProvider: DataSetsProvider
   ) {}
 
   saveSmsLogs(smsLogs: Array<SmsGateWayLogs>): Observable<any> {
@@ -154,61 +157,85 @@ export class SmsGatewayProvider {
   startWatchingSms(smsCommandObjects, currentUser) {
     if (SMS) {
       this.backgroundMode.enable();
-      setInterval(() => {
-        this.store.dispatch(new logsActions.LoadingLogs());
-        SMS.listSMS(
-          {},
-          (data: any) => {
-            if (data && data.length > 0) {
-              this.getSmsConfigurations(currentUser).subscribe(
-                (smsConfigurations: SmsConfiguration) => {
-                  data.map((smsData: any) => {
-                    if (this.shouldProcessSMS(smsConfigurations, smsData._id)) {
-                      const smsResponse: ReceivedSms = {
-                        _id: smsData._id,
-                        address: smsData.address,
-                        body: smsData.body
-                      };
-                      const log: SmsGateWayLogs = {
-                        type: 'info',
-                        time: this.getSMSGatewayLogTime(),
-                        _id: smsResponse._id,
-                        message: smsResponse,
-                        logMessage:
-                          'Starting processing message from ' +
-                          smsResponse.address
-                      };
-                      this.store.dispatch(
-                        new logsActions.LogsHaveBeenLoaded(log)
-                      );
-                      this.processMessage(
-                        smsResponse,
-                        smsCommandObjects,
-                        smsConfigurations,
-                        currentUser
-                      );
-                    }
-                  });
-                },
-                error => {
-                  console.log(JSON.stringify(error));
-                }
-              );
-            }
-          },
-          error => {
-            const logs: SmsGateWayLogsError = {
-              time: this.getSMSGatewayLogTime(),
-              logMessage: 'Error on list sms : ' + JSON.stringify(error)
-            };
-            this.store.dispatch(new logsActions.FailToLoadLogs(logs));
-            console.log('Error on list sms : ' + JSON.stringify(error));
-          }
-        );
-      }, 10 * 1000);
+      let dataSetsMapper = {};
+      this.dataSetProvider.getAllDataSets(currentUser).subscribe(
+        (dataSets: Array<DataSet>) => {
+          dataSets.map(dataSet => {
+            dataSetsMapper[dataSet.id] = dataSet.name;
+          });
+          this.setTimeOutFuction(
+            smsCommandObjects,
+            currentUser,
+            dataSetsMapper
+          );
+        },
+        error => {
+          this.setTimeOutFuction(
+            smsCommandObjects,
+            currentUser,
+            dataSetsMapper
+          );
+        }
+      );
     } else {
       console.log('No sms variable');
     }
+  }
+
+  setTimeOutFuction(smsCommandObjects, currentUser, dataSetsMapper) {
+    setInterval(() => {
+      this.store.dispatch(new logsActions.LoadingLogs());
+      SMS.listSMS(
+        {},
+        (data: any) => {
+          if (data && data.length > 0) {
+            this.getSmsConfigurations(currentUser).subscribe(
+              (smsConfigurations: SmsConfiguration) => {
+                data.map((smsData: any) => {
+                  if (this.shouldProcessSMS(smsConfigurations, smsData._id)) {
+                    const smsResponse: ReceivedSms = {
+                      _id: smsData._id,
+                      address: smsData.address,
+                      body: smsData.body
+                    };
+                    const log: SmsGateWayLogs = {
+                      type: 'info',
+                      time: this.getSMSGatewayLogTime(),
+                      _id: smsResponse._id,
+                      message: smsResponse,
+                      logMessage:
+                        'Starting processing message from ' +
+                        smsResponse.address
+                    };
+                    this.store.dispatch(
+                      new logsActions.LogsHaveBeenLoaded(log)
+                    );
+                    this.processMessage(
+                      smsResponse,
+                      smsCommandObjects,
+                      smsConfigurations,
+                      currentUser,
+                      dataSetsMapper
+                    );
+                  }
+                });
+              },
+              error => {
+                console.log(JSON.stringify(error));
+              }
+            );
+          }
+        },
+        error => {
+          const logs: SmsGateWayLogsError = {
+            time: this.getSMSGatewayLogTime(),
+            logMessage: 'Error on list sms : ' + JSON.stringify(error)
+          };
+          this.store.dispatch(new logsActions.FailToLoadLogs(logs));
+          console.log('Error on list sms : ' + JSON.stringify(error));
+        }
+      );
+    }, 10 * 1000);
   }
 
   shouldProcessSMS(smsConfigurations, smsId) {
@@ -263,7 +290,8 @@ export class SmsGatewayProvider {
     smsResponse,
     smsCommandObjects,
     smsConfigurations,
-    currentUser
+    currentUser,
+    dataSetsMapper
   ) {
     this.getSmsToDataValuePayload(
       smsResponse,
@@ -272,7 +300,7 @@ export class SmsGatewayProvider {
       currentUser
     ).subscribe(
       (payload: any) => {
-        let dataSetName = ' form name ';
+        let dataSetName = dataSetsMapper[payload.dataSet];
         const orgUnitName = payload.orgUnitName;
         delete payload.orgUnitName;
         const log: SmsGateWayLogs = {
@@ -287,9 +315,9 @@ export class SmsGatewayProvider {
           logMessage:
             'Uploading ' +
             payload.dataValues.length +
-            ' data values to the server for organisation unit ' +
+            ' data values to the server for ' +
             orgUnitName +
-            ', form ' +
+            ', on  ' +
             dataSetName +
             ' for period ' +
             payload.period
@@ -310,13 +338,13 @@ export class SmsGatewayProvider {
               dataSetId: payload.dataSet,
               logMessage:
                 payload.dataValues.length +
-                ' data values for organisation unit ' +
+                ' data values for ' +
                 orgUnitName +
-                ', form ' +
+                ', on ' +
                 dataSetName +
                 ' for period ' +
                 payload.period +
-                ' data values haved uploaded successfully'
+                ' haved uploaded successfully'
             };
             this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
           },
@@ -402,6 +430,7 @@ export class SmsGatewayProvider {
                         completeDate: this.getCompletenessDate(),
                         period: period,
                         orgUnit: orgUnit,
+                        orgUnitName: organisationUnits[0].name,
                         dataValues: dataValues
                       };
                       observer.next(payload);
