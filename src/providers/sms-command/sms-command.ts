@@ -290,7 +290,8 @@ export class SmsCommandProvider {
     period,
     orgUnitId,
     dataElements,
-    currentUser
+    currentUser,
+    dataDimension?
   ): Observable<any> {
     let ids = [];
     let entryFormDataValuesObjectFromStorage = {};

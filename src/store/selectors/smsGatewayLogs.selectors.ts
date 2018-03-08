@@ -4,6 +4,7 @@ import {
   getSmsGatewayLogsData,
   getSmsGatewayLogsError
 } from '../reducers/smsGatewayLogs.reducers';
+import { SmsGateWayLogs } from '../../models/smsCommand';
 
 export const getCurrentSmsGatewayLogs = createSelector(
   getSmsGatewayLogsState,

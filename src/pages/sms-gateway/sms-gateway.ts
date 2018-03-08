@@ -6,7 +6,7 @@ import { EncryptionProvider } from '../../providers/encryption/encryption';
 import { DataSetsProvider } from '../../providers/data-sets/data-sets';
 import { DataSet } from '../../models/dataSet';
 import { SmsGatewayProvider } from '../../providers/sms-gateway/sms-gateway';
-import { SmsConfiguration } from '../../models/smsCommand';
+import { SmsConfiguration, SmsGateWayLogs } from '../../models/smsCommand';
 import { AppProvider } from '../../providers/app/app';
 import { SmsCommandProvider } from '../../providers/sms-command/sms-command';
 import { AppTranslationProvider } from '../../providers/app-translation/app-translation';
@@ -36,8 +36,9 @@ export class SmsGatewayPage implements OnInit {
   smsCommandMapper: any;
   translationMapper: any;
   icons: any;
+  currentFilter: string;
   //observer
-  smsLogs$: Observable<any>;
+  allSmsLogs$: Observable<Array<SmsGateWayLogs>>;
 
   constructor(
     private encryption: EncryptionProvider,
@@ -51,9 +52,11 @@ export class SmsGatewayPage implements OnInit {
     private appPermisssion: AppPermissionProvider,
     private store: Store<ApplicationState>
   ) {
-    this.smsLogs$ = store.select(logsSelectors.getCurrentSmsGatewayLogs);
+    this.currentFilter = 'all';
+    this.allSmsLogs$ = store.select(logsSelectors.getCurrentSmsGatewayLogs);
     this.icons = {
       danger: 'assets/icon/danger.png',
+      logs: 'assets/icon/logs.png',
       info: 'assets/icon/info.png',
       warning: 'assets/icon/warning.png'
     };
@@ -77,7 +80,20 @@ export class SmsGatewayPage implements OnInit {
   }
 
   viewLogsByStatus(status) {
-    this.appProvider.setTopNotification('View logs status coming soon');
+    this.currentFilter = status;
+  }
+
+  getLogsByStatus(logs, status) {}
+
+  getCountByStatus(logs, status) {
+    let counts = 0;
+    if (logs) {
+      let filteredLogs = logs.filter((log: any) => {
+        return log.type == status;
+      });
+      counts = filteredLogs.length;
+    }
+    return counts;
   }
 
   loadingCurrentUserInformation() {
@@ -244,7 +260,6 @@ export class SmsGatewayPage implements OnInit {
       : key;
     this.smsGateway.getSmsConfigurations(currentUser).subscribe(
       (smsConfigurations: SmsConfiguration) => {
-        console.log(JSON.stringify(smsConfigurations));
         key = 'Discovering SMS commands';
         this.loadingMessage = this.translationMapper[key]
           ? this.translationMapper[key]
