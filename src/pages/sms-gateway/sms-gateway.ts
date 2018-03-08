@@ -15,6 +15,7 @@ import { ApplicationState } from '../../store/reducers';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import * as logsSelectors from '../../store/selectors/smsGatewayLogs.selectors';
+import * as _ from 'lodash';
 
 /**
  * Generated class for the SmsGatewayPage page.
@@ -83,7 +84,9 @@ export class SmsGatewayPage implements OnInit {
     this.currentFilter = status;
   }
 
-  getLogsByStatus(logs, status) {}
+  getLogsByStatus(logs, status) {
+    return _.filter(logs, { type: status });
+  }
 
   getCountByStatus(logs, status) {
     let counts = 0;

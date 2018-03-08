@@ -35,7 +35,7 @@
             </button>
           </div>
           <div class="item-card" padding-top padding-bottom>
-            <div *ngIf="(allSmsLogs$ |async).length == 0" text-center>
+            <div *ngIf="(allSmsLogs$ |async).length == 0 && currentFilter == 'all'" text-center>
               <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
               <span class="animated fadeIn" [translate]="'SMS gatway is now listening for incoming SMS'"> </span>
             </div>
@@ -46,16 +46,28 @@
               </div>
             </div>
             <div *ngIf="currentFilter == 'info'">
+              <div *ngIf="getLogsByStatus((allSmsLogs$ |async),'info').length == 0" text-center>
+                <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
+                <span [translate]="'Currently there is no log to view'"></span>
+              </div>
               <div *ngFor="let smsLog of getLogsByStatus((allSmsLogs$ |async),'info');trackBy: trackByFn">
                 <sms-logs-list-card [smsLog]="smsLog"></sms-logs-list-card>
               </div>
             </div>
             <div *ngIf="currentFilter == 'warning'">
+              <div *ngIf="getLogsByStatus((allSmsLogs$ |async),'warning').length == 0" text-center>
+                <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
+                <span [translate]="'Currently there is no log to view'"></span>
+              </div>
               <div *ngFor="let smsLog of getLogsByStatus((allSmsLogs$ |async),'warning');trackBy: trackByFn">
                 <sms-logs-list-card [smsLog]="smsLog"></sms-logs-list-card>
               </div>
             </div>
             <div *ngIf="currentFilter == 'danger'">
+              <div *ngIf="getLogsByStatus((allSmsLogs$ |async),'danger').length == 0" text-center>
+                <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
+                <span [translate]="'Currently there is no log to view'"></span>
+              </div>
               <div *ngFor="let smsLog of getLogsByStatus((allSmsLogs$ |async),'danger') ;trackBy: trackByFn">
                 <sms-logs-list-card [smsLog]="smsLog"></sms-logs-list-card>
               </div>
