@@ -14,11 +14,17 @@ import { SmsGateWayLogs } from '../../../../models/smsCommand';
 export class SmsLogsListCardComponent {
   @Input() smsLog: SmsGateWayLogs;
   icons: any;
+  isSelected: boolean;
   constructor() {
     this.icons = {
       danger: 'assets/icon/danger.png',
       info: 'assets/icon/info.png',
       warning: 'assets/icon/warning.png'
     };
+    this.isSelected = false;
+  }
+
+  toggleLogsDetails() {
+    this.isSelected = !this.isSelected;
   }
 }
