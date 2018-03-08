@@ -311,7 +311,7 @@ export class SmsGatewayPage implements OnInit {
   }
 
   trackByFn(index, item) {
-    return index;
+    return item._id;
   }
 
   getValuesToTranslate() {

@@ -20,7 +20,7 @@ export interface SmsConfiguration {
 }
 
 export interface SmsGateWayLogs {
-  _id?: string;
+  _id: string;
   time: string;
   type: string;
   dataSetId?: string;

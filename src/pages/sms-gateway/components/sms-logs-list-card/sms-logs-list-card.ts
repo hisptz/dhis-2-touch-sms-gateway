@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SmsGateWayLogs } from '../../../../models/smsCommand';
+import { AppTranslationProvider } from '../../../../providers/app-translation/app-translation';
 
 /**
  * Generated class for the SmsLogsListCardComponent component.
@@ -11,11 +12,12 @@ import { SmsGateWayLogs } from '../../../../models/smsCommand';
   selector: 'sms-logs-list-card',
   templateUrl: 'sms-logs-list-card.html'
 })
-export class SmsLogsListCardComponent {
+export class SmsLogsListCardComponent implements OnInit {
   @Input() smsLog: SmsGateWayLogs;
   icons: any;
   isSelected: boolean;
-  constructor() {
+  translationMapper: any;
+  constructor(private appTranslation: AppTranslationProvider) {
     this.icons = {
       danger: 'assets/icon/danger.png',
       info: 'assets/icon/info.png',
@@ -24,7 +26,21 @@ export class SmsLogsListCardComponent {
     this.isSelected = false;
   }
 
+  ngOnInit() {
+    this.translationMapper = {};
+    this.appTranslation.getTransalations(this.getValuesToTranslate()).subscribe(
+      (data: any) => {
+        this.translationMapper = data;
+      },
+      error => {}
+    );
+  }
+
   toggleLogsDetails() {
     this.isSelected = !this.isSelected;
+  }
+
+  getValuesToTranslate() {
+    return ['Sender', 'SMS Content'];
   }
 }
