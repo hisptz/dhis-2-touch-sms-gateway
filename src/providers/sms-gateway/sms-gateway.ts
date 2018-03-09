@@ -42,6 +42,7 @@ export class SmsGatewayProvider {
 
   saveSmsLogs(smsLogs: Array<SmsGateWayLogs>): Observable<any> {
     const resource = 'smsLogs';
+    console.log('Saving logs');
     let data = [];
     smsLogs.map((smsLog: SmsGateWayLogs) => {
       let log = smsLog;
@@ -184,7 +185,6 @@ export class SmsGatewayProvider {
 
   setTimeOutFuction(smsCommandObjects, currentUser, dataSetsMapper) {
     setInterval(() => {
-      this.store.dispatch(new logsActions.LoadingLogs());
       SMS.listSMS(
         {},
         (data: any) => {
@@ -208,8 +208,9 @@ export class SmsGatewayProvider {
                         smsResponse.address
                     };
                     this.store.dispatch(
-                      new logsActions.LogsHaveBeenLoaded(log)
+                      new logsActions.LogsHaveBeenLoaded([log])
                     );
+                    this.saveSmsLogs([log]).subscribe(() => {}, error => {});
                     this.processMessage(
                       smsResponse,
                       smsCommandObjects,
@@ -322,7 +323,8 @@ export class SmsGatewayProvider {
             ' for period ' +
             payload.period
         };
-        this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+        this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+        this.saveSmsLogs([log]).subscribe(() => {}, error => {});
         let url = '/api/25/dataValueSets';
         this.http.defaultPost(url, payload).subscribe(
           response => {
@@ -346,7 +348,8 @@ export class SmsGatewayProvider {
                 payload.period +
                 ' haved uploaded successfully'
             };
-            this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+            this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+            this.saveSmsLogs([log]).subscribe(() => {}, error => {});
           },
           error => {
             const log: SmsGateWayLogs = {
@@ -370,7 +373,8 @@ export class SmsGatewayProvider {
                 ' :: ' +
                 JSON.stringify(error)
             };
-            this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+            this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+            this.saveSmsLogs([log]).subscribe(() => {}, error => {});
             console.log('Error on post data : ' + JSON.stringify(error));
           }
         );
@@ -446,8 +450,9 @@ export class SmsGatewayProvider {
                           smsResponse.address
                       };
                       this.store.dispatch(
-                        new logsActions.LogsHaveBeenLoaded(log)
+                        new logsActions.LogsHaveBeenLoaded([log])
                       );
+                      this.saveSmsLogs([log]).subscribe(() => {}, error => {});
                       observer.error('User has not assinged organisation unit');
                     }
                   },
@@ -467,7 +472,8 @@ export class SmsGatewayProvider {
                     'Missing SMS configurations on received SMS from ' +
                     smsResponse.address
                 };
-                this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+                this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+                this.saveSmsLogs([log]).subscribe(() => {}, error => {});
                 observer.error('Data set is has not being set for sync');
               }
             } else {
@@ -481,7 +487,8 @@ export class SmsGatewayProvider {
                   'Missing data values on received SMS from + ' +
                   smsResponse.address
               };
-              this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+              this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+              this.saveSmsLogs([log]).subscribe(() => {}, error => {});
               observer.error('Missing data values from received sms');
             }
           } else {
@@ -496,7 +503,8 @@ export class SmsGatewayProvider {
                 smsResponse.address +
                 ' has been marked as unsynced due to incorrect formatting'
             };
-            this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+            this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+            this.saveSmsLogs([log]).subscribe(() => {}, error => {});
           }
         } else {
           this.markAsSkippedSMS(smsResponse._id, currentUser);
@@ -510,7 +518,8 @@ export class SmsGatewayProvider {
               smsResponse.address +
               ' has been marked as skipped due to incorrect formatting'
           };
-          this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+          this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+          this.saveSmsLogs([log]).subscribe(() => {}, error => {});
           observer.error('SMS received is not from dhis 2 touch');
         }
       } else {
@@ -525,7 +534,8 @@ export class SmsGatewayProvider {
             smsResponse.address +
             ' has been skipped due to missing SMS contents'
         };
-        this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+        this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+        this.saveSmsLogs([log]).subscribe(() => {}, error => {});
         observer.error('Sms content has not found from received sms');
       }
     });
@@ -583,7 +593,8 @@ export class SmsGatewayProvider {
                   'There is no user with phone number ' + smsResponse.address,
                 message: smsResponse
               };
-              this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+              this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+              this.saveSmsLogs([log]).subscribe(() => {}, error => {});
               observer.error(
                 'There is no user with mobile number ' + smsResponse.address
               );
@@ -602,7 +613,8 @@ export class SmsGatewayProvider {
                 ' : ' +
                 JSON.stringify(error)
             };
-            this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+            this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+            this.saveSmsLogs([log]).subscribe(() => {}, error => {});
             observer.error('Error on fetching user : ' + JSON.stringify(error));
           }
         );
@@ -615,7 +627,8 @@ export class SmsGatewayProvider {
           logMessage: 'Missing phone number of the sender',
           message: smsResponse
         };
-        this.store.dispatch(new logsActions.LogsHaveBeenLoaded(log));
+        this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+        this.saveSmsLogs([log]).subscribe(() => {}, error => {});
         observer.error('Sender phone number is not found');
       }
     });
