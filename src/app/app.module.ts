@@ -25,8 +25,10 @@ export function createTranslateLoader(http: Http) {
 }
 
 //store
-import { reducers } from '../store/reducers/index';
+import { reducers } from '../store/reducers';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { effects } from '../store/effects';
 
 import { MyApp } from './app.component';
 import { LauncherPage } from '../pages/launcher/launcher';
@@ -52,6 +54,7 @@ import { AppPermissionProvider } from '../providers/app-permission/app-permissio
     BrowserModule,
     HttpModule,
     StoreModule.forRoot(reducers),
+    EffectsModule.forRoot(effects),
     IonicStorageModule.forRoot(),
     SharedModule,
     TranslateModule.forRoot({

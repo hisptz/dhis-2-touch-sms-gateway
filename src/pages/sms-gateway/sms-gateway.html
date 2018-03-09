@@ -8,23 +8,82 @@
     </ion-title>
   </ion-navbar>
 </ion-header>
-
 <ion-content>
-
   <ion-grid>
     <ion-row>
       <ion-col>
-
         <div *ngIf="isLoading">
           <loading [loadingMessage]="loadingMessage" [loadingSize]="'large'"></loading>
         </div>
         <div *ngIf="!isLoading">
-          <div class="item-card">
-            Logs for all actions on background process
+          <div text-right class="animated fadeIn">
+            <button ion-button outline color="font-color" text-capitalize [disabled]="currentFilter == 'all'" (click)="viewLogsByStatus('all')">
+              <img class="side-menu-icon" [src]="icons.logs" />&nbsp;&nbsp;
+              <span>{{ (allSmsLogs$ |async).length }}</span>
+            </button>
+            <button ion-button outline color="font-color" text-capitalize [disabled]="currentFilter == 'info'" (click)="viewLogsByStatus('info')">
+              <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
+              <span>{{ getCountByStatus((allSmsLogs$ |async),'info') }} </span>
+            </button>
+            <button ion-button outline color="font-color" text-capitalize [disabled]="currentFilter == 'warning'" (click)="viewLogsByStatus('warning')">
+              <img class="side-menu-icon" [src]="icons.warning" />&nbsp;&nbsp;
+              <span>{{ getCountByStatus((allSmsLogs$ |async),'warning') }} </span>
+            </button>
+            <button ion-button outline color="font-color" text-capitalize [disabled]="currentFilter == 'danger'" (click)="viewLogsByStatus('danger')">
+              <img class="side-menu-icon" [src]="icons.danger" />&nbsp;&nbsp;
+              <span>{{ getCountByStatus((allSmsLogs$ |async),'danger') }} </span>
+            </button>
+          </div>
+          <div padding-top padding-bottom>
+
+            <div class="item-card" *ngIf="(allSmsLogs$ |async).length == 0 && currentFilter == 'all'" text-center>
+              <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
+              <span class="animated fadeIn" [translate]="'SMS gatway is now listening for incoming SMS'"> </span>
+            </div>
+            <div class="list-seperator" *ngIf="(allSmsLogs$ |async).length > 0">
+              <div *ngIf="currentFilter == 'all'">
+                <div *ngFor="let smsLog of allSmsLogs$ |async;trackBy: trackByFn">
+                  <sms-logs-list-card [smsLog]="smsLog"></sms-logs-list-card>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="currentFilter == 'info'">
+              <div class="item-card" *ngIf="getLogsByStatus((allSmsLogs$ |async),'info').length == 0" text-center>
+                <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
+                <span [translate]="'Currently there is no log to view'"></span>
+              </div>
+              <div class="list-seperator" *ngIf="getLogsByStatus((allSmsLogs$ |async),'info').length > 0">
+                <div *ngFor="let smsLog of getLogsByStatus((allSmsLogs$ |async),'info');trackBy: trackByFn">
+                  <sms-logs-list-card [smsLog]="smsLog"></sms-logs-list-card>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="currentFilter == 'warning'">
+              <div class="item-card" *ngIf="getLogsByStatus((allSmsLogs$ |async),'warning').length == 0" text-center>
+                <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
+                <span [translate]="'Currently there is no log to view'"></span>
+              </div>
+              <div class="list-seperator" *ngIf="getLogsByStatus((allSmsLogs$ |async),'warning').length > 0">
+                <div *ngFor="let smsLog of getLogsByStatus((allSmsLogs$ |async),'warning');trackBy: trackByFn">
+                  <sms-logs-list-card [smsLog]="smsLog"></sms-logs-list-card>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="currentFilter == 'danger'">
+              <div class="item-card" *ngIf="getLogsByStatus((allSmsLogs$ |async),'danger').length == 0" text-center>
+                <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
+                <span [translate]="'Currently there is no log to view'"></span>
+              </div>
+              <div class="list-seperator" *ngIf="getLogsByStatus((allSmsLogs$ |async),'danger').length > 0">
+                <div *ngFor="let smsLog of getLogsByStatus((allSmsLogs$ |async),'danger') ;trackBy: trackByFn">
+                  <sms-logs-list-card [smsLog]="smsLog"></sms-logs-list-card>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </ion-col>
     </ion-row>
   </ion-grid>
-
 </ion-content>

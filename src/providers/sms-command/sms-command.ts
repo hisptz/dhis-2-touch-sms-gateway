@@ -186,14 +186,9 @@ export class SmsCommandProvider {
     let dataSetCounter = 0;
     dataSets.map((dataSet: DataSet) => {
       let smsCodeIndex = 0;
-      let smsCommand: SmsCommand = {
-        dataSetId: dataSet.id,
-        commandName: this.getCodeCharacter(dataSetCounter, new_format),
-        separator: ':',
-        parserType: 'KEY_VALUE_PARSER',
-        smsCode: []
-      };
+      let dataElementCount = 0;
       let dataElements = [];
+      let smsCodes = [];
       if (dataSet.dataElements) {
         dataElements = dataSet.dataElements;
       } else {
@@ -203,27 +198,30 @@ export class SmsCommandProvider {
           }
         });
       }
-      let dataElementCount = 0;
       dataElements.map((dataElementData: any) => {
         let dataElement = {};
-        let smsCodeObject: SmsCode = {};
         dataElement['id'] = dataElementData.id;
         let categoryCombo = dataElementData.categoryCombo;
         optionCombos = categoryCombo['categoryOptionCombos'];
         optionCombos.map((optionCombo: any) => {
-          smsCodeObject['smsCode'] = this.getCodeCharacter(
-            smsCodeIndex,
-            new_format
-          );
-          smsCodeObject['dataElement'] = dataElement;
-          smsCodeObject['categoryOptionCombos'] = optionCombo.id;
-          smsCommand.smsCode.push(smsCodeObject);
+          let smsCode = this.getCodeCharacter(smsCodeIndex, new_format);
+          smsCodes.push({
+            categoryOptionCombos: optionCombo.id,
+            dataElement: dataElement,
+            smsCode: smsCode
+          });
           smsCodeIndex++;
         });
         dataElementCount++;
       });
+      smsCommands.push({
+        dataSetId: dataSet.id,
+        commandName: this.getCodeCharacter(dataSetCounter, new_format),
+        separator: ':',
+        parserType: 'KEY_VALUE_PARSER',
+        smsCode: smsCodes
+      });
       dataSetCounter++;
-      smsCommands.push(smsCommand);
     });
     return smsCommands;
   }
@@ -290,7 +288,8 @@ export class SmsCommandProvider {
     period,
     orgUnitId,
     dataElements,
-    currentUser
+    currentUser,
+    dataDimension?
   ): Observable<any> {
     let ids = [];
     let entryFormDataValuesObjectFromStorage = {};

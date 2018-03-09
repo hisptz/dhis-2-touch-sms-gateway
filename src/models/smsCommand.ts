@@ -13,8 +13,31 @@ export interface SmsCode {
 }
 
 export interface SmsConfiguration {
-  dataSetIds: Array<any>;
-  syncedSMSIds: Array<any>;
+  dataSetIds: Array<string>;
+  syncedSMSIds: Array<string>;
+  notSyncedSMSIds: Array<string>;
+  skippedSMSIds: Array<string>;
 }
 
-export interface SmsGateWayLogs {}
+export interface SmsGateWayLogs {
+  _id: string;
+  time: string;
+  type: string;
+  dataSetId?: string;
+  periodIso?: string;
+  logMessage: string;
+  organisationUnitId?: string;
+  organisationUnitName?: string;
+  message?: ReceivedSms;
+}
+
+export interface ReceivedSms {
+  _id: string;
+  body: string;
+  address: string;
+}
+
+export interface SmsGateWayLogsError {
+  time: string;
+  logMessage: string;
+}

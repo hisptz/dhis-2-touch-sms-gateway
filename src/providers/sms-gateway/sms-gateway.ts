@@ -1,9 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs/Observable';
-import { SmsConfiguration } from '../../models/smsCommand';
+import {
+  SmsConfiguration,
+  SmsGateWayLogs,
+  SmsGateWayLogsError,
+  ReceivedSms
+} from '../../models/smsCommand';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { HttpClientProvider } from '../http-client/http-client';
+import * as logsActions from '../../store/actions/smsGatewayLogs.action';
+import { Store } from '@ngrx/store';
+import { ApplicationState } from '../../store/reducers';
+import { SqlLiteProvider } from '../sql-lite/sql-lite';
+import { UserProvider } from '../user/user';
+import { CurrentUser } from '../../models/currentUser';
+import { DataSetsProvider } from '../data-sets/data-sets';
+import { DataSet } from '../../models/dataSet';
 
 declare var SMS: any;
 
@@ -20,8 +33,68 @@ export class SmsGatewayProvider {
   constructor(
     private storage: Storage,
     private http: HttpClientProvider,
-    private backgroundMode: BackgroundMode
+    private backgroundMode: BackgroundMode,
+    private store: Store<ApplicationState>,
+    private sqlLiteProvider: SqlLiteProvider,
+    private userProvider: UserProvider,
+    private dataSetProvider: DataSetsProvider
   ) {}
+
+  saveSmsLog(log, currentUser) {
+    this.saveSmsLogs([log], currentUser).subscribe(() => {}, error => {});
+  }
+
+  saveSmsLogs(
+    smsLogs: Array<SmsGateWayLogs>,
+    currentUser: CurrentUser
+  ): Observable<any> {
+    const resource = 'smsLogs';
+    let data = [];
+    smsLogs.map((smsLog: SmsGateWayLogs) => {
+      let log = smsLog;
+      let time = new Date().toJSON();
+      time = time.replace(/[:\s]/g, '-');
+      log['id'] = time + '-' + smsLog._id + '-' + smsLog.type;
+      data.push(log);
+    });
+    return new Observable(observer => {
+      this.sqlLiteProvider
+        .insertBulkDataOnTable(resource, data, currentUser.currentDatabase)
+        .subscribe(
+          () => {
+            observer.next();
+            observer.complete();
+          },
+          error => {
+            observer.error(error);
+          }
+        );
+    });
+  }
+
+  getAllSavedSmsLogs(): Observable<any> {
+    const resource = 'smsLogs';
+    return new Observable(observer => {
+      this.userProvider.getCurrentUser().subscribe(
+        (currentUser: CurrentUser) => {
+          this.sqlLiteProvider
+            .getAllDataFromTable(resource, currentUser.currentDatabase)
+            .subscribe(
+              (smsLogs: Array<SmsGateWayLogs>) => {
+                observer.next(smsLogs.reverse());
+                observer.complete();
+              },
+              error => {
+                observer.error(error);
+              }
+            );
+        },
+        error => {
+          observer.error(error);
+        }
+      );
+    });
+  }
 
   /**
    *
@@ -61,7 +134,7 @@ export class SmsGatewayProvider {
         .set(key, configuration)
         .then(() => {
           observer.next();
-          //observer.complete();
+          observer.complete();
         })
         .catch(error => {
           observer.error(error);
@@ -76,55 +149,142 @@ export class SmsGatewayProvider {
   getDefaultConfigurations(): SmsConfiguration {
     let defaultConfigurations: SmsConfiguration = {
       dataSetIds: [],
-      syncedSMSIds: []
+      syncedSMSIds: [],
+      notSyncedSMSIds: [],
+      skippedSMSIds: []
     };
     return defaultConfigurations;
   }
 
-  startWatchingSms(
-    smsCommandObjects,
-    smsConfigurations: SmsConfiguration,
-    currentUser
-  ) {
+  startWatchingSms(smsCommandObjects, currentUser) {
     if (SMS) {
       this.backgroundMode.enable();
-      setInterval(() => {
-        SMS.listSMS(
-          {},
-          (data: any) => {
-            if (data && data.length > 0) {
-              data.map((smsData: any) => {
-                if (smsConfigurations.syncedSMSIds.indexOf(smsData._id) == -1) {
-                  const smsResponse = {
-                    _id: smsData._id,
-                    address: smsData.address,
-                    body: smsData.body
-                  };
-                  this.processMessage(
-                    smsResponse,
-                    smsCommandObjects,
-                    smsConfigurations,
-                    currentUser
-                  );
-                }
-              });
-            }
-          },
-          error => {
-            console.log('Error on list sms : ' + JSON.stringify(error));
-          }
-        );
-      }, 5 * 1000);
+      let dataSetsMapper = {};
+      this.dataSetProvider.getAllDataSets(currentUser).subscribe(
+        (dataSets: Array<DataSet>) => {
+          dataSets.map(dataSet => {
+            dataSetsMapper[dataSet.id] = dataSet.name;
+          });
+          this.setTimeOutFuction(
+            smsCommandObjects,
+            currentUser,
+            dataSetsMapper
+          );
+        },
+        error => {
+          this.setTimeOutFuction(
+            smsCommandObjects,
+            currentUser,
+            dataSetsMapper
+          );
+        }
+      );
     } else {
       console.log('No sms variable');
     }
   }
 
-  marksSyncedSMS(smsId, smsConfigurations, currentUser) {
-    smsConfigurations.syncedSMSIds.push(smsId);
-    this.setSmsConfigurations(currentUser, smsConfigurations).subscribe(
-      () => {},
-      error => {}
+  setTimeOutFuction(smsCommandObjects, currentUser, dataSetsMapper) {
+    setInterval(() => {
+      SMS.listSMS(
+        {},
+        (data: any) => {
+          if (data && data.length > 0) {
+            this.getSmsConfigurations(currentUser).subscribe(
+              (smsConfigurations: SmsConfiguration) => {
+                data.map((smsData: any) => {
+                  if (this.shouldProcessSMS(smsConfigurations, smsData._id)) {
+                    const smsResponse: ReceivedSms = {
+                      _id: smsData._id,
+                      address: smsData.address,
+                      body: smsData.body
+                    };
+                    const log: SmsGateWayLogs = {
+                      type: 'info',
+                      time: this.getSMSGatewayLogTime(),
+                      _id: smsResponse._id,
+                      message: smsResponse,
+                      logMessage:
+                        'Starting processing message from ' +
+                        smsResponse.address
+                    };
+                    this.store.dispatch(
+                      new logsActions.LogsHaveBeenLoaded([log])
+                    );
+                    this.saveSmsLog(log, currentUser);
+                    this.processMessage(
+                      smsResponse,
+                      smsCommandObjects,
+                      smsConfigurations,
+                      currentUser,
+                      dataSetsMapper
+                    );
+                  }
+                });
+              },
+              error => {
+                console.log(JSON.stringify(error));
+              }
+            );
+          }
+        },
+        error => {
+          const logs: SmsGateWayLogsError = {
+            time: this.getSMSGatewayLogTime(),
+            logMessage: 'Error on list sms : ' + JSON.stringify(error)
+          };
+          this.store.dispatch(new logsActions.FailToLoadLogs(logs));
+          console.log('Error on list sms : ' + JSON.stringify(error));
+        }
+      );
+    }, 10 * 1000);
+  }
+
+  shouldProcessSMS(smsConfigurations, smsId) {
+    let result = true;
+    if (
+      smsConfigurations.syncedSMSIds.indexOf(smsId) > -1 ||
+      smsConfigurations.notSyncedSMSIds.indexOf(smsId) > -1 ||
+      smsConfigurations.skippedSMSIds.indexOf(smsId) > -1
+    ) {
+      result = false;
+    }
+    return result;
+  }
+
+  markAsSyncedSMS(smsId, currentUser) {
+    this.getSmsConfigurations(currentUser).subscribe(
+      (smsConfigurations: SmsConfiguration) => {
+        smsConfigurations.syncedSMSIds.push(smsId);
+        this.setSmsConfigurations(currentUser, smsConfigurations).subscribe(
+          () => {},
+          error => {}
+        );
+      }
+    );
+  }
+
+  markAsNotSyncedSMS(smsId, currentUser) {
+    this.getSmsConfigurations(currentUser).subscribe(
+      (smsConfigurations: SmsConfiguration) => {
+        smsConfigurations.notSyncedSMSIds.push(smsId);
+        this.setSmsConfigurations(currentUser, smsConfigurations).subscribe(
+          () => {},
+          error => {}
+        );
+      }
+    );
+  }
+
+  markAsSkippedSMS(smsId, currentUser) {
+    this.getSmsConfigurations(currentUser).subscribe(
+      (smsConfigurations: SmsConfiguration) => {
+        smsConfigurations.skippedSMSIds.push(smsId);
+        this.setSmsConfigurations(currentUser, smsConfigurations).subscribe(
+          () => {},
+          error => {}
+        );
+      }
     );
   }
 
@@ -132,26 +292,90 @@ export class SmsGatewayProvider {
     smsResponse,
     smsCommandObjects,
     smsConfigurations,
-    currentUser
+    currentUser,
+    dataSetsMapper
   ) {
     this.getSmsToDataValuePayload(
       smsResponse,
       smsCommandObjects,
-      smsConfigurations
+      smsConfigurations,
+      currentUser
     ).subscribe(
       (payload: any) => {
+        let dataSetName = dataSetsMapper[payload.dataSet];
+        const orgUnitName = payload.orgUnitName;
+        delete payload.orgUnitName;
+        const log: SmsGateWayLogs = {
+          type: 'info',
+          time: this.getSMSGatewayLogTime(),
+          _id: smsResponse._id,
+          message: smsResponse,
+          organisationUnitId: payload.orgUnit,
+          organisationUnitName: orgUnitName,
+          periodIso: payload.period,
+          dataSetId: payload.dataSet,
+          logMessage:
+            'Uploading ' +
+            payload.dataValues.length +
+            ' data values to the server for ' +
+            orgUnitName +
+            ', on  ' +
+            dataSetName +
+            ' for period ' +
+            payload.period
+        };
+        this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+        this.saveSmsLog(log, currentUser);
         let url = '/api/25/dataValueSets';
         this.http.defaultPost(url, payload).subscribe(
           response => {
-            this.marksSyncedSMS(
-              smsResponse._id,
-              smsConfigurations,
-              currentUser
-            );
-            console.log('Success import data value');
-            console.log(JSON.stringify(response));
+            this.markAsSyncedSMS(smsResponse._id, currentUser);
+            const log: SmsGateWayLogs = {
+              type: 'info',
+              time: this.getSMSGatewayLogTime(),
+              _id: smsResponse._id,
+              message: smsResponse,
+              organisationUnitId: payload.orgUnit,
+              organisationUnitName: orgUnitName,
+              periodIso: payload.period,
+              dataSetId: payload.dataSet,
+              logMessage:
+                payload.dataValues.length +
+                ' data values for ' +
+                orgUnitName +
+                ', on ' +
+                dataSetName +
+                ' for period ' +
+                payload.period +
+                ' haved uploaded successfully'
+            };
+            this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+            this.saveSmsLog(log, currentUser);
           },
           error => {
+            const log: SmsGateWayLogs = {
+              type: 'danger',
+              time: this.getSMSGatewayLogTime(),
+              _id: smsResponse._id,
+              message: smsResponse,
+              organisationUnitId: payload.orgUnit,
+              organisationUnitName: orgUnitName,
+              periodIso: payload.period,
+              dataSetId: payload.dataSet,
+              logMessage:
+                'Fail to upload ' +
+                payload.dataValues.length +
+                ' data values to the server for organisation unit ' +
+                orgUnitName +
+                ', form ' +
+                dataSetName +
+                ' for period ' +
+                payload.period +
+                ' :: ' +
+                JSON.stringify(error)
+            };
+            this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+            this.saveSmsLog(log, currentUser);
             console.log('Error on post data : ' + JSON.stringify(error));
           }
         );
@@ -162,21 +386,27 @@ export class SmsGatewayProvider {
     );
   }
 
+  getSmsResponseArray(smsResponse) {
+    let smsResponseArray = [];
+    smsResponse.body.split(' ').map((content: string) => {
+      if (content && content.trim() != '') {
+        smsResponseArray.push(content.trim());
+      }
+    });
+    return smsResponseArray;
+  }
+
   getSmsToDataValuePayload(
-    smsResponse,
+    smsResponse: ReceivedSms,
     smsCommandObjects,
-    smsConfigurations
+    smsConfigurations,
+    currentUser
   ): Observable<any> {
     return new Observable(observer => {
       if (smsResponse.body) {
         let availableSmsCodes = Object.keys(smsCommandObjects);
         let orgUnit, period, dataSet, dataValues;
-        let smsResponseArray = [];
-        smsResponse.body.split(' ').map((content: string) => {
-          if (content && content.trim() != '') {
-            smsResponseArray.push(content.trim());
-          }
-        });
+        let smsResponseArray = this.getSmsResponseArray(smsResponse);
         if (smsResponseArray.length == 3) {
           let smsCommand = smsResponseArray[0];
           if (availableSmsCodes.indexOf(smsCommand) > -1) {
@@ -193,8 +423,10 @@ export class SmsGatewayProvider {
                 smsCodeToValueMapper
               );
               if (smsConfigurations.dataSetIds.indexOf(dataSet) > -1) {
-                //@todo handling if payload saving if user is not found
-                this.getUserOrganisationUnits(smsResponse).subscribe(
+                this.getUserOrganisationUnits(
+                  smsResponse,
+                  currentUser
+                ).subscribe(
                   (organisationUnits: any) => {
                     if (organisationUnits && organisationUnits.length > 0) {
                       orgUnit = organisationUnits[0].id;
@@ -203,41 +435,111 @@ export class SmsGatewayProvider {
                         completeDate: this.getCompletenessDate(),
                         period: period,
                         orgUnit: orgUnit,
+                        orgUnitName: organisationUnits[0].name,
                         dataValues: dataValues
                       };
                       observer.next(payload);
                     } else {
+                      this.markAsNotSyncedSMS(smsResponse._id, currentUser);
+                      const log: SmsGateWayLogs = {
+                        type: 'warning',
+                        time: this.getSMSGatewayLogTime(),
+                        _id: smsResponse._id,
+                        message: smsResponse,
+                        logMessage:
+                          'Missing organisation unit assignemnts for user with phone number ' +
+                          smsResponse.address
+                      };
+                      this.store.dispatch(
+                        new logsActions.LogsHaveBeenLoaded([log])
+                      );
+                      this.saveSmsLog(log, currentUser);
                       observer.error('User has not assinged organisation unit');
                     }
                   },
                   error => {
-                    console.log(
-                      'Here w are on error : ' + JSON.stringify(error)
-                    );
+                    console.log('On fetching : ' + JSON.stringify(error));
                     observer.error(error);
                   }
                 );
               } else {
+                this.markAsNotSyncedSMS(smsResponse._id, currentUser);
+                const log: SmsGateWayLogs = {
+                  type: 'warning',
+                  time: this.getSMSGatewayLogTime(),
+                  _id: smsResponse._id,
+                  message: smsResponse,
+                  logMessage:
+                    'Missing SMS configurations on received SMS from ' +
+                    smsResponse.address
+                };
+                this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+                this.saveSmsLog(log, currentUser);
                 observer.error('Data set is has not being set for sync');
               }
             } else {
+              this.markAsNotSyncedSMS(smsResponse._id, currentUser);
+              const log: SmsGateWayLogs = {
+                type: 'warning',
+                time: this.getSMSGatewayLogTime(),
+                _id: smsResponse._id,
+                message: smsResponse,
+                logMessage:
+                  'Missing data values on received SMS from + ' +
+                  smsResponse.address
+              };
+              this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+              this.saveSmsLog(log, currentUser);
               observer.error('Missing data values from received sms');
             }
           } else {
-            observer.error('Sms command is not set up');
+            this.markAsNotSyncedSMS(smsResponse._id, currentUser);
+            const log: SmsGateWayLogs = {
+              type: 'warning',
+              time: this.getSMSGatewayLogTime(),
+              _id: smsResponse._id,
+              message: smsResponse,
+              logMessage:
+                'Message from ' +
+                smsResponse.address +
+                ' has been marked as unsynced due to incorrect formatting'
+            };
+            this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+            this.saveSmsLog(log, currentUser);
           }
         } else {
+          this.markAsSkippedSMS(smsResponse._id, currentUser);
+          const log: SmsGateWayLogs = {
+            type: 'warning',
+            time: this.getSMSGatewayLogTime(),
+            _id: smsResponse._id,
+            message: smsResponse,
+            logMessage:
+              'Message from ' +
+              smsResponse.address +
+              ' has been marked as skipped due to incorrect formatting'
+          };
+          this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+          this.saveSmsLog(log, currentUser);
           observer.error('SMS received is not from dhis 2 touch');
         }
       } else {
+        this.markAsSkippedSMS(smsResponse._id, currentUser);
+        const log: SmsGateWayLogs = {
+          type: 'warning',
+          time: this.getSMSGatewayLogTime(),
+          _id: smsResponse._id,
+          message: smsResponse,
+          logMessage:
+            'Message from ' +
+            smsResponse.address +
+            ' has been skipped due to missing SMS contents'
+        };
+        this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+        this.saveSmsLog(log, currentUser);
         observer.error('Sms content has not found from received sms');
       }
     });
-  }
-
-  getCompletenessDate() {
-    let date = new Date();
-    return date.toISOString().split('T')[0];
   }
 
   getSmsCodeToValueMapper(smsCodeValueContents, separator) {
@@ -267,12 +569,15 @@ export class SmsGatewayProvider {
     return dataValues;
   }
 
-  getUserOrganisationUnits(smsResponse): Observable<any> {
+  getUserOrganisationUnits(
+    smsResponse: ReceivedSms,
+    currentUser
+  ): Observable<any> {
     return new Observable(observer => {
       if (smsResponse && smsResponse.address) {
         let number = smsResponse.address.replace('+', '');
         let url =
-          'users.json?fields=organisationUnits&filter=phoneNumber:ilike:' +
+          'users.json?fields=organisationUnits[id,name]&filter=phoneNumber:ilike:' +
           number;
         this.http.get(url, true).subscribe(
           (response: any) => {
@@ -280,22 +585,64 @@ export class SmsGatewayProvider {
               observer.next(response.users[0].organisationUnits);
               observer.complete();
             } else {
+              this.markAsNotSyncedSMS(smsResponse._id, currentUser);
+              const log: SmsGateWayLogs = {
+                type: 'warning',
+                time: this.getSMSGatewayLogTime(),
+                _id: smsResponse._id,
+                logMessage:
+                  'There is no user with phone number ' + smsResponse.address,
+                message: smsResponse
+              };
+              this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+              this.saveSmsLog(log, currentUser);
               observer.error(
                 'There is no user with mobile number ' + smsResponse.address
               );
             }
           },
           error => {
-            console.log(
-              'Error of fetching user : ' + url + ' :: ' + JSON.stringify(error)
-            );
-            observer.error(error);
+            this.markAsNotSyncedSMS(smsResponse._id, currentUser);
+            const log: SmsGateWayLogs = {
+              type: 'danger',
+              time: this.getSMSGatewayLogTime(),
+              message: smsResponse,
+              _id: smsResponse._id,
+              logMessage:
+                'Fail to fetching user with phone number ' +
+                smsResponse.address +
+                ' : ' +
+                JSON.stringify(error)
+            };
+            this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+            this.saveSmsLog(log, currentUser);
+            observer.error('Error on fetching user : ' + JSON.stringify(error));
           }
         );
       } else {
+        this.markAsSkippedSMS(smsResponse._id, currentUser);
+        const log: SmsGateWayLogs = {
+          type: 'warning',
+          _id: smsResponse._id,
+          time: this.getSMSGatewayLogTime(),
+          logMessage: 'Missing phone number of the sender',
+          message: smsResponse
+        };
+        this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
+        this.saveSmsLog(log, currentUser);
         observer.error('Sender phone number is not found');
       }
     });
+  }
+
+  getCompletenessDate() {
+    let date = new Date();
+    return date.toISOString().split('T')[0];
+  }
+
+  getSMSGatewayLogTime() {
+    let date = new Date();
+    return date.toISOString().split('T')[0] + ' ' + date.toLocaleTimeString();
   }
 
   stopWatchingSms() {
