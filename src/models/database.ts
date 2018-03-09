@@ -43,6 +43,7 @@ export const DATABASE_STRUCTURE = {
   smsLogs: {
     columns: [
       { value: 'id', type: 'TEXT' },
+      { value: '_id', type: 'TEXT' },
       { value: 'time', type: 'TEXT' },
       { value: 'type', type: 'TEXT' },
       { value: 'dataSetId', type: 'TEXT' },

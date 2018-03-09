@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { catchError, map, switchMap, mergeMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import * as smsGatewayLogsActions from '../actions/smsGatewayLogs.action';
 import { SmsGatewayProvider } from '../../providers/sms-gateway/sms-gateway';

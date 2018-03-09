@@ -41,18 +41,7 @@ export class SmsGatewayProvider {
   ) {}
 
   saveSmsLog(log, currentUser) {
-    console.log(JSON.stringify([log]));
-    this.saveSmsLogs([log], currentUser).subscribe(
-      () => {
-        this.getAllSavedSmsLogs().subscribe(
-          (data: any) => {
-            console.log('Available logs : ' + data.length);
-          },
-          error => {}
-        );
-      },
-      error => {}
-    );
+    this.saveSmsLogs([log], currentUser).subscribe(() => {}, error => {});
   }
 
   saveSmsLogs(
@@ -66,7 +55,6 @@ export class SmsGatewayProvider {
       let time = new Date().toJSON();
       time = time.replace(/[:\s]/g, '-');
       log['id'] = time + '-' + smsLog._id + '-' + smsLog.type;
-      console.log('Log ' + log['id'] + ' ' + JSON.stringify(log));
       data.push(log);
     });
     return new Observable(observer => {
@@ -93,7 +81,7 @@ export class SmsGatewayProvider {
             .getAllDataFromTable(resource, currentUser.currentDatabase)
             .subscribe(
               (smsLogs: Array<SmsGateWayLogs>) => {
-                observer.next(smsLogs);
+                observer.next(smsLogs.reverse());
                 observer.complete();
               },
               error => {
