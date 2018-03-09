@@ -1,5 +1,6 @@
 import { SmsGateWayLogs, SmsGateWayLogsError } from '../../models/smsCommand';
 import * as fromSmsGatewayLogsAction from '../actions/smsGatewayLogs.action';
+import * as _ from 'lodash';
 
 export interface SmsGatewayLogsState {
   logs: Array<SmsGateWayLogs>;
@@ -22,8 +23,7 @@ export function smsGatewayLogsReducer(
       return { ...state, isLoading: true };
     }
     case fromSmsGatewayLogsAction.LOGS_HAVE_BEEN_LOADED: {
-      let logs = state.logs;
-      logs.unshift(action.payload);
+      let logs = _.concat(action.payload, state.logs);
       return { ...state, logs, isLoading: false };
     }
     case fromSmsGatewayLogsAction.FAIL_TO_LOAD_LOGS: {

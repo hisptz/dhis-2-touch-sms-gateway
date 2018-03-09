@@ -12,7 +12,7 @@ export class LoadingLogs implements Action {
 
 export class LogsHaveBeenLoaded implements Action {
   readonly type = LOGS_HAVE_BEEN_LOADED;
-  constructor(public payload: SmsGateWayLogs) {}
+  constructor(public payload: Array<SmsGateWayLogs>) {}
 }
 
 export class FailToLoadLogs implements Action {
