@@ -15,6 +15,7 @@ import { ApplicationState } from '../../store/reducers';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import * as logsSelectors from '../../store/selectors/smsGatewayLogs.selectors';
+import * as logsActions from '../../store/actions/smsGatewayLogs.action';
 import * as _ from 'lodash';
 
 /**
@@ -302,6 +303,7 @@ export class SmsGatewayPage implements OnInit {
             'SMS gatway is now listening for incoming SMS'
           );
         }
+        this.store.dispatch(new logsActions.LoadingLogs());
       },
       error => {
         this.isLoading = false;

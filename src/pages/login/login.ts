@@ -12,7 +12,7 @@ import { SettingsProvider } from '../../providers/settings/settings';
 import { EncryptionProvider } from '../../providers/encryption/encryption';
 import { DataSetsProvider } from '../../providers/data-sets/data-sets';
 import { SmsCommandProvider } from '../../providers/sms-command/sms-command';
-import { ApplicationState } from '../../store/reducers/index';
+import { ApplicationState } from '../../store/reducers';
 import { Store } from '@ngrx/store';
 import { LoadedCurrentUser } from '../../store/actions/currentUser.actons';
 

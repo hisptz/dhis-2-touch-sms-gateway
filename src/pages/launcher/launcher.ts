@@ -6,7 +6,6 @@ import { AppTranslationProvider } from '../../providers/app-translation/app-tran
 import { ApplicationState } from '../../store/reducers/index';
 import { Store } from '@ngrx/store';
 import { LoadedCurrentUser } from '../../store/actions/currentUser.actons';
-import * as logsActions from '../../store/actions/smsGatewayLogs.action';
 
 /**
  * Generated class for the LauncherPage page.
@@ -42,7 +41,6 @@ export class LauncherPage implements OnInit {
         this.appTranslationProvider.setAppTranslation(currentLanguage);
         if (user && user.isLogin) {
           this.store.dispatch(new LoadedCurrentUser(user));
-          this.store.dispatch(new logsActions.LoadingLogs());
           this.navCtrl.setRoot('SmsGatewayPage');
         } else {
           this.navCtrl.setRoot('LoginPage');
