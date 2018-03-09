@@ -49,8 +49,8 @@ export const DATABASE_STRUCTURE = {
       { value: 'periodIso', type: 'TEXT' },
       { value: 'organisationUnitName', type: 'TEXT' },
       { value: 'organisationUnitId', type: 'TEXT' },
-      { value: 'logMessage', type: 'TEXT' },
-      { value: 'message', type: 'TEXT' }
+      { value: 'logMessage', type: 'LONGTEXT' },
+      { value: 'message', type: 'LONGTEXT' }
     ],
     fields: '',
     isMetadata: true,
