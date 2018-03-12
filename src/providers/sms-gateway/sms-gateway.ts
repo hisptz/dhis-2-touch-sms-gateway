@@ -353,6 +353,7 @@ export class SmsGatewayProvider {
             this.saveSmsLog(log, currentUser);
           },
           error => {
+            this.markAsNotSyncedSMS(smsResponse._id, currentUser);
             const log: SmsGateWayLogs = {
               type: 'danger',
               time: this.getSMSGatewayLogTime(),
@@ -478,9 +479,9 @@ export class SmsGatewayProvider {
                 observer.error('Data set is has not being set for sync');
               }
             } else {
-              this.markAsNotSyncedSMS(smsResponse._id, currentUser);
+              this.markAsSkippedSMS(smsResponse._id, currentUser);
               const log: SmsGateWayLogs = {
-                type: 'warning',
+                type: 'irrelevant',
                 time: this.getSMSGatewayLogTime(),
                 _id: smsResponse._id,
                 message: smsResponse,
@@ -493,16 +494,16 @@ export class SmsGatewayProvider {
               observer.error('Missing data values from received sms');
             }
           } else {
-            this.markAsNotSyncedSMS(smsResponse._id, currentUser);
+            this.markAsSkippedSMS(smsResponse._id, currentUser);
             const log: SmsGateWayLogs = {
-              type: 'warning',
+              type: 'irrelevant',
               time: this.getSMSGatewayLogTime(),
               _id: smsResponse._id,
               message: smsResponse,
               logMessage:
                 'Message from ' +
                 smsResponse.address +
-                ' has been marked as unsynced due to incorrect formatting'
+                ' has been marked as skipped due to incorrect formatting'
             };
             this.store.dispatch(new logsActions.LogsHaveBeenLoaded([log]));
             this.saveSmsLog(log, currentUser);
@@ -510,7 +511,7 @@ export class SmsGatewayProvider {
         } else {
           this.markAsSkippedSMS(smsResponse._id, currentUser);
           const log: SmsGateWayLogs = {
-            type: 'warning',
+            type: 'irrelevant',
             time: this.getSMSGatewayLogTime(),
             _id: smsResponse._id,
             message: smsResponse,
@@ -526,7 +527,7 @@ export class SmsGatewayProvider {
       } else {
         this.markAsSkippedSMS(smsResponse._id, currentUser);
         const log: SmsGateWayLogs = {
-          type: 'warning',
+          type: 'irrelevant',
           time: this.getSMSGatewayLogTime(),
           _id: smsResponse._id,
           message: smsResponse,
@@ -622,7 +623,7 @@ export class SmsGatewayProvider {
       } else {
         this.markAsSkippedSMS(smsResponse._id, currentUser);
         const log: SmsGateWayLogs = {
-          type: 'warning',
+          type: 'irrelevant',
           _id: smsResponse._id,
           time: this.getSMSGatewayLogTime(),
           logMessage: 'Missing phone number of the sender',

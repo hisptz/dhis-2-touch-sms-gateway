@@ -60,6 +60,7 @@ export class SmsGatewayPage implements OnInit {
       danger: 'assets/icon/danger.png',
       logs: 'assets/icon/logs.png',
       info: 'assets/icon/info.png',
+      irrelevant: 'assets/icon/irrelevant.png',
       warning: 'assets/icon/warning.png'
     };
   }
@@ -227,6 +228,7 @@ export class SmsGatewayPage implements OnInit {
                             );
                         },
                         error => {
+                          this.isLoading = false;
                           console.log(JSON.stringify(error));
                           this.appProvider.setNormalNotification(
                             'Fail to update current user information'
@@ -235,6 +237,7 @@ export class SmsGatewayPage implements OnInit {
                       );
                   },
                   error => {
+                    this.isLoading = false;
                     console.log(JSON.stringify(error));
                     this.appProvider.setNormalNotification(
                       'Fail to check and update missed SMS commands'
@@ -243,6 +246,7 @@ export class SmsGatewayPage implements OnInit {
                 );
             },
             error => {
+              this.isLoading = false;
               console.log(JSON.stringify(error));
               this.appProvider.setNormalNotification(
                 'Fail to save entry forms'
@@ -251,6 +255,7 @@ export class SmsGatewayPage implements OnInit {
           );
       },
       error => {
+        this.isLoading = false;
         console.log(JSON.stringify(error));
         this.appProvider.setNormalNotification('Fail to discover entry forms');
       }

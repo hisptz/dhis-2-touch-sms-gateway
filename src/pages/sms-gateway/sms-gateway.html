@@ -33,9 +33,12 @@
               <img class="side-menu-icon" [src]="icons.danger" />&nbsp;&nbsp;
               <span>{{ getCountByStatus((allSmsLogs$ |async),'danger') }} </span>
             </button>
+            <button ion-button outline color="font-color" text-capitalize [disabled]="currentFilter == 'irrelevant'" (click)="viewLogsByStatus('irrelevant')">
+              <img class="side-menu-icon" [src]="icons.irrelevant" />&nbsp;&nbsp;
+              <span>{{ getCountByStatus((allSmsLogs$ |async),'irrelevant') }} </span>
+            </button>
           </div>
           <div padding-top padding-bottom>
-
             <div class="item-card" *ngIf="(allSmsLogs$ |async).length == 0 && currentFilter == 'all'" text-center>
               <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
               <span class="animated fadeIn" [translate]="'SMS gatway is now listening for incoming SMS'"> </span>
@@ -47,7 +50,6 @@
                 </div>
               </div>
             </div>
-
             <div *ngIf="currentFilter == 'info'">
               <div class="item-card" *ngIf="getLogsByStatus((allSmsLogs$ |async),'info').length == 0" text-center>
                 <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
@@ -77,6 +79,17 @@
               </div>
               <div class="list-seperator" *ngIf="getLogsByStatus((allSmsLogs$ |async),'danger').length > 0">
                 <div *ngFor="let smsLog of getLogsByStatus((allSmsLogs$ |async),'danger') ;trackBy: trackByFn">
+                  <sms-logs-list-card [smsLog]="smsLog"></sms-logs-list-card>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="currentFilter == 'irrelevant'">
+              <div class="item-card" *ngIf="getLogsByStatus((allSmsLogs$ |async),'irrelevant').length == 0" text-center>
+                <img class="side-menu-icon" [src]="icons.info" />&nbsp;&nbsp;
+                <span [translate]="'Currently there is no log to view'"></span>
+              </div>
+              <div class="list-seperator" *ngIf="getLogsByStatus((allSmsLogs$ |async),'irrelevant').length > 0">
+                <div *ngFor="let smsLog of getLogsByStatus((allSmsLogs$ |async),'irrelevant') ;trackBy: trackByFn">
                   <sms-logs-list-card [smsLog]="smsLog"></sms-logs-list-card>
                 </div>
               </div>
