@@ -106,7 +106,7 @@ export class LoginPage implements OnInit {
       }
       this.currentUser = currentUser;
     } else {
-      this.currentUser.serverUrl = 'play.hisptz.org/28';
+      this.currentUser.serverUrl = 'play.hisptz.org/29';
       this.currentUser.username = 'admin';
       this.currentUser.password = 'district';
     }
@@ -166,6 +166,7 @@ export class LoginPage implements OnInit {
       this.currentUser.username &&
       this.currentUser.password
     ) {
+      delete this.currentUser.dhisVersion;
       let currentResourceType = 'communication';
       this.progressTracker = {};
       let resource = 'Authenticating user';
@@ -195,103 +196,111 @@ export class LoginPage implements OnInit {
           );
           this.reInitiateProgressTrackerObject(this.currentUser);
           this.updateProgressTracker(resource);
-          this.UserProvider.setUserData(JSON.parse(response.data)).subscribe(
-            userData => {
-              resource = 'Discovering system information';
-              if (this.isLoginProcessActive) {
-                this.progressTracker[currentResourceType].message =
-                  'Discovering system information';
-                this.HttpClientProvider.get(
-                  '/api/system/info',
-                  false,
-                  this.currentUser
+          resource = 'Discovering system information';
+          if (this.isLoginProcessActive) {
+            this.progressTracker[currentResourceType].message =
+              'Discovering system information';
+            this.HttpClientProvider.get(
+              '/api/system/info',
+              false,
+              this.currentUser
+            ).subscribe(
+              (response: any) => {
+                this.UserProvider.setCurrentUserSystemInformation(
+                  JSON.parse(response.data)
                 ).subscribe(
-                  (response: any) => {
-                    this.UserProvider.setCurrentUserSystemInformation(
-                      JSON.parse(response.data)
-                    ).subscribe(
-                      (dhisVersion: string) => {
-                        this.currentUser.dhisVersion = dhisVersion;
-                        this.updateProgressTracker(resource);
-                        if (this.isLoginProcessActive) {
+                  (dhisVersion: string) => {
+                    this.currentUser.dhisVersion = dhisVersion;
+                    this.updateProgressTracker(resource);
+                    if (this.isLoginProcessActive) {
+                      this.progressTracker[currentResourceType].message =
+                        'Discovering current user authorities';
+                      this.UserProvider.getUserAuthorities(
+                        this.currentUser
+                      ).subscribe(
+                        (response: any) => {
+                          this.currentUser.id = response.id;
+                          this.currentUser.name = response.name;
+                          this.currentUser.authorities = response.authorities;
+                          this.currentUser.dataViewOrganisationUnits =
+                            response.dataViewOrganisationUnits;
+                          resource = 'Preparing local storage';
                           this.progressTracker[currentResourceType].message =
-                            'Discovering current user authorities';
-                          this.UserProvider.getUserAuthorities(
-                            this.currentUser
-                          ).subscribe(
-                            (response: any) => {
-                              this.currentUser.id = response.id;
-                              this.currentUser.name = response.name;
-                              this.currentUser.authorities =
-                                response.authorities;
-                              this.currentUser.dataViewOrganisationUnits =
-                                response.dataViewOrganisationUnits;
-                              resource = 'Preparing local storage';
-                              this.progressTracker[
-                                currentResourceType
-                              ].message =
-                                'Preparing local storage';
-                              this.sqlLite
-                                .generateTables(
-                                  this.currentUser.currentDatabase
-                                )
-                                .subscribe(
-                                  () => {
-                                    this.updateProgressTracker(resource);
-                                    this.hasUserAuthenticated = true;
+                            'Preparing local storage';
+                          this.sqlLite
+                            .generateTables(this.currentUser.currentDatabase)
+                            .subscribe(
+                              () => {
+                                this.UserProvider.getUserDataFromServer(
+                                  this.currentUser,
+                                  true
+                                ).subscribe(
+                                  (response: any) => {
+                                    response = this.getResponseData(response);
+                                    this.UserProvider.setUserData(
+                                      JSON.parse(response.data)
+                                    ).subscribe(
+                                      userData => {
+                                        this.updateProgressTracker(resource);
+                                        this.hasUserAuthenticated = true;
+                                      },
+                                      error => {}
+                                    );
                                   },
                                   error => {
                                     this.cancelLoginProcess(
                                       this.cancelLoginProcessData
                                     );
                                     this.AppProvider.setNormalNotification(
-                                      'Fail to prepare local storage'
+                                      'Fail to save current user information'
                                     );
                                     console.error(
                                       'error : ' + JSON.stringify(error)
                                     );
                                   }
                                 );
-                            },
-                            error => {
-                              this.cancelLoginProcess(
-                                this.cancelLoginProcessData
-                              );
-                              this.AppProvider.setNormalNotification(
-                                'Fail to discover user authorities'
-                              );
-                              console.error('error : ' + JSON.stringify(error));
-                            }
+                              },
+                              error => {
+                                this.cancelLoginProcess(
+                                  this.cancelLoginProcessData
+                                );
+                                this.AppProvider.setNormalNotification(
+                                  'Fail to prepare local storage'
+                                );
+                                console.error(
+                                  'error : ' + JSON.stringify(error)
+                                );
+                              }
+                            );
+                        },
+                        error => {
+                          this.cancelLoginProcess(this.cancelLoginProcessData);
+                          this.AppProvider.setNormalNotification(
+                            'Fail to discover user authorities'
                           );
+                          console.error('error : ' + JSON.stringify(error));
                         }
-                      },
-                      error => {
-                        this.cancelLoginProcess(this.cancelLoginProcessData);
-                        this.AppProvider.setNormalNotification(
-                          'Fail to discover user authorities'
-                        );
-                        console.error('error : ' + JSON.stringify(error));
-                      }
-                    );
+                      );
+                    }
                   },
                   error => {
                     this.cancelLoginProcess(this.cancelLoginProcessData);
                     this.AppProvider.setNormalNotification(
-                      'Fail to discover system information'
+                      'Fail to discover user authorities'
                     );
                     console.error('error : ' + JSON.stringify(error));
                   }
                 );
+              },
+              error => {
+                this.cancelLoginProcess(this.cancelLoginProcessData);
+                this.AppProvider.setNormalNotification(
+                  'Fail to discover system information'
+                );
+                console.error('error : ' + JSON.stringify(error));
               }
-            },
-            error => {
-              this.cancelLoginProcess(this.cancelLoginProcessData);
-              this.AppProvider.setNormalNotification(
-                'Fail to save current user information'
-              );
-              console.error('error : ' + JSON.stringify(error));
-            }
-          );
+            );
+          }
         },
         (error: any) => {
           if (error.status == 0) {
