@@ -24,11 +24,24 @@ export class SettingsProvider {
         icon: 'assets/icon/app-setting.png',
         isLoading: false,
         loadingMessage: ''
+      },
+      {
+        id: 'entryForm',
+        name: 'Entry form',
+        icon: 'assets/icon/form.png',
+        isLoading: false,
+        loadingMessage: ''
       }
-      // {id: 'entryForm', name: 'entry_form', icon: 'assets/icon/form.png', isLoading: false, loadingMessage: ''},
+      // {
+      //   id: 'entryForm',
+      //   name: 'Entry form',
+      //   icon: 'assets/icon/form.png',
+      //   isLoading: false,
+      //   loadingMessage: ''
+      // },
       // {
       //   id: 'synchronization',
-      //   name: 'synchronization',
+      //   name: 'Synchronization',
       //   icon: 'assets/icon/synchronization.png',
       //   isLoading: false,
       //   loadingMessage: ''
