@@ -34,15 +34,15 @@ export class SmsGatewayDatasetSetupComponent implements OnInit {
       (smsConfiguration: SmsConfiguration) => {
         this.dataSetProvider.getAllDataSets(this.currentUser).subscribe(
           (dataSets: Array<DataSet>) => {
-            dataSets.map((dataSet: DataSet) => {
-              this.dataSets.push({
+            this.dataSets = _.map(dataSets, (dataSet: DataSet) => {
+              return {
                 id: dataSet.id,
                 name: dataSet.name,
                 status:
                   smsConfiguration.dataSetIds.indexOf(dataSet.id) > -1
                     ? true
                     : false
-              });
+              };
             });
             this.isLoading = false;
           },
