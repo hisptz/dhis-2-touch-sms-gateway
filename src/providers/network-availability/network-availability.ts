@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { Network } from "@ionic-native/network";
-import { AppProvider } from "../app/app";
+import { Injectable } from '@angular/core';
+import { Network } from '@ionic-native/network';
+import { AppProvider } from '../app/app';
 
 /*
   Generated class for the NetworkAvailabilityProvider provider.
@@ -15,19 +15,19 @@ export class NetworkAvailabilityProvider {
   getNetWorkStatus() {
     return {
       isAvailable:
-        this.network.type == "unknown" || this.network.type == "none"
+        this.network.type == 'unknown' || this.network.type == 'none'
           ? false
           : true,
       message:
-        this.network.type == "unknown" || this.network.type == "none"
-          ? "You are offline"
-          : "You are online",
+        this.network.type == 'unknown' || this.network.type == 'none'
+          ? 'You are offline'
+          : 'You are online',
       networkType: this.network.type
     };
   }
 
   setNetworkStatusDetection() {
-    console.log("Here we are ");
+    console.log('Here we are ');
     this.network.onConnect().subscribe(
       data => {
         this.displayNetworkUpdate(data.type);
@@ -44,7 +44,7 @@ export class NetworkAvailabilityProvider {
   }
 
   displayNetworkUpdate(connectionState: string) {
-    let message = `you are ${connectionState}`;
+    let message = `You are ${connectionState}`;
     this.AppProvider.setTopNotification(message);
   }
 }

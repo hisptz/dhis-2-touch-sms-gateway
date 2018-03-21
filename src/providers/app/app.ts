@@ -3,8 +3,6 @@ import { AppVersion } from '@ionic-native/app-version';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { ToastController } from 'ionic-angular';
-import { SqlLiteProvider } from '../sql-lite/sql-lite';
-import { Http } from '@angular/http';
 import { AppTranslationProvider } from '../app-translation/app-translation';
 
 /*
@@ -18,8 +16,6 @@ export class AppProvider {
   constructor(
     private appVersion: AppVersion,
     private toastController: ToastController,
-    private sqLite: SqlLiteProvider,
-    private http: Http,
     private transalationProvider: AppTranslationProvider
   ) {}
 

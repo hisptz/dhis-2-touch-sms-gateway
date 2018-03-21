@@ -4,7 +4,6 @@ import { UserProvider } from '../../providers/user/user';
 import { CurrentUser } from '../../models/currentUser';
 import { EncryptionProvider } from '../../providers/encryption/encryption';
 import { DataSetsProvider } from '../../providers/data-sets/data-sets';
-import { DataSet } from '../../models/dataSet';
 import { SmsGatewayProvider } from '../../providers/sms-gateway/sms-gateway';
 import { SmsConfiguration, SmsGateWayLogs } from '../../models/smsCommand';
 import { AppProvider } from '../../providers/app/app';
@@ -60,6 +59,7 @@ export class SmsGatewayPage implements OnInit {
       danger: 'assets/icon/danger.png',
       logs: 'assets/icon/logs.png',
       info: 'assets/icon/info.png',
+      irrelevant: 'assets/icon/irrelevant.png',
       warning: 'assets/icon/warning.png'
     };
   }
@@ -92,9 +92,7 @@ export class SmsGatewayPage implements OnInit {
   getCountByStatus(logs, status) {
     let counts = 0;
     if (logs) {
-      let filteredLogs = logs.filter((log: any) => {
-        return log.type == status;
-      });
+      const filteredLogs = _.filter(logs, { type: status });
       counts = filteredLogs.length;
     }
     return counts;
@@ -192,6 +190,7 @@ export class SmsGatewayPage implements OnInit {
                             .getSmsConfigurations(this.currentUser)
                             .subscribe(
                               (smsConfigurations: SmsConfiguration) => {
+                                //@todo checking if it was unchecked on setting
                                 if (smsConfigurations.dataSetIds.length == 0) {
                                   dataSets.map((dataSet: any) => {
                                     if (
@@ -227,6 +226,7 @@ export class SmsGatewayPage implements OnInit {
                             );
                         },
                         error => {
+                          this.isLoading = false;
                           console.log(JSON.stringify(error));
                           this.appProvider.setNormalNotification(
                             'Fail to update current user information'
@@ -235,6 +235,7 @@ export class SmsGatewayPage implements OnInit {
                       );
                   },
                   error => {
+                    this.isLoading = false;
                     console.log(JSON.stringify(error));
                     this.appProvider.setNormalNotification(
                       'Fail to check and update missed SMS commands'
@@ -243,6 +244,7 @@ export class SmsGatewayPage implements OnInit {
                 );
             },
             error => {
+              this.isLoading = false;
               console.log(JSON.stringify(error));
               this.appProvider.setNormalNotification(
                 'Fail to save entry forms'
@@ -251,6 +253,7 @@ export class SmsGatewayPage implements OnInit {
           );
       },
       error => {
+        this.isLoading = false;
         console.log(JSON.stringify(error));
         this.appProvider.setNormalNotification('Fail to discover entry forms');
       }
@@ -299,7 +302,7 @@ export class SmsGatewayPage implements OnInit {
         this.smsCommandMapper = smsCommandMapper;
         this.isLoading = false;
         if (response) {
-          this.appProvider.setTopNotification(
+          this.appProvider.setNormalNotification(
             'SMS gatway is now listening for incoming SMS'
           );
         }

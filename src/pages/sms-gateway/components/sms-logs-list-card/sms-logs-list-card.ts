@@ -21,6 +21,7 @@ export class SmsLogsListCardComponent implements OnInit {
     this.icons = {
       danger: 'assets/icon/danger.png',
       info: 'assets/icon/info.png',
+      irrelevant: 'assets/icon/irrelevant.png',
       warning: 'assets/icon/warning.png'
     };
     this.isSelected = false;

@@ -4,7 +4,6 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import * as smsGatewayLogsActions from '../actions/smsGatewayLogs.action';
 import { SmsGatewayProvider } from '../../providers/sms-gateway/sms-gateway';
-import { SmsGateWayLogs } from '../../models/smsCommand';
 
 @Injectable()
 export class SmsGatewayLogsEffects {

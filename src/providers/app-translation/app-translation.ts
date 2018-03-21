@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
-import * as _ from 'lodash';
 
 /*
   Generated class for the AppTranslationProvider provider.
