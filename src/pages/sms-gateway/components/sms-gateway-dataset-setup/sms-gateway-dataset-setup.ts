@@ -31,7 +31,7 @@ export class SmsGatewayDatasetSetupComponent implements OnInit {
 
   ngOnInit() {
     this.smsGatewayProvider.getSmsConfigurations(this.currentUser).subscribe(
-      (smConfiguration: SmsConfiguration) => {
+      (smsConfiguration: SmsConfiguration) => {
         this.dataSetProvider.getAllDataSets(this.currentUser).subscribe(
           (dataSets: Array<DataSet>) => {
             dataSets.map((dataSet: DataSet) => {
@@ -39,7 +39,7 @@ export class SmsGatewayDatasetSetupComponent implements OnInit {
                 id: dataSet.id,
                 name: dataSet.name,
                 status:
-                  smConfiguration.dataSetIds.indexOf(dataSet.id) > -1
+                  smsConfiguration.dataSetIds.indexOf(dataSet.id) > -1
                     ? true
                     : false
               });
@@ -58,8 +58,30 @@ export class SmsGatewayDatasetSetupComponent implements OnInit {
   }
 
   updateSelectedItems() {
-    const seletectDataSets = _.filter(this.dataSets, { status: true });
-    const dataSetIds = _.map(seletectDataSets, 'id');
-    console.log(dataSetIds);
+    const dataSetIds = _.map(_.filter(this.dataSets, { status: true }), 'id');
+    this.smsGatewayProvider.getSmsConfigurations(this.currentUser).subscribe(
+      (smsConfiguration: SmsConfiguration) => {
+        smsConfiguration.dataSetIds = dataSetIds;
+        this.smsGatewayProvider
+          .setSmsConfigurations(this.currentUser, smsConfiguration)
+          .subscribe(
+            () => {
+              console.log('success set up sms configurations');
+            },
+            error => {
+              console.log(
+                'Error on set up sms configurations ' + JSON.stringify(error)
+              );
+            }
+          );
+      },
+      error => {
+        console.log('Error on get sms configurations ' + JSON.stringify(error));
+      }
+    );
+  }
+
+  trackByFn(index, item) {
+    return item._id;
   }
 }

@@ -185,7 +185,10 @@ export class SmsGatewayProvider {
   }
 
   setTimeOutFuction(smsCommandObjects, currentUser, dataSetsMapper) {
-    setInterval(() => {
+    if (this.synchronizationWatcher) {
+      clearInterval(this.synchronizationWatcher);
+    }
+    this.synchronizationWatcher = setInterval(() => {
       SMS.listSMS(
         {},
         (data: any) => {

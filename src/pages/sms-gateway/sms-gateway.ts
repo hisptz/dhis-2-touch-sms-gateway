@@ -92,9 +92,7 @@ export class SmsGatewayPage implements OnInit {
   getCountByStatus(logs, status) {
     let counts = 0;
     if (logs) {
-      let filteredLogs = logs.filter((log: any) => {
-        return log.type == status;
-      });
+      const filteredLogs = _.filter(logs, { type: status });
       counts = filteredLogs.length;
     }
     return counts;
@@ -192,6 +190,7 @@ export class SmsGatewayPage implements OnInit {
                             .getSmsConfigurations(this.currentUser)
                             .subscribe(
                               (smsConfigurations: SmsConfiguration) => {
+                                //@todo checking if it was unchecked on setting
                                 if (smsConfigurations.dataSetIds.length == 0) {
                                   dataSets.map((dataSet: any) => {
                                     if (
@@ -303,7 +302,7 @@ export class SmsGatewayPage implements OnInit {
         this.smsCommandMapper = smsCommandMapper;
         this.isLoading = false;
         if (response) {
-          this.appProvider.setTopNotification(
+          this.appProvider.setNormalNotification(
             'SMS gatway is now listening for incoming SMS'
           );
         }

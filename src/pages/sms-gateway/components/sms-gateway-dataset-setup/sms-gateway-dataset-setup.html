@@ -4,7 +4,7 @@
 
 <div *ngIf="!isLoading">
 
-  <div *ngFor="let dataSet of dataSets">
+  <div *ngFor="let dataSet of dataSets; trackBy: trackByFn">
     <ion-item no-lines>
       <ion-checkbox color="blue" [(ngModel)]="dataSet.status" (ionChange)="updateSelectedItems()"></ion-checkbox>
       <ion-label> {{ dataSet.name }} </ion-label>
