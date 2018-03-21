@@ -4,7 +4,6 @@ import 'rxjs/add/operator/map';
 import { HTTP } from '@ionic-native/http';
 import { Observable } from 'rxjs/Observable';
 import { HttpClientProvider } from '../http-client/http-client';
-import { CurrentUser } from '../../models/currentUser';
 
 /*
  Generated class for the UserProvider provider.

@@ -10,7 +10,6 @@ import { SqlLiteProvider } from '../../providers/sql-lite/sql-lite';
 import { HttpClientProvider } from '../../providers/http-client/http-client';
 import { SettingsProvider } from '../../providers/settings/settings';
 import { EncryptionProvider } from '../../providers/encryption/encryption';
-import { DataSetsProvider } from '../../providers/data-sets/data-sets';
 import { SmsCommandProvider } from '../../providers/sms-command/sms-command';
 import { ApplicationState } from '../../store/reducers';
 import { Store } from '@ngrx/store';
@@ -59,7 +58,6 @@ export class LoginPage implements OnInit {
     private encryption: EncryptionProvider,
     private settingsProvider: SettingsProvider,
     private menu: MenuController,
-    private dataSetsProvider: DataSetsProvider,
     private smsCommandProvider: SmsCommandProvider,
     private backgroundMode: BackgroundMode
   ) {}

@@ -46,6 +46,9 @@
         </ion-row>
         <div class="updateManagerContents" *ngIf="(isSettingContentOpen[settingContent.id])">
           <hr>
+          <div *ngIf=" settingContent.id == 'entryForm'">
+            <sms-gateway-dataset-setup [currentUser]="currentUser"></sms-gateway-dataset-setup>
+          </div>
 
           <div *ngIf=" settingContent.id == 'appSettings'">
             <div *ngIf="settingContent.isLoading">

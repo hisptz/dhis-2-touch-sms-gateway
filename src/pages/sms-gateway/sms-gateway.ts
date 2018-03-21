@@ -4,7 +4,6 @@ import { UserProvider } from '../../providers/user/user';
 import { CurrentUser } from '../../models/currentUser';
 import { EncryptionProvider } from '../../providers/encryption/encryption';
 import { DataSetsProvider } from '../../providers/data-sets/data-sets';
-import { DataSet } from '../../models/dataSet';
 import { SmsGatewayProvider } from '../../providers/sms-gateway/sms-gateway';
 import { SmsConfiguration, SmsGateWayLogs } from '../../models/smsCommand';
 import { AppProvider } from '../../providers/app/app';
