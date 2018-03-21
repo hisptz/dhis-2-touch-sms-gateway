@@ -1,3 +1,13 @@
-<loading [loadingSize]="'large'"> </loading>
+<div *ngIf="isLoading">
+  <loading [loadingSize]="'large'"> </loading>
+</div>
 
-{{ currentUser |json }}
+<div *ngIf="!isLoading">
+
+  <div *ngFor="let dataSet of dataSets">
+    <ion-item no-lines>
+      <ion-checkbox color="blue" [(ngModel)]="dataSet.status" (ionChange)="updateSelectedItems()"></ion-checkbox>
+      <ion-label> {{ dataSet.name }} </ion-label>
+    </ion-item>
+  </div>
+</div>
