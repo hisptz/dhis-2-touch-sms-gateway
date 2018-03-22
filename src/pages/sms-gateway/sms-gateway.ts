@@ -39,6 +39,7 @@ export class SmsGatewayPage implements OnInit {
   translationMapper: any;
   icons: any;
   currentFilter: string;
+  dataSetsInformation: any;
   //observer
   allSmsLogs$: Observable<Array<SmsGateWayLogs>>;
 
@@ -55,6 +56,7 @@ export class SmsGatewayPage implements OnInit {
     private store: Store<ApplicationState>
   ) {
     this.currentFilter = 'all';
+    this.dataSetsInformation = [];
     this.allSmsLogs$ = store.select(logsSelectors.getCurrentSmsGatewayLogs);
     this.icons = {
       danger: 'assets/icon/danger.png',
@@ -266,34 +268,41 @@ export class SmsGatewayPage implements OnInit {
     this.loadingMessage = this.translationMapper[key]
       ? this.translationMapper[key]
       : key;
-    this.smsGateway.getSmsConfigurations(currentUser).subscribe(
-      (smsConfigurations: SmsConfiguration) => {
-        key = 'Discovering SMS commands';
-        this.loadingMessage = this.translationMapper[key]
-          ? this.translationMapper[key]
-          : key;
-        this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
-          smsCommandMapper => {
-            this.checkPermisionsAndStartGateway(smsCommandMapper);
+    this.dataSetProvider
+      .getAllDataSets(currentUser)
+      .subscribe((dataSets: Array<any>) => {
+        this.dataSetsInformation = _.map(dataSets, dataSet => {
+          return { id: dataSet.id, name: dataSet.name };
+        });
+        this.smsGateway.getSmsConfigurations(currentUser).subscribe(
+          (smsConfigurations: SmsConfiguration) => {
+            key = 'Discovering SMS commands';
+            this.loadingMessage = this.translationMapper[key]
+              ? this.translationMapper[key]
+              : key;
+            this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
+              smsCommandMapper => {
+                this.checkPermisionsAndStartGateway(smsCommandMapper);
+              },
+              error => {
+                this.isLoading = false;
+                this.appProvider.setNormalNotification(
+                  'Fail to discover SMS commands'
+                );
+              }
+            );
           },
           error => {
             this.isLoading = false;
+            console.log(
+              'Error on loading sms configurations ' + JSON.stringify(error)
+            );
             this.appProvider.setNormalNotification(
-              'Fail to discover SMS commands'
+              'Fail to discover SMS configurations'
             );
           }
         );
-      },
-      error => {
-        this.isLoading = false;
-        console.log(
-          'Error on loading sms configurations ' + JSON.stringify(error)
-        );
-        this.appProvider.setNormalNotification(
-          'Fail to discover SMS configurations'
-        );
-      }
-    );
+      });
   }
 
   checkPermisionsAndStartGateway(smsCommandMapper) {

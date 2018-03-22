@@ -561,9 +561,10 @@ export class SmsGatewayProvider {
 
   getDataValusFromSmsContents(smsCommandObject, smsCodeToValueMapper) {
     let dataValues = [];
+    const keys = Object.keys(smsCodeToValueMapper);
     if (smsCommandObject && smsCommandObject.smsCode) {
       smsCommandObject.smsCode.map((smsCodeObject: any) => {
-        if (smsCodeToValueMapper[smsCodeObject.smsCode]) {
+        if (keys.indexOf(smsCodeObject.smsCode) > -1) {
           dataValues.push({
             dataElement: smsCodeObject.dataElement.id,
             categoryOptionCombo: smsCodeObject.categoryOptionCombos,

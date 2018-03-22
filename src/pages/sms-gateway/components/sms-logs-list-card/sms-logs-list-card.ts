@@ -18,6 +18,7 @@ export class SmsLogsListCardComponent implements OnInit {
   @Input() smsLog: SmsGateWayLogs;
   @Input() dataElements;
   @Input() smsCommandMapper;
+  @Input() dataSetsInformation;
 
   icons: any;
   isSelected: boolean;
@@ -25,10 +26,12 @@ export class SmsLogsListCardComponent implements OnInit {
   hasSMSDecrypted: boolean;
   dataValueMapper: any;
   seletectDataElements: any;
+  dataSet: any;
   constructor(
     private appTranslation: AppTranslationProvider,
     private smsGatewayProvider: SmsGatewayProvider
   ) {
+    this.dataSet = {};
     this.hasSMSDecrypted = false;
     this.dataValueMapper = {};
     this.seletectDataElements = [];
@@ -49,6 +52,13 @@ export class SmsLogsListCardComponent implements OnInit {
       },
       error => {}
     );
+
+    if (this.dataSetsInformation) {
+      this.dataSet = _.find(this.dataSetsInformation, {
+        id: 'lyLU2wR22tC'
+      });
+    }
+
     if (this.smsLog && this.smsLog.message && this.smsCommandMapper) {
       const smsResponseArray = this.smsGatewayProvider.getSmsResponseArray(
         this.smsLog.message
@@ -61,6 +71,7 @@ export class SmsLogsListCardComponent implements OnInit {
         const smsCommandObject: SmsCommand = this.smsCommandMapper[
           smsResponseArray[0]
         ];
+        this.dataSet['period'] = smsResponseArray[1];
         const smsCodeToValueMapper = this.smsGatewayProvider.getSmsCodeToValueMapper(
           smsResponseArray[2],
           smsCommandObject.separator

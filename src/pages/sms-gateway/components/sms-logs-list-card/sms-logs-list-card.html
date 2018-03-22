@@ -5,7 +5,7 @@
     <div *ngIf="isSelected" class="animate fadeIn">
       <ion-card>
         <div *ngIf="hasSMSDecrypted">
-          <sms-to-readable-table [dataElements]="dataElements" [dataValueMapper]="dataValueMapper" [seletectDataElements]="seletectDataElements"></sms-to-readable-table>
+          <sms-to-readable-table [dataSet]="dataSet" [dataElements]="dataElements" [dataValueMapper]="dataValueMapper" [seletectDataElements]="seletectDataElements"></sms-to-readable-table>
         </div>
         <div *ngIf="!hasSMSDecrypted" class="item-card non-decrypted-sms">
           <span>

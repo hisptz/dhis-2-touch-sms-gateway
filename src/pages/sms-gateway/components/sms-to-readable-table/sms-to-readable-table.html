@@ -1,7 +1,13 @@
 <div class="sms-to-table-view">
-  <!-- <ion-card>
-    
-  </ion-card> -->
+  <table class="table table-bordered" width="100%">
+    <thead>
+      <tr>
+        <th colspan="100%">
+          {{ dataSet.name }} - {{ dataSet.period }}
+        </th>
+      </tr>
+    </thead>
+  </table>
   <div *ngFor="let dataElement of dataElements;trackBy: trackByFn">
     <table class="table table-bordered" width="100%" *ngIf="dataElement && seletectDataElements.indexOf(dataElement.id) > -1">
       <thead>

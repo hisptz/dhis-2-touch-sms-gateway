@@ -12,6 +12,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class SmsToReadableTableComponent implements OnInit {
   @Input() dataElements;
+  @Input() dataSet;
   @Input() dataValueMapper;
   @Input() seletectDataElements;
 
