@@ -28,7 +28,7 @@ export class DataSetsProvider {
    */
   downloadDataSetsFromServer(currentUser): Observable<any> {
     let url =
-      '/api/dataSets.json?fields=id,name,dataSetElements[dataElement[id,name,formName,displayName,categoryCombo[categoryOptionCombos[id,name]]]],dataElements[id,name,formName,displayName,categoryCombo[categoryOptionCombos[id,name]]]';
+      '/api/dataSets.json?fields=id,name,dataSetElements[dataElement[id,name,formName,displayName,categoryCombo[id,name,categoryOptionCombos[id,name]]]],dataElements[id,name,formName,displayName,categoryCombo[id,name,categoryOptionCombos[id,name]]]';
     return new Observable(observer => {
       this.httpClient
         .get(url, false, currentUser, this.resourceName, 50)

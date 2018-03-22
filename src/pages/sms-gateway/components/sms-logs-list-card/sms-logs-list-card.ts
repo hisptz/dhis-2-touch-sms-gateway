@@ -18,15 +18,20 @@ export class SmsLogsListCardComponent implements OnInit {
   @Input() smsLog: SmsGateWayLogs;
   @Input() dataElements;
   @Input() smsCommandMapper;
+
   icons: any;
   isSelected: boolean;
   translationMapper: any;
   hasSMSDecrypted: boolean;
+  dataValueMapper: any;
+  seletectDataElements: any;
   constructor(
     private appTranslation: AppTranslationProvider,
     private smsGatewayProvider: SmsGatewayProvider
   ) {
     this.hasSMSDecrypted = false;
+    this.dataValueMapper = {};
+    this.seletectDataElements = [];
     this.icons = {
       danger: 'assets/icon/danger.png',
       info: 'assets/icon/info.png',
@@ -49,7 +54,6 @@ export class SmsLogsListCardComponent implements OnInit {
         this.smsLog.message
       );
       const availableSmsCodes = Object.keys(this.smsCommandMapper);
-      console.log(smsResponseArray.length);
       if (
         smsResponseArray.length == 3 &&
         availableSmsCodes.indexOf(smsResponseArray[0]) > -1
@@ -67,7 +71,18 @@ export class SmsLogsListCardComponent implements OnInit {
             smsCommandObject,
             smsCodeToValueMapper
           );
-          console.log(JSON.stringify(dataValues));
+          _.map(dataValues, dataValue => {
+            this.seletectDataElements.push(dataValue.dataElement);
+            const id =
+              dataValue.dataElement + '-' + dataValue.categoryOptionCombo;
+            let data = {};
+            data[id] = dataValue.value;
+            return data;
+          }).map(dataValue => {
+            Object.keys(dataValue).map(key => {
+              this.dataValueMapper[key] = dataValue[key];
+            });
+          });
         }
       }
     }

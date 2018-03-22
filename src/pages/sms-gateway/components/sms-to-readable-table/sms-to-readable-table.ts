@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ReceivedSms } from '../../../../models/smsCommand';
 
 /**
  * Generated class for the SmsToReadableTableComponent component.
@@ -13,9 +12,13 @@ import { ReceivedSms } from '../../../../models/smsCommand';
 })
 export class SmsToReadableTableComponent implements OnInit {
   @Input() dataElements;
-  @Input() smsCommandMapper;
-  @Input() smsResponse: ReceivedSms;
+  @Input() dataValueMapper;
+  @Input() seletectDataElements;
 
   constructor() {}
   ngOnInit() {}
+
+  trackByFn(index, item) {
+    return item._id;
+  }
 }
