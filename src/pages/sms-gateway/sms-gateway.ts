@@ -35,6 +35,7 @@ export class SmsGatewayPage implements OnInit {
   loadingMessage: string;
   isSyncActive: boolean;
   smsCommandMapper: any;
+  dataElements: any;
   translationMapper: any;
   icons: any;
   currentFilter: string;
@@ -307,6 +308,12 @@ export class SmsGatewayPage implements OnInit {
           );
         }
         this.store.dispatch(new logsActions.LoadingLogs());
+        this.dataSetProvider.getDataSetDataElements(this.currentUser).subscribe(
+          dataElements => {
+            this.dataElements = dataElements;
+          },
+          error => {}
+        );
       },
       error => {
         this.isLoading = false;

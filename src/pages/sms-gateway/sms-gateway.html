@@ -16,6 +16,10 @@
           <loading [loadingMessage]="loadingMessage" [loadingSize]="'large'"></loading>
         </div>
         <div *ngIf="!isLoading">
+
+
+          <sms-to-readable-table [dataElements]="dataElements" [smsCommandMapper]="smsCommandMapper"></sms-to-readable-table>
+
           <div text-right class="animated fadeIn">
             <button ion-button outline [color]="(currentFilter == 'all')? 'current' : 'font-color'" text-capitalize [disabled]="(allSmsLogs$ |async).length == 0"
               (click)="viewLogsByStatus('all')">
