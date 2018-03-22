@@ -7,7 +7,7 @@
         <div *ngIf="hasSMSDecrypted">
           <sms-to-readable-table [dataElements]="dataElements" [dataValueMapper]="dataValueMapper" [seletectDataElements]="seletectDataElements"></sms-to-readable-table>
         </div>
-        <div *ngIf="!hasSMSDecrypted" class="item-card">
+        <div *ngIf="!hasSMSDecrypted" class="item-card non-decrypted-sms">
           <span>
             <b>
               {{ translationMapper['Sender'] }}

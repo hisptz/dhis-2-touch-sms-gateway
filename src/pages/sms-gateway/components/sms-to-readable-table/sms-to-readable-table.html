@@ -7,7 +7,7 @@
       <thead>
         <tr>
           <th [attr.colspan]="dataElement.categoryCombo.categoryOptionCombos.length">
-            {{dataElement.name}}
+            {{ getLabel(dataElement) }}
           </th>
         </tr>
         <tr *ngIf="dataElement.categoryCombo.name !='default'">

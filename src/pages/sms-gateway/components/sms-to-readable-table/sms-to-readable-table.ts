@@ -18,6 +18,18 @@ export class SmsToReadableTableComponent implements OnInit {
   constructor() {}
   ngOnInit() {}
 
+  getLabel(dataElement) {
+    let label = dataElement.name;
+    if (
+      dataElement &&
+      dataElement.formName &&
+      (dataElement.formName != '0' || dataElement.formName != '0.0')
+    ) {
+      label = dataElement.formName;
+    }
+    return label;
+  }
+
   trackByFn(index, item) {
     return item._id;
   }
