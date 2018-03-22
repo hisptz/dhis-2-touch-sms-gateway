@@ -12,8 +12,8 @@
         <b>
           {{ translationMapper['SMS Content'] }}
         </b>: {{ smsLog.message.body }} </span>
-
-      <sms-to-readable-table></sms-to-readable-table>
+      <br>hasSMSDecrypted :: {{ hasSMSDecrypted }}
+      <sms-to-readable-table [dataElements]="dataElements" [smsCommandMapper]="smsCommandMapper" [smsResponse]="smsLog.message"></sms-to-readable-table>
     </div>
   </div>
 </div>
