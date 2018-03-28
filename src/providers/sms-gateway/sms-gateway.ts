@@ -17,6 +17,7 @@ import { UserProvider } from '../user/user';
 import { CurrentUser } from '../../models/currentUser';
 import { DataSetsProvider } from '../data-sets/data-sets';
 import { DataSet } from '../../models/dataSet';
+import * as _ from 'lodash';
 
 declare var SMS: any;
 
@@ -391,13 +392,14 @@ export class SmsGatewayProvider {
   }
 
   getSmsResponseArray(smsResponse) {
-    let smsResponseArray = [];
-    smsResponse.body.split(' ').map((content: string) => {
-      if (content && content.trim() != '') {
-        smsResponseArray.push(content.trim());
+    return _.remove(
+      _.map(smsResponse.body.split(' '), (content: string) => {
+        return content.trim();
+      }),
+      (content: string) => {
+        return content && content.trim() != '';
       }
-    });
-    return smsResponseArray;
+    );
   }
 
   getSmsToDataValuePayload(
@@ -549,7 +551,7 @@ export class SmsGatewayProvider {
   getSmsCodeToValueMapper(smsCodeValueContents, separator) {
     let mapper = {};
     smsCodeValueContents.split('|').map((content: any) => {
-      let smsCodeValueArray = content.split(separator);
+      const smsCodeValueArray = content.split(separator);
       if (smsCodeValueArray.length == 2) {
         mapper[smsCodeValueArray[0]] = smsCodeValueArray[1];
       }
@@ -559,9 +561,10 @@ export class SmsGatewayProvider {
 
   getDataValusFromSmsContents(smsCommandObject, smsCodeToValueMapper) {
     let dataValues = [];
+    const keys = Object.keys(smsCodeToValueMapper);
     if (smsCommandObject && smsCommandObject.smsCode) {
       smsCommandObject.smsCode.map((smsCodeObject: any) => {
-        if (smsCodeToValueMapper[smsCodeObject.smsCode]) {
+        if (keys.indexOf(smsCodeObject.smsCode) > -1) {
           dataValues.push({
             dataElement: smsCodeObject.dataElement.id,
             categoryOptionCombo: smsCodeObject.categoryOptionCombos,

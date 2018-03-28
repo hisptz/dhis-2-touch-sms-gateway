@@ -2,16 +2,24 @@
   <div class="log-list-item-border log-list-item" [ngClass]="(isSelected)? 'log-list-item-selected': ''">
     <img class="side-menu-icon" [src]="icons[smsLog.type]" />&nbsp;&nbsp;
     <span>{{ smsLog.time + " : " + smsLog.logMessage }}</span>
-    <div *ngIf="isSelected" class="item-card animate fadeIn">
-      <span>
-        <b>
-          {{ translationMapper['Sender'] }}
-        </b>: {{ smsLog.message.address }} </span>
-      <br>
-      <span>
-        <b>
-          {{ translationMapper['SMS Content'] }}
-        </b>: {{ smsLog.message.body }} </span>
+    <div *ngIf="isSelected" class="animate fadeIn">
+      <ion-card>
+        <div *ngIf="hasSMSDecrypted">
+          <sms-to-readable-table [dataSet]="dataSet" [dataElements]="dataElements" [dataValueMapper]="dataValueMapper" [seletectDataElements]="seletectDataElements"></sms-to-readable-table>
+        </div>
+        <div *ngIf="!hasSMSDecrypted" class="item-card non-decrypted-sms">
+          <span>
+            <b>
+              {{ translationMapper['Sender'] }}
+            </b>: {{ smsLog.message.address }} </span>
+          <br>
+          <span>
+            <b>
+              {{ translationMapper['SMS Content'] }}
+            </b>: {{ smsLog.message.body }} </span>
+        </div>
+      </ion-card>
     </div>
+
   </div>
 </div>

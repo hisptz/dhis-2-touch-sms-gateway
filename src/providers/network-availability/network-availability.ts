@@ -27,7 +27,6 @@ export class NetworkAvailabilityProvider {
   }
 
   setNetworkStatusDetection() {
-    console.log('Here we are ');
     this.network.onConnect().subscribe(
       data => {
         this.displayNetworkUpdate(data.type);
