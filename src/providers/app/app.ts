@@ -108,7 +108,7 @@ export class AppProvider {
       .replace(/[/\s]/g, '_')
       .replace(/[.\s]/g, '_')
       .replace(/[:\s]/g, '_');
-    databaseName += '_' + username;
+    databaseName += '_' + username + '_gateway';
     return databaseName;
   }
 

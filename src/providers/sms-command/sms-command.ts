@@ -61,7 +61,7 @@ export class SmsCommandProvider {
         observer.next();
         observer.complete();
       } else {
-        smsCommands.forEach((smsCommand: any) => {
+        smsCommands.map((smsCommand: any) => {
           smsCommand['id'] = smsCommand.dataSetId;
         });
         this.SqlLite.insertBulkDataOnTable(
@@ -96,35 +96,49 @@ export class SmsCommandProvider {
             let smsCommands: Array<SmsCommand> = this.getGenerateSmsCommands(
               dataSets
             );
-            this.savingSmsCommand(
-              smsCommands,
-              currentUser.currentDatabase
-            ).subscribe(() => {});
-            let smsCommandUrl = '/api/25/dataStore/sms/commands';
-            this.HttpClient.defaultPost(
-              smsCommandUrl,
-              smsCommands,
-              currentUser
-            ).subscribe(
-              () => {
-                observer.next();
-                observer.complete();
+            this.getAllSmsCommands(currentUser).subscribe(
+              (data: any) => {
+                if (data && data.length >= 0) {
+                  observer.next();
+                  observer.complete();
+                } else {
+                  this.savingSmsCommand(
+                    smsCommands,
+                    currentUser.currentDatabase
+                  ).subscribe(() => {});
+                  let smsCommandUrl = '/api/25/dataStore/sms/commands';
+                  this.HttpClient.defaultPost(
+                    smsCommandUrl,
+                    smsCommands,
+                    currentUser
+                  ).subscribe(
+                    () => {
+                      console.log('On post commands');
+                      observer.next();
+                      observer.complete();
+                    },
+                    error => {
+                      //update data store
+                      this.HttpClient.put(
+                        smsCommandUrl,
+                        smsCommands,
+                        currentUser
+                      ).subscribe(
+                        () => {
+                          console.log('on put');
+                          observer.next();
+                          observer.complete();
+                        },
+                        errro => {
+                          observer.error(error);
+                        }
+                      );
+                    }
+                  );
+                }
               },
               error => {
-                //update data store
-                this.HttpClient.put(
-                  smsCommandUrl,
-                  smsCommands,
-                  currentUser
-                ).subscribe(
-                  data => {
-                    observer.next(data);
-                    observer.complete();
-                  },
-                  errro => {
-                    observer.error(error);
-                  }
-                );
+                observer.error(error);
               }
             );
           },
