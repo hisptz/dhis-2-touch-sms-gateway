@@ -99,17 +99,18 @@ export class LoginPage implements OnInit, OnDestroy {
     this.showOverallProgressBar = true;
     this.topThreeTranslationCodes = this.appTranslationProvider.getTopThreeSupportedTranslationCodes();
     this.processes = [
-      'organisationUnits'
-      // 'sections',
-      // 'dataElements',
-      // 'smsCommand',
+      'organisationUnits',
+      'sections',
+      'dataElements',
+      'smsCommand',
+      'dataSets'
       // 'programs',
       // 'programStageSections',
       // 'programRules',
       // 'indicators',
       // 'programRuleActions',
       // 'programRuleVariables',
-      // 'dataSets',
+
       // 'reports',
       // 'constants'
     ];

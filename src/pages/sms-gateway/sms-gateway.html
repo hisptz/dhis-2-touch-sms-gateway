@@ -36,4 +36,10 @@
   <div *ngIf="currentUser$ |async as currentUser">
     {{ currentUser.name }}
   </div>
+  <div *ngIf="dataSets$ |async as dataSets">
+    dataSets : {{ dataSets.length }}
+  </div>
+  <div *ngIf="smsCommands$ |async as smsCommands">
+    smsCommands : {{ smsCommands.length }}
+  </div>
 </ion-content>

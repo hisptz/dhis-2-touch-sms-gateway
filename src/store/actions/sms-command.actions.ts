@@ -22,6 +22,7 @@
  *
  */
 import { Action } from '@ngrx/store';
+import { SmsCommand } from '../../models';
 
 export enum SmsCommandActionTypes {
   LoadSmsCommandSuccess = '[SMS Command] Load SMS command success'
@@ -29,7 +30,7 @@ export enum SmsCommandActionTypes {
 
 export class LoadSmsCommandSuccess implements Action {
   readonly type = SmsCommandActionTypes.LoadSmsCommandSuccess;
-  constructor(public payload: { SmsCommands: any[] }) {}
+  constructor(public payload: { smsCommands: SmsCommand[] }) {}
 }
 
 export type SmsCommandActions = LoadSmsCommandSuccess;

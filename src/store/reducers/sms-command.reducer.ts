@@ -23,10 +23,13 @@
  */
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { SmsCommandActions, SmsCommandActionTypes } from '../actions';
+import { SmsCommand } from '../../models';
 
-export interface SmsCommandState extends EntityState<any> {}
+export interface SmsCommandState extends EntityState<SmsCommand> {}
 
-export const smsCommandAdapter: EntityAdapter<any> = createEntityAdapter<any>();
+export const smsCommandAdapter: EntityAdapter<any> = createEntityAdapter<
+  SmsCommand
+>();
 
 const initialState: SmsCommandState = smsCommandAdapter.getInitialState({});
 
@@ -36,8 +39,7 @@ export function smsCommandReducer(
 ): SmsCommandState {
   switch (action.type) {
     case SmsCommandActionTypes.LoadSmsCommandSuccess: {
-      console.log('SmsCommands : ' + action.payload.SmsCommands.length);
-      return state;
+      return smsCommandAdapter.addMany(action.payload.smsCommands, state);
     }
     default: {
       return state;

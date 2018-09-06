@@ -21,6 +21,7 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  */
 export interface SmsCommand {
+  id?: string;
   dataSetId: string;
   commandName: string;
   separator: string;

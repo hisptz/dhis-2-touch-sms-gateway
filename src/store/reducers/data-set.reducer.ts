@@ -36,8 +36,7 @@ export function dataSetReducer(
 ): DataSetState {
   switch (action.type) {
     case DataSetActionTypes.LoadDataSetSuccess: {
-      console.log('DataSets : ' + action.payload.dataSets.length);
-      return state;
+      return DataSetAdapter.addMany(action.payload.dataSets, state);
     }
     default: {
       return state;

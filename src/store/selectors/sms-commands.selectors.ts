@@ -21,3 +21,18 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
+import { createSelector } from '@ngrx/store';
+import * as _ from 'lodash';
+import { getRootState, State } from '../reducers';
+import { smsCommandAdapter } from '../reducers/sms-command.reducer';
+
+export const getSmsCommandEntityState = createSelector(
+  getRootState,
+  (state: State) => state.smsCommand
+);
+
+export const {
+  selectIds: getSmsCommandIds,
+  selectEntities: getSmsCommandEntities,
+  selectAll: getAllSmsCommands
+} = smsCommandAdapter.getSelectors(getSmsCommandEntityState);

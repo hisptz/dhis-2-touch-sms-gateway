@@ -22,3 +22,5 @@
  *
  */
 export * from './current-user.selectors';
+export * from './data-set.selectors';
+export * from './sms-commands.selectors';

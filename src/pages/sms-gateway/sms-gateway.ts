@@ -24,10 +24,15 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
 
-import { Store } from '@ngrx/store';
-import { State, getCurrentUser } from '../../store';
+import { Store, select } from '@ngrx/store';
+import {
+  State,
+  getCurrentUser,
+  getAllSmsCommands,
+  getAllDataSets
+} from '../../store';
 import { Observable } from 'rxjs';
-import { CurrentUser } from '../../models';
+import { CurrentUser, SmsCommand } from '../../models';
 
 /**
  * Generated class for the SmsGatewayPage page.
@@ -43,9 +48,13 @@ import { CurrentUser } from '../../models';
 })
 export class SmsGatewayPage implements OnInit {
   currentUser$: Observable<CurrentUser>;
+  dataSets$: Observable<any>;
+  smsCommands$: Observable<SmsCommand[]>;
 
   constructor(private store: Store<State>) {
-    this.currentUser$ = this.store.select(getCurrentUser);
+    this.currentUser$ = this.store.pipe(select(getCurrentUser));
+    this.smsCommands$ = this.store.pipe(select(getAllSmsCommands));
+    this.dataSets$ = this.store.pipe(select(getAllDataSets));
   }
 
   ngOnInit() {}

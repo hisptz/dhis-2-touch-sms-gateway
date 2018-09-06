@@ -21,3 +21,18 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
+import { createSelector } from '@ngrx/store';
+import * as _ from 'lodash';
+import { getRootState, State } from '../reducers';
+import { DataSetAdapter } from '../reducers/data-set.reducer';
+
+export const getDataSetEntityState = createSelector(
+  getRootState,
+  (state: State) => state.dataSet
+);
+
+export const {
+  selectIds: getDataSetIds,
+  selectEntities: getDataSetEntities,
+  selectAll: getAllDataSets
+} = DataSetAdapter.getSelectors(getDataSetEntityState);

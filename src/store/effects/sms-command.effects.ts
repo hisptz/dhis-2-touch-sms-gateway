@@ -25,18 +25,30 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { CurrentUserActionTypes, SetCurrentUser } from '../actions';
-import { CurrentUser } from '../../models/currentUser';
+import {
+  CurrentUserActionTypes,
+  LoadSmsCommandSuccess,
+  CurrentUserActions
+} from '../actions';
+import { SmsCommand } from '../../models';
+import { SmsCommandProvider } from '../../providers/sms-command/sms-command';
+import { mergeMap, map } from 'rxjs/operators';
 
 @Injectable()
 export class SmsCommandEffects {
-  constructor(private actions$: Actions) {}
+  constructor(
+    private actions$: Actions,
+    private smsCommandProvider: SmsCommandProvider
+  ) {}
 
-  //   @Effect()
-  //   loadAllArticles$: Observable<Action> = this.actions$
-  //     .ofType(CurrentUserActionTypes.AddCurrentUser)
-  //     .map((actions: any) => {
-  //       const currentUser: CurrentUser = actions.payload.currentUser;
-  //       return new SetCurrentUser({ id: currentUser.id });
-  //     });
+  @Effect()
+  loadSmsCommands$: Observable<Action> = this.actions$.pipe(
+    ofType<CurrentUserActions>(CurrentUserActionTypes.AddCurrentUser),
+    mergeMap((action: any) =>
+      this.smsCommandProvider.getAllSmsCommands(action.payload.currentUser)
+    ),
+    map(
+      (smsCommands: SmsCommand[]) => new LoadSmsCommandSuccess({ smsCommands })
+    )
+  );
 }
