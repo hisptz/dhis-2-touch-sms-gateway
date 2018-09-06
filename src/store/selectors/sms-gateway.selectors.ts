@@ -21,32 +21,3 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, MenuController } from 'ionic-angular';
-
-import { Observable } from 'rxjs';
-
-/**
- * Generated class for the HomePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
-@IonicPage()
-@Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
-})
-export class HomePage implements OnInit {
-  currentUser$: Observable<any>;
-  constructor(
-    public navCtrl: NavController,
-    private menuCtrl: MenuController
-  ) {}
-
-  ngOnInit() {
-    this.menuCtrl.enable(true);
-    this.navCtrl.setRoot('SmsGatewayPage');
-  }
-}

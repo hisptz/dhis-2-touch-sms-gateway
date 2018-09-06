@@ -24,7 +24,7 @@
 import { createSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { getRootState, State } from '../reducers';
-import { currentUserAdapter } from '../reducers/current-user.reducers';
+import { currentUserAdapter } from '../reducers/current-user.reducer';
 import { CurrentUser, AppItem } from '../../models';
 export const getUsersEntityState = createSelector(
   getRootState,

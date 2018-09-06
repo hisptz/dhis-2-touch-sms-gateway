@@ -21,32 +21,22 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, MenuController } from 'ionic-angular';
-
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Action } from '@ngrx/store';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { CurrentUserActionTypes, SetCurrentUser } from '../actions';
+import { CurrentUser } from '../../models/currentUser';
 
-/**
- * Generated class for the HomePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+@Injectable()
+export class SmsCommandEffects {
+  constructor(private actions$: Actions) {}
 
-@IonicPage()
-@Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
-})
-export class HomePage implements OnInit {
-  currentUser$: Observable<any>;
-  constructor(
-    public navCtrl: NavController,
-    private menuCtrl: MenuController
-  ) {}
-
-  ngOnInit() {
-    this.menuCtrl.enable(true);
-    this.navCtrl.setRoot('SmsGatewayPage');
-  }
+  //   @Effect()
+  //   loadAllArticles$: Observable<Action> = this.actions$
+  //     .ofType(CurrentUserActionTypes.AddCurrentUser)
+  //     .map((actions: any) => {
+  //       const currentUser: CurrentUser = actions.payload.currentUser;
+  //       return new SetCurrentUser({ id: currentUser.id });
+  //     });
 }

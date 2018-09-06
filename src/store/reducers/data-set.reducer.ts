@@ -21,32 +21,26 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, MenuController } from 'ionic-angular';
+import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { DataSetActions, DataSetActionTypes } from '../actions';
 
-import { Observable } from 'rxjs';
+export interface DataSetState extends EntityState<any> {}
 
-/**
- * Generated class for the HomePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+export const DataSetAdapter: EntityAdapter<any> = createEntityAdapter<any>();
 
-@IonicPage()
-@Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
-})
-export class HomePage implements OnInit {
-  currentUser$: Observable<any>;
-  constructor(
-    public navCtrl: NavController,
-    private menuCtrl: MenuController
-  ) {}
+const initialState: DataSetState = DataSetAdapter.getInitialState({});
 
-  ngOnInit() {
-    this.menuCtrl.enable(true);
-    this.navCtrl.setRoot('SmsGatewayPage');
+export function dataSetReducer(
+  state = initialState,
+  action: DataSetActions
+): DataSetState {
+  switch (action.type) {
+    case DataSetActionTypes.LoadDataSetSuccess: {
+      console.log('DataSets : ' + action.payload.dataSets.length);
+      return state;
+    }
+    default: {
+      return state;
+    }
   }
 }

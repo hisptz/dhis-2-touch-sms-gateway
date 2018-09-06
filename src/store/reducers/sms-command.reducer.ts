@@ -21,32 +21,26 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, MenuController } from 'ionic-angular';
+import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { SmsCommandActions, SmsCommandActionTypes } from '../actions';
 
-import { Observable } from 'rxjs';
+export interface SmsCommandState extends EntityState<any> {}
 
-/**
- * Generated class for the HomePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+export const smsCommandAdapter: EntityAdapter<any> = createEntityAdapter<any>();
 
-@IonicPage()
-@Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
-})
-export class HomePage implements OnInit {
-  currentUser$: Observable<any>;
-  constructor(
-    public navCtrl: NavController,
-    private menuCtrl: MenuController
-  ) {}
+const initialState: SmsCommandState = smsCommandAdapter.getInitialState({});
 
-  ngOnInit() {
-    this.menuCtrl.enable(true);
-    this.navCtrl.setRoot('SmsGatewayPage');
+export function smsCommandReducer(
+  state = initialState,
+  action: SmsCommandActions
+): SmsCommandState {
+  switch (action.type) {
+    case SmsCommandActionTypes.LoadSmsCommandSuccess: {
+      console.log('SmsCommands : ' + action.payload.SmsCommands.length);
+      return state;
+    }
+    default: {
+      return state;
+    }
   }
 }

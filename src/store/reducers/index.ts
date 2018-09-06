@@ -22,14 +22,20 @@
  *
  */
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
-import { currentUserState, currentUserReducer } from './current-user.reducers';
+import { currentUserState, currentUserReducer } from './current-user.reducer';
+import { SmsCommandState, smsCommandReducer } from './sms-command.reducer';
+import { DataSetState, dataSetReducer } from './data-set.reducer';
 
 export interface State {
   currentUser: currentUserState;
+  smsCommand: SmsCommandState;
+  dataSet: DataSetState;
 }
 
 export const reducers: ActionReducerMap<State> = {
-  currentUser: currentUserReducer
+  currentUser: currentUserReducer,
+  smsCommand: smsCommandReducer,
+  dataSet: dataSetReducer
 };
 export const getRootState = (state: State) => state;
 export const metaReducers: MetaReducer<State>[] = [];
