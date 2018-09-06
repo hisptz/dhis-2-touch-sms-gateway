@@ -133,21 +133,26 @@ export class DataSetsProvider {
         currentUser.currentDatabase
       ).subscribe(
         (dataSetElements: any) => {
-          const dataElementids = _.map(
-            dataSetElements,
-            (dataSetElement: any) => {
-              return dataSetElement.dataElementId;
-            }
+          const dataElementIds = _.concat(
+            [],
+            _.flattenDeep(
+              _.map(dataSetElements, (dataSetElement: any) => {
+                return dataSetElement.dataElementIds;
+              })
+            )
           );
-          let dataSetElementMapper = {};
-          this.getAllDataElementsMapper(currentUser, dataElementids).subscribe(
+          const dataSetElementMapper = {};
+          this.getAllDataElementsMapper(currentUser, dataElementIds).subscribe(
             (dataElementMapper: any) => {
               dataSetElements.map((dataSetElement: any) => {
-                if (!dataSetElementMapper[dataSetElement.dataSetId]) {
-                  dataSetElementMapper[dataSetElement.dataSetId] = [];
+                if (!dataSetElementMapper[dataSetElement.id]) {
+                  dataSetElementMapper[dataSetElement.id] = [];
                 }
-                dataSetElementMapper[dataSetElement.dataSetId].push(
-                  dataElementMapper[dataSetElement.dataElementId]
+                dataSetElementMapper[dataSetElement.id] = _.map(
+                  dataSetElement.dataElementIds,
+                  (dataElementId: string) => {
+                    return dataElementMapper[dataElementId];
+                  }
                 );
               });
               observer.next(dataSetElementMapper);
@@ -182,7 +187,7 @@ export class DataSetsProvider {
         currentUser.currentDatabase
       ).subscribe(
         (dataElements: any) => {
-          let dataElementsmapper = {};
+          const dataElementsmapper = {};
           dataElements.map((dataElement: any) => {
             dataElementsmapper[dataElement.id] = {
               id: dataElement.id,

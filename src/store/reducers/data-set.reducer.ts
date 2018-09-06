@@ -24,11 +24,15 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { DataSetActions, DataSetActionTypes } from '../actions';
 
-export interface DataSetState extends EntityState<any> {}
+export interface DataSetState extends EntityState<any> {
+  loaded: boolean;
+}
 
 export const DataSetAdapter: EntityAdapter<any> = createEntityAdapter<any>();
 
-const initialState: DataSetState = DataSetAdapter.getInitialState({});
+const initialState: DataSetState = DataSetAdapter.getInitialState({
+  loaded: false
+});
 
 export function dataSetReducer(
   state = initialState,
@@ -36,7 +40,10 @@ export function dataSetReducer(
 ): DataSetState {
   switch (action.type) {
     case DataSetActionTypes.LoadDataSetSuccess: {
-      return DataSetAdapter.addMany(action.payload.dataSets, state);
+      return DataSetAdapter.addMany(action.payload.dataSets, {
+        ...state,
+        loaded: true
+      });
     }
     default: {
       return state;

@@ -23,16 +23,18 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
-
 import { Store, select } from '@ngrx/store';
 import {
   State,
-  getCurrentUser,
-  getAllSmsCommands,
-  getAllDataSets
+  getSmsCommandMapper,
+  getDataSetInformation,
+  getDataSetLoadedState,
+  getSmsCommandLoadedState,
+  getDataElements,
+  getCurrentUser
 } from '../../store';
 import { Observable } from 'rxjs';
-import { CurrentUser, SmsCommand } from '../../models';
+import { CurrentUser } from '../../models';
 
 /**
  * Generated class for the SmsGatewayPage page.
@@ -48,13 +50,21 @@ import { CurrentUser, SmsCommand } from '../../models';
 })
 export class SmsGatewayPage implements OnInit {
   currentUser$: Observable<CurrentUser>;
-  dataSets$: Observable<any>;
-  smsCommands$: Observable<SmsCommand[]>;
+  smsCommandMapper$: Observable<any>;
+  dataSetInformation$: Observable<any>;
+  dataElements$: Observable<any>;
+  isDataSetLoaded$: Observable<boolean>;
+  isSmsCommandLoaded$: Observable<boolean>;
 
   constructor(private store: Store<State>) {
+    this.isDataSetLoaded$ = this.store.pipe(select(getDataSetLoadedState));
+    this.isSmsCommandLoaded$ = this.store.pipe(
+      select(getSmsCommandLoadedState)
+    );
     this.currentUser$ = this.store.pipe(select(getCurrentUser));
-    this.smsCommands$ = this.store.pipe(select(getAllSmsCommands));
-    this.dataSets$ = this.store.pipe(select(getAllDataSets));
+    this.dataElements$ = this.store.pipe(select(getDataElements));
+    this.dataSetInformation$ = this.store.pipe(select(getDataSetInformation));
+    this.smsCommandMapper$ = this.store.pipe(select(getSmsCommandMapper));
   }
 
   ngOnInit() {}

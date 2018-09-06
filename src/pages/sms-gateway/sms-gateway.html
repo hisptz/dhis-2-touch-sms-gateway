@@ -33,13 +33,13 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <div *ngIf="currentUser$ |async as currentUser">
-    {{ currentUser.name }}
+  <div *ngIf="(isDataSetLoaded$|async) && (isSmsCommandLoaded$ |async)">
+    <div *ngIf="dataElements$|async as dataElements">
+      dataElements : {{ dataElements.length}}
+    </div>
+    dataSetInformation : {{ dataSetInformation$ |async|json }}<br><br>
+    smsCommandMapper : {{ smsCommandMapper$ |async|json }}
   </div>
-  <div *ngIf="dataSets$ |async as dataSets">
-    dataSets : {{ dataSets.length }}
-  </div>
-  <div *ngIf="smsCommands$ |async as smsCommands">
-    smsCommands : {{ smsCommands.length }}
-  </div>
+
+
 </ion-content>
