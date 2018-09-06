@@ -19,47 +19,19 @@
  *
  * @since 2015
  * @author Joseph Chingalo <profschingalo@gmail.com>
+ *
  */
-export interface SmsCommand {
-  dataSetId: string;
-  commandName: string;
-  separator: string;
-  parserType: string;
-  smsCode: Array<SmsCode>;
-}
+import { NgModule } from '@angular/core';
+import { IonicPageModule } from 'ionic-angular';
+import { SmsGatewayPage } from './sms-gateway';
 
-export interface SmsCode {
-  smsCode?: string;
-  dataElements?: any;
-  categoryOptionCombos?: string;
-}
+import { TranslateModule } from '@ngx-translate/core';
 
-export interface SmsConfiguration {
-  dataSetIds: Array<string>;
-  syncedSMSIds: Array<string>;
-  notSyncedSMSIds: Array<string>;
-  skippedSMSIds: Array<string>;
-}
-
-export interface SmsGateWayLogs {
-  _id: string;
-  time: string;
-  type: string;
-  dataSetId?: string;
-  periodIso?: string;
-  logMessage: string;
-  organisationUnitId?: string;
-  organisationUnitName?: string;
-  message?: ReceivedSms;
-}
-
-export interface ReceivedSms {
-  _id: string;
-  body: string;
-  address: string;
-}
-
-export interface SmsGateWayLogsError {
-  time: string;
-  logMessage: string;
-}
+@NgModule({
+  declarations: [SmsGatewayPage],
+  imports: [
+    IonicPageModule.forChild(SmsGatewayPage),
+    TranslateModule.forChild({})
+  ]
+})
+export class SmsGatewayPageModule {}

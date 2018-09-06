@@ -22,14 +22,15 @@
  *
  */
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, MenuController } from 'ionic-angular';
+import { IonicPage } from 'ionic-angular';
 
 import { Store } from '@ngrx/store';
 import { State, getCurrentUser } from '../../store';
 import { Observable } from 'rxjs';
+import { CurrentUser } from '../../models';
 
 /**
- * Generated class for the HomePage page.
+ * Generated class for the SmsGatewayPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -37,21 +38,15 @@ import { Observable } from 'rxjs';
 
 @IonicPage()
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+  selector: 'page-sms-gateway',
+  templateUrl: 'sms-gateway.html'
 })
-export class HomePage implements OnInit {
-  currentUser$: Observable<any>;
-  constructor(
-    public navCtrl: NavController,
-    private store: Store<State>,
-    private menuCtrl: MenuController
-  ) {
+export class SmsGatewayPage implements OnInit {
+  currentUser$: Observable<CurrentUser>;
+
+  constructor(private store: Store<State>) {
     this.currentUser$ = this.store.select(getCurrentUser);
   }
 
-  ngOnInit() {
-    this.menuCtrl.enable(true);
-    this.navCtrl.setRoot('SmsGatewayPage');
-  }
+  ngOnInit() {}
 }

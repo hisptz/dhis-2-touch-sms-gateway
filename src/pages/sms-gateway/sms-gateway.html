@@ -28,10 +28,12 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>
-      <span [translate]="'Home'"></span>
+      <span [translate]="'SMS Gateway'"></span>
     </ion-title>
   </ion-navbar>
-
 </ion-header>
 <ion-content>
+  <div *ngIf="currentUser$ |async as currentUser">
+    {{ currentUser.name }}
+  </div>
 </ion-content>
