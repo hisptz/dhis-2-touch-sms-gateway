@@ -21,19 +21,19 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { NgModule } from '@angular/core';
-import { IonicPageModule } from 'ionic-angular';
-import { SmsGatewayPage } from './sms-gateway';
+import { Injectable } from '@angular/core';
 
-import { TranslateModule } from '@ngx-translate/core';
-import { providers } from './providers';
+/*
+  Generated class for the SmsGatewayProvider provider.
 
-@NgModule({
-  declarations: [SmsGatewayPage],
-  imports: [
-    IonicPageModule.forChild(SmsGatewayPage),
-    TranslateModule.forChild({})
-  ],
-  providers: [...providers]
-})
-export class SmsGatewayPageModule {}
+  See https://angular.io/guide/dependency-injection for more info on providers
+  and Angular DI.
+*/
+@Injectable()
+export class SmsGatewayProvider {
+  constructor() {}
+
+  test() {
+    console.log('Yeah thumbs up');
+  }
+}

@@ -21,19 +21,8 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { NgModule } from '@angular/core';
-import { IonicPageModule } from 'ionic-angular';
-import { SmsGatewayPage } from './sms-gateway';
 
-import { TranslateModule } from '@ngx-translate/core';
-import { providers } from './providers';
+import { SmsGatewayPermissionProvider } from './sms-gateway-permission/sms-gateway-permission';
+import { SmsGatewayProvider } from './sms-gateway/sms-gateway';
 
-@NgModule({
-  declarations: [SmsGatewayPage],
-  imports: [
-    IonicPageModule.forChild(SmsGatewayPage),
-    TranslateModule.forChild({})
-  ],
-  providers: [...providers]
-})
-export class SmsGatewayPageModule {}
+export const providers = [SmsGatewayPermissionProvider, SmsGatewayProvider];
