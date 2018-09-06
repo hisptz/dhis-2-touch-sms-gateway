@@ -98,10 +98,10 @@ export class DataSetsProvider {
             (dataSetElementMapper: any) => {
               let dataSets: Array<DataSet> = [];
               dataSetsResponse.map((dataSet: any) => {
-                let dataElemets = dataSetElementMapper[dataSet.id]
+                const dataElemets = dataSetElementMapper[dataSet.id]
                   ? dataSetElementMapper[dataSet.id]
                   : [];
-                dataSets = _.concat(dataSet, {
+                dataSets = _.concat(dataSets, {
                   id: dataSet.id,
                   name: dataSet.name,
                   dataElements: dataElemets
