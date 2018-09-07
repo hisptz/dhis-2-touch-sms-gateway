@@ -14,7 +14,6 @@ export class AppPermissionProvider {
 
   getSMSPermisionStatus(): Observable<any> {
     return new Observable(observer => {
-      console.log('here on apps');
       this.androidPermissions
         .checkPermission(this.androidPermissions.PERMISSION.READ_SMS)
         .then(
