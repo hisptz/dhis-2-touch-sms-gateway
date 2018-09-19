@@ -22,20 +22,24 @@
  *
  */
 import { NgModule } from '@angular/core';
-import { IonicPageModule } from 'ionic-angular';
-import { SmsGatewayPage } from './sms-gateway';
-
+import { IonicModule } from 'ionic-angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { providers } from './providers';
-import { smsGatewayComponentsModule } from './components/smsGatewayComponents.module';
+import { sharedComponentsModule } from '../../../components/sharedComponents.module';
+import { SmsGatwayLogSummaryComponent } from './sms-gatway-log-summary/sms-gatway-log-summary';
+import { SmsGatewayLogContainerComponent } from './sms-gateway-log-container/sms-gateway-log-container';
+import { SmsGatewayLogComponent } from './sms-gateway-log/sms-gateway-log';
 
 @NgModule({
-  declarations: [SmsGatewayPage],
-  imports: [
-    IonicPageModule.forChild(SmsGatewayPage),
-    smsGatewayComponentsModule,
-    TranslateModule.forChild({})
+  declarations: [
+    SmsGatwayLogSummaryComponent,
+    SmsGatewayLogContainerComponent,
+    SmsGatewayLogComponent
   ],
-  providers: [...providers]
+  imports: [IonicModule, TranslateModule.forChild({}), sharedComponentsModule],
+  exports: [
+    SmsGatwayLogSummaryComponent,
+    SmsGatewayLogContainerComponent,
+    SmsGatewayLogComponent
+  ]
 })
-export class SmsGatewayPageModule {}
+export class smsGatewayComponentsModule {}

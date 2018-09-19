@@ -21,12 +21,18 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { currentUserEffects } from './current-user.effects';
-import { SmsCommandEffects } from './sms-command.effects';
-import { DataSetEffects } from './data-set.effect';
+import { Component } from '@angular/core';
 
-export const effects: any[] = [
-  currentUserEffects,
-  SmsCommandEffects,
-  DataSetEffects
-];
+/**
+ * Generated class for the SmsGatewayLogComponent component.
+ *
+ * See https://angular.io/api/core/Component for more info on Angular
+ * Components.
+ */
+@Component({
+  selector: 'sms-gateway-log',
+  templateUrl: 'sms-gateway-log.html'
+})
+export class SmsGatewayLogComponent {
+  constructor() {}
+}

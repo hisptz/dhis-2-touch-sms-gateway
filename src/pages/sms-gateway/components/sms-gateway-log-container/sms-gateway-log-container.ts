@@ -21,12 +21,29 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { currentUserEffects } from './current-user.effects';
-import { SmsCommandEffects } from './sms-command.effects';
-import { DataSetEffects } from './data-set.effect';
+import { Component, OnInit, Input } from '@angular/core';
 
-export const effects: any[] = [
-  currentUserEffects,
-  SmsCommandEffects,
-  DataSetEffects
-];
+/**
+ * Generated class for the SmsGatewayLogContainerComponent component.
+ *
+ * See https://angular.io/api/core/Component for more info on Angular
+ * Components.
+ */
+@Component({
+  selector: 'sms-gateway-log-container',
+  templateUrl: 'sms-gateway-log-container.html'
+})
+export class SmsGatewayLogContainerComponent implements OnInit {
+  @Input()
+  currentUser;
+  @Input()
+  dataElements;
+  @Input()
+  dataSetInformation;
+  @Input()
+  smsCommandMapper;
+
+  constructor() {}
+
+  ngOnInit() {}
+}

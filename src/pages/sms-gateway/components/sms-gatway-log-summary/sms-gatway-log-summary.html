@@ -22,24 +22,4 @@
 *
 *
 -->
-<ion-header>
-  <ion-navbar color="primary">
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>
-      <span [translate]="'SMS Gateway'"></span>
-    </ion-title>
-  </ion-navbar>
-</ion-header>
-<ion-content>
-  <div *ngIf="(isDataSetLoaded$|async) && (isSmsCommandLoaded$ |async)">
-    <div text-right class="animated fadeIn">
-      <sms-gatway-log-summary></sms-gatway-log-summary>
-    </div>
-    <div padding-top padding-bottom>
-      <sms-gateway-log-container [smsCommandMapper]="smsCommandMapper$|async" [dataSetInformation]="dataSetInformation$|async"
-        [dataElements]="dataElements$|async" [currentUser]="currentUser$|async"></sms-gateway-log-container>
-    </div>
-  </div>
-</ion-content>
+<div>buttons</div>
