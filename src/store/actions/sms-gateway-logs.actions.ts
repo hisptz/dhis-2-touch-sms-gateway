@@ -21,35 +21,22 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { SmsCommandActions, SmsCommandActionTypes } from '../actions';
-import { SmsCommand } from '../../models';
+import { Action } from '@ngrx/store';
+import { SmsGateWayLogs } from '../../models/sms-gateway-logs';
 
-export interface SmsCommandState extends EntityState<SmsCommand> {
-  loaded: boolean;
+export enum SmsGatewayLogsActionTypes {
+  AddSmsGateWayLogs = '[SMS Gateway] Adding sms gateway Logs',
+  UpdateSmsGatewayLog = '[SMS Gateway] Update sms gateway log'
 }
 
-export const smsCommandAdapter: EntityAdapter<SmsCommand> = createEntityAdapter<
-  SmsCommand
->();
-
-const initialState: SmsCommandState = smsCommandAdapter.getInitialState({
-  loaded: false
-});
-
-export function smsCommandReducer(
-  state = initialState,
-  action: SmsCommandActions
-): SmsCommandState {
-  switch (action.type) {
-    case SmsCommandActionTypes.LoadSmsCommandSuccess: {
-      return smsCommandAdapter.addMany(action.payload.smsCommands, {
-        ...state,
-        loaded: true
-      });
-    }
-    default: {
-      return state;
-    }
-  }
+export class AddSmsGateWayLogs implements Action {
+  readonly type = SmsGatewayLogsActionTypes.AddSmsGateWayLogs;
+  constructor(public payload: { logs: SmsGateWayLogs[] }) {}
 }
+
+export class UpdateSmsGatewayLog implements Action {
+  readonly type = SmsGatewayLogsActionTypes.UpdateSmsGatewayLog;
+  constructor(public payload: { id: string; log: SmsGateWayLogs }) {}
+}
+
+export type SmsGatewayLogsActions = AddSmsGateWayLogs | UpdateSmsGatewayLog;

@@ -26,7 +26,7 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { UserProvider } from '../providers/user/user';
-import { CurrentUser } from '../models/currentUser';
+import { CurrentUser } from '../models/current-user';
 
 import { Store } from '@ngrx/store';
 import { State, ClearCurrentUser } from '../store';

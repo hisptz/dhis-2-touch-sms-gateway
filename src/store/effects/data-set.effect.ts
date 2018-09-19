@@ -30,7 +30,7 @@ import {
   CurrentUserActions,
   LoadDataSetSuccess
 } from '../actions';
-import { CurrentUser } from '../../models/currentUser';
+import { CurrentUser } from '../../models/current-user';
 import { DataSetsProvider } from '../../providers/data-sets/data-sets';
 import { mergeMap, map } from 'rxjs/operators';
 

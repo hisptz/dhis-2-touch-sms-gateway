@@ -19,48 +19,20 @@
  *
  * @since 2015
  * @author Joseph Chingalo <profschingalo@gmail.com>
+ *
  */
-export interface SmsCommand {
-  id?: string;
-  dataSetId: string;
-  commandName: string;
-  separator: string;
-  parserType: string;
-  smsCode: Array<SmsCode>;
-}
+import { createSelector } from '@ngrx/store';
+import * as _ from 'lodash';
+import { getRootState, State } from '../reducers';
+import { smsGatewayLogsAdapter } from '../reducers/sms-gateway-logs.reducer';
 
-export interface SmsCode {
-  smsCode?: string;
-  dataElements?: any;
-  categoryOptionCombos?: string;
-}
+export const getSmsGatewayLogsEntityState = createSelector(
+  getRootState,
+  (state: State) => state.smsGatewayLog
+);
 
-export interface SmsConfiguration {
-  dataSetIds: Array<string>;
-  syncedSMSIds: Array<string>;
-  notSyncedSMSIds: Array<string>;
-  skippedSMSIds: Array<string>;
-}
-
-export interface SmsGateWayLogs {
-  _id: string;
-  time: string;
-  type: string;
-  dataSetId?: string;
-  periodIso?: string;
-  logMessage: string;
-  organisationUnitId?: string;
-  organisationUnitName?: string;
-  message?: ReceivedSms;
-}
-
-export interface ReceivedSms {
-  _id: string;
-  body: string;
-  address: string;
-}
-
-export interface SmsGateWayLogsError {
-  time: string;
-  logMessage: string;
-}
+export const {
+  selectIds: getSmsGatewayLogsIds,
+  selectEntities: getSmsGatewayLogEntities,
+  selectAll: getAllSmsGatewayLogs
+} = smsGatewayLogsAdapter.getSelectors(getSmsGatewayLogsEntityState);

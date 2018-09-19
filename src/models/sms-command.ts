@@ -19,37 +19,25 @@
  *
  * @since 2015
  * @author Joseph Chingalo <profschingalo@gmail.com>
- *
  */
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { SmsCommandActions, SmsCommandActionTypes } from '../actions';
-import { SmsCommand } from '../../models';
-
-export interface SmsCommandState extends EntityState<SmsCommand> {
-  loaded: boolean;
+export interface SmsCommand {
+  id?: string;
+  dataSetId: string;
+  commandName: string;
+  separator: string;
+  parserType: string;
+  smsCode: Array<SmsCode>;
 }
 
-export const smsCommandAdapter: EntityAdapter<SmsCommand> = createEntityAdapter<
-  SmsCommand
->();
+export interface SmsCode {
+  smsCode?: string;
+  dataElements?: any;
+  categoryOptionCombos?: string;
+}
 
-const initialState: SmsCommandState = smsCommandAdapter.getInitialState({
-  loaded: false
-});
-
-export function smsCommandReducer(
-  state = initialState,
-  action: SmsCommandActions
-): SmsCommandState {
-  switch (action.type) {
-    case SmsCommandActionTypes.LoadSmsCommandSuccess: {
-      return smsCommandAdapter.addMany(action.payload.smsCommands, {
-        ...state,
-        loaded: true
-      });
-    }
-    default: {
-      return state;
-    }
-  }
+export interface SmsConfiguration {
+  dataSetIds: Array<string>;
+  syncedSMSIds: Array<string>;
+  notSyncedSMSIds: Array<string>;
+  skippedSMSIds: Array<string>;
 }

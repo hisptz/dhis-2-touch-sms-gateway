@@ -24,9 +24,11 @@
 import { currentUserEffects } from './current-user.effects';
 import { SmsCommandEffects } from './sms-command.effects';
 import { DataSetEffects } from './data-set.effect';
+import { AddSmsGateWayLogs } from '../actions/sms-gateway-logs.actions';
 
 export const effects: any[] = [
   currentUserEffects,
   SmsCommandEffects,
+  AddSmsGateWayLogs,
   DataSetEffects
 ];

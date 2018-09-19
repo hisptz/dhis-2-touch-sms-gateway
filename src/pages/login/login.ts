@@ -30,7 +30,7 @@ import {
   MenuController
 } from 'ionic-angular';
 import { UserProvider } from '../../providers/user/user';
-import { CurrentUser } from '../../models/currentUser';
+import { CurrentUser } from '../../models/current-user';
 
 import { Store } from '@ngrx/store';
 import { State, AddCurrentUser } from '../../store';

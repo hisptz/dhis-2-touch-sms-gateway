@@ -22,31 +22,32 @@
  *
  */
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { SmsCommandActions, SmsCommandActionTypes } from '../actions';
-import { SmsCommand } from '../../models';
+import { SmsGateWayLogs } from '../../models/sms-gateway-logs';
+import { SmsGatewayLogsActions, SmsGatewayLogsActionTypes } from '../actions';
 
-export interface SmsCommandState extends EntityState<SmsCommand> {
-  loaded: boolean;
-}
+export interface SmsGatewayLogsState extends EntityState<SmsGateWayLogs> {}
 
-export const smsCommandAdapter: EntityAdapter<SmsCommand> = createEntityAdapter<
-  SmsCommand
->();
+export const smsGatewayLogsAdapter: EntityAdapter<
+  SmsGateWayLogs
+> = createEntityAdapter<SmsGateWayLogs>({});
 
-const initialState: SmsCommandState = smsCommandAdapter.getInitialState({
-  loaded: false
-});
+const initialState: SmsGatewayLogsState = smsGatewayLogsAdapter.getInitialState(
+  {}
+);
 
-export function smsCommandReducer(
+export function smsGatewayLogReducer(
   state = initialState,
-  action: SmsCommandActions
-): SmsCommandState {
+  action: SmsGatewayLogsActions
+): SmsGatewayLogsState {
   switch (action.type) {
-    case SmsCommandActionTypes.LoadSmsCommandSuccess: {
-      return smsCommandAdapter.addMany(action.payload.smsCommands, {
-        ...state,
-        loaded: true
-      });
+    case SmsGatewayLogsActionTypes.AddSmsGateWayLogs: {
+      return smsGatewayLogsAdapter.addMany(action.payload.logs, state);
+    }
+    case SmsGatewayLogsActionTypes.UpdateSmsGatewayLog: {
+      return smsGatewayLogsAdapter.updateOne(
+        { id: action.payload.id, changes: action.payload.log },
+        state
+      );
     }
     default: {
       return state;

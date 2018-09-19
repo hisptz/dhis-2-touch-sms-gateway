@@ -21,35 +21,23 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { SmsCommandActions, SmsCommandActionTypes } from '../actions';
-import { SmsCommand } from '../../models';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Action } from '@ngrx/store';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 
-export interface SmsCommandState extends EntityState<SmsCommand> {
-  loaded: boolean;
-}
+@Injectable()
+export class SmsGatewayLogsEffects {
+  constructor(private actions$: Actions) {}
 
-export const smsCommandAdapter: EntityAdapter<SmsCommand> = createEntityAdapter<
-  SmsCommand
->();
-
-const initialState: SmsCommandState = smsCommandAdapter.getInitialState({
-  loaded: false
-});
-
-export function smsCommandReducer(
-  state = initialState,
-  action: SmsCommandActions
-): SmsCommandState {
-  switch (action.type) {
-    case SmsCommandActionTypes.LoadSmsCommandSuccess: {
-      return smsCommandAdapter.addMany(action.payload.smsCommands, {
-        ...state,
-        loaded: true
-      });
-    }
-    default: {
-      return state;
-    }
-  }
+  //   @Effect()
+  //   loadSmsCommands$: Observable<Action> = this.actions$.pipe(
+  //     ofType<CurrentUserActions>(CurrentUserActionTypes.AddCurrentUser),
+  //     mergeMap((action: any) =>
+  //       this.smsCommandProvider.getAllSmsCommands(action.payload.currentUser)
+  //     ),
+  //     map(
+  //       (smsCommands: SmsCommand[]) => new LoadSmsCommandSuccess({ smsCommands })
+  //     )
+  //   );
 }
