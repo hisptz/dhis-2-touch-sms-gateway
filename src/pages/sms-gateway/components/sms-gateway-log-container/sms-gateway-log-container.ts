@@ -22,6 +22,7 @@
  *
  */
 import { Component, OnInit, Input } from '@angular/core';
+import { SmsGateWayLogs } from '../../../../models/sms-gateway-logs';
 
 /**
  * Generated class for the SmsGatewayLogContainerComponent component.
@@ -42,6 +43,8 @@ export class SmsGatewayLogContainerComponent implements OnInit {
   dataSetInformation;
   @Input()
   smsCommandMapper;
+  @Input()
+  smsGatewayLogs: SmsGateWayLogs[];
 
   constructor() {}
 

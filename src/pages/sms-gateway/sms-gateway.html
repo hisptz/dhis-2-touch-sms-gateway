@@ -34,6 +34,9 @@
 </ion-header>
 <ion-content>
   <div *ngIf="(isDataSetLoaded$|async) && (isSmsCommandLoaded$ |async)">
+
+    {{ test$|async |json}}
+
     <div text-right class="animated fadeIn">
       <sms-gatway-log-summary></sms-gatway-log-summary>
     </div>

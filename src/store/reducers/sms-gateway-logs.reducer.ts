@@ -25,14 +25,18 @@ import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { SmsGateWayLogs } from '../../models/sms-gateway-logs';
 import { SmsGatewayLogsActions, SmsGatewayLogsActionTypes } from '../actions';
 
-export interface SmsGatewayLogsState extends EntityState<SmsGateWayLogs> {}
+export interface SmsGatewayLogsState extends EntityState<SmsGateWayLogs> {
+  status: string;
+}
 
 export const smsGatewayLogsAdapter: EntityAdapter<
   SmsGateWayLogs
 > = createEntityAdapter<SmsGateWayLogs>({});
 
 const initialState: SmsGatewayLogsState = smsGatewayLogsAdapter.getInitialState(
-  {}
+  {
+    status: 'all'
+  }
 );
 
 export function smsGatewayLogReducer(
@@ -48,6 +52,9 @@ export function smsGatewayLogReducer(
         { id: action.payload.id, changes: action.payload.log },
         state
       );
+    }
+    case SmsGatewayLogsActionTypes.UpdateSmsGatewayLogStatus: {
+      return { ...state, status: action.payload.status };
     }
     default: {
       return state;

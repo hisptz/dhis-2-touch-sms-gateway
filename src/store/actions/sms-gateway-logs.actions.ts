@@ -26,7 +26,8 @@ import { SmsGateWayLogs } from '../../models/sms-gateway-logs';
 
 export enum SmsGatewayLogsActionTypes {
   AddSmsGateWayLogs = '[SMS Gateway] Adding sms gateway Logs',
-  UpdateSmsGatewayLog = '[SMS Gateway] Update sms gateway log'
+  UpdateSmsGatewayLog = '[SMS Gateway] Update sms gateway log',
+  UpdateSmsGatewayLogStatus = '[SMS Gateway] Update sms gateway log status'
 }
 
 export class AddSmsGateWayLogs implements Action {
@@ -34,9 +35,17 @@ export class AddSmsGateWayLogs implements Action {
   constructor(public payload: { logs: SmsGateWayLogs[] }) {}
 }
 
+export class UpdateSmsGatewayLogStatus implements Action {
+  readonly type = SmsGatewayLogsActionTypes.UpdateSmsGatewayLogStatus;
+  constructor(public payload: { status: string }) {}
+}
+
 export class UpdateSmsGatewayLog implements Action {
   readonly type = SmsGatewayLogsActionTypes.UpdateSmsGatewayLog;
   constructor(public payload: { id: string; log: SmsGateWayLogs }) {}
 }
 
-export type SmsGatewayLogsActions = AddSmsGateWayLogs | UpdateSmsGatewayLog;
+export type SmsGatewayLogsActions =
+  | AddSmsGateWayLogs
+  | UpdateSmsGatewayLog
+  | UpdateSmsGatewayLogStatus;

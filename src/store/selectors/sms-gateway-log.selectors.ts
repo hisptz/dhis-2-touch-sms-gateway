@@ -24,11 +24,20 @@
 import { createSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { getRootState, State } from '../reducers';
-import { smsGatewayLogsAdapter } from '../reducers/sms-gateway-logs.reducer';
+import {
+  smsGatewayLogsAdapter,
+  SmsGatewayLogsState
+} from '../reducers/sms-gateway-logs.reducer';
+import { SmsGateWayLogs } from '../../models/sms-gateway-logs';
 
 export const getSmsGatewayLogsEntityState = createSelector(
   getRootState,
   (state: State) => state.smsGatewayLog
+);
+
+export const getCurrentSmsLogStatus = createSelector(
+  getSmsGatewayLogsEntityState,
+  (state: SmsGatewayLogsState) => state.status
 );
 
 export const {
@@ -36,3 +45,13 @@ export const {
   selectEntities: getSmsGatewayLogEntities,
   selectAll: getAllSmsGatewayLogs
 } = smsGatewayLogsAdapter.getSelectors(getSmsGatewayLogsEntityState);
+
+export const getSmsGatewayLogsByCurrentStatus = createSelector(
+  getAllSmsGatewayLogs,
+  getCurrentSmsLogStatus,
+  (smsGateWayLogs: SmsGateWayLogs[], status: string) => {
+    return _.filter(smsGateWayLogs, (smsGateWayLog: SmsGateWayLogs) => {
+      return smsGateWayLog.type === status;
+    });
+  }
+);

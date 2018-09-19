@@ -31,10 +31,12 @@ import {
   getDataSetLoadedState,
   getSmsCommandLoadedState,
   getDataElements,
-  getCurrentUser
+  getCurrentUser,
+  getSmsGatewayLogsByCurrentStatus
 } from '../../store';
 import { Observable } from 'rxjs';
 import { CurrentUser } from '../../models';
+import { SmsGateWayLogs } from '../../models/sms-gateway-logs';
 
 /**
  * Generated class for the SmsGatewayPage page.
@@ -55,6 +57,7 @@ export class SmsGatewayPage implements OnInit {
   dataElements$: Observable<any>;
   isDataSetLoaded$: Observable<boolean>;
   isSmsCommandLoaded$: Observable<boolean>;
+  smsGatewayLogs$: Observable<SmsGateWayLogs[]>;
 
   constructor(private store: Store<State>) {
     this.isDataSetLoaded$ = this.store.pipe(select(getDataSetLoadedState));
@@ -65,6 +68,9 @@ export class SmsGatewayPage implements OnInit {
     this.dataElements$ = this.store.pipe(select(getDataElements));
     this.dataSetInformation$ = this.store.pipe(select(getDataSetInformation));
     this.smsCommandMapper$ = this.store.pipe(select(getSmsCommandMapper));
+    this.smsGatewayLogs$ = this.store.pipe(
+      select(getSmsGatewayLogsByCurrentStatus)
+    );
   }
 
   ngOnInit() {}
