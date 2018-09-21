@@ -34,15 +34,13 @@
 </ion-header>
 <ion-content>
   <div *ngIf="(isDataSetLoaded$|async) && (isSmsCommandLoaded$ |async)">
-
-    {{ test$|async |json}}
-
     <div text-right class="animated fadeIn">
+      {{ smsGatewayLogSummary$|async |json}}
       <sms-gatway-log-summary></sms-gatway-log-summary>
     </div>
     <div padding-top padding-bottom>
-      <sms-gateway-log-container [smsCommandMapper]="smsCommandMapper$|async" [dataSetInformation]="dataSetInformation$|async"
-        [dataElements]="dataElements$|async" [currentUser]="currentUser$|async"></sms-gateway-log-container>
+      <sms-gateway-log-container [smsGatewayLogs]="smsGatewayLogs$|async" [smsCommandMapper]="smsCommandMapper$|async"
+        [dataSetInformation]="dataSetInformation$|async" [dataElements]="dataElements$|async" [currentUser]="currentUser$|async"></sms-gateway-log-container>
     </div>
   </div>
 </ion-content>

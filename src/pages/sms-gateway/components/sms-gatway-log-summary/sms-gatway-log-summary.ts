@@ -22,6 +22,7 @@
  *
  */
 import { Component } from '@angular/core';
+import { smsLogsStatusIcons } from '../../constants/sms-logs-status';
 
 /**
  * Generated class for the SmsGatwayLogSummaryComponent component.
@@ -34,5 +35,7 @@ import { Component } from '@angular/core';
   templateUrl: 'sms-gatway-log-summary.html'
 })
 export class SmsGatwayLogSummaryComponent {
-  constructor() {}
+  constructor() {
+    console.log('smsLogsStatusIcons : ' + JSON.stringify(smsLogsStatusIcons));
+  }
 }

@@ -50,8 +50,30 @@ export const getSmsGatewayLogsByCurrentStatus = createSelector(
   getAllSmsGatewayLogs,
   getCurrentSmsLogStatus,
   (smsGateWayLogs: SmsGateWayLogs[], status: string) => {
-    return _.filter(smsGateWayLogs, (smsGateWayLog: SmsGateWayLogs) => {
-      return smsGateWayLog.type === status;
-    });
+    const logs =
+      status === 'all'
+        ? smsGateWayLogs
+        : _.filter(smsGateWayLogs, (smsGateWayLog: SmsGateWayLogs) => {
+            return smsGateWayLog.type === status;
+          });
+    return _.reverse(
+      _.sortBy(logs, (log: SmsGateWayLogs) => {
+        return log.time;
+      })
+    );
   }
 );
+
+export const getSmsGatewayLogsSummary = smsLogsStatus =>
+  createSelector(getAllSmsGatewayLogs, (smsGateWayLogs: SmsGateWayLogs[]) => {
+    const summary = {};
+    for (status of smsLogsStatus) {
+      summary[status] =
+        status === 'all'
+          ? smsGateWayLogs.length
+          : _.filter(smsGateWayLogs, (smsGateWayLog: SmsGateWayLogs) => {
+              return smsGateWayLog.type === status;
+            }).length;
+    }
+    return summary;
+  });

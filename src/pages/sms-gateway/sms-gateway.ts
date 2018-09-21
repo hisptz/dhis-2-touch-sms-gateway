@@ -32,11 +32,14 @@ import {
   getSmsCommandLoadedState,
   getDataElements,
   getCurrentUser,
-  getSmsGatewayLogsByCurrentStatus
+  getSmsGatewayLogsByCurrentStatus,
+  AddSmsGateWayLogs,
+  getSmsGatewayLogsSummary
 } from '../../store';
 import { Observable } from 'rxjs';
 import { CurrentUser } from '../../models';
 import { SmsGateWayLogs } from '../../models/sms-gateway-logs';
+import { smsLogsStatus, smsLogsStatusIcons } from './constants/sms-logs-status';
 
 /**
  * Generated class for the SmsGatewayPage page.
@@ -58,6 +61,7 @@ export class SmsGatewayPage implements OnInit {
   isDataSetLoaded$: Observable<boolean>;
   isSmsCommandLoaded$: Observable<boolean>;
   smsGatewayLogs$: Observable<SmsGateWayLogs[]>;
+  smsGatewayLogSummary$: Observable<any>;
 
   constructor(private store: Store<State>) {
     this.isDataSetLoaded$ = this.store.pipe(select(getDataSetLoadedState));
@@ -71,7 +75,27 @@ export class SmsGatewayPage implements OnInit {
     this.smsGatewayLogs$ = this.store.pipe(
       select(getSmsGatewayLogsByCurrentStatus)
     );
+    this.smsGatewayLogSummary$ = this.store.pipe(
+      select(getSmsGatewayLogsSummary(smsLogsStatus))
+    );
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    const logs: SmsGateWayLogs[] = this.getSampleLogs();
+    this.store.dispatch(new AddSmsGateWayLogs({ logs }));
+  }
+
+  getSampleLogs(): SmsGateWayLogs[] {
+    return [
+      { type: 'info', time: '1', id: '1', logMessage: 'log 1' },
+      { type: 'info', time: '3', id: '2', logMessage: 'log 2' },
+      { type: 'info', time: '2', id: '3', logMessage: 'log 3' },
+      { type: 'irrelevant', time: '5', id: '4', logMessage: 'log 4' },
+      { type: 'warning', time: '6', id: '7', logMessage: 'log 5' },
+      { type: 'warning', time: '7', id: '5', logMessage: 'log 6' },
+      { type: 'danger', time: '23', id: '6', logMessage: 'log 7' },
+      { type: 'danger', time: '10', id: '8', logMessage: 'log 8' },
+      { type: 'danger', time: '9', id: '9', logMessage: 'log 89' }
+    ];
+  }
 }
