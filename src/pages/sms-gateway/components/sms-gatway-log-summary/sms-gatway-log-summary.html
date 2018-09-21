@@ -22,3 +22,8 @@
 *
 *
 -->
+
+<button class="sms-gateway-log-btn" *ngFor="let icon of icons;trackBy: trackByFn" padding ion-button outline [color]="(icon.id === currentSmsLogStatus)? 'current' : 'font-color'" text-capitalize [disabled]="smsGatewayLogSummary[icon.id] === 0 || icon.id === currentSmsLogStatus" (click)="onCurrentSmsLogStatusUpdate(icon.id)">
+  <img class="side-menu-icon" [src]="icon.src" />&nbsp;&nbsp;
+  <span>{{ smsGatewayLogSummary[icon.id] }}</span>
+</button>

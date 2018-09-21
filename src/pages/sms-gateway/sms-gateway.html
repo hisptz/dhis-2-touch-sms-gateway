@@ -33,14 +33,19 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <div *ngIf="(isDataSetLoaded$|async) && (isSmsCommandLoaded$ |async)">
-    <div text-right class="animated fadeIn">
-      {{ smsGatewayLogSummary$|async |json}}
-      <sms-gatway-log-summary></sms-gatway-log-summary>
-    </div>
-    <div padding-top padding-bottom>
-      <sms-gateway-log-container [smsGatewayLogs]="smsGatewayLogs$|async" [smsCommandMapper]="smsCommandMapper$|async"
-        [dataSetInformation]="dataSetInformation$|async" [dataElements]="dataElements$|async" [currentUser]="currentUser$|async"></sms-gateway-log-container>
-    </div>
-  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+          <div *ngIf="(isDataSetLoaded$|async) && (isSmsCommandLoaded$ |async)">
+              <div text-right class="animated fadeIn">
+                <sms-gatway-log-summary (currentSmsLogStatusUpdate)="onCurrentSmsLogStatusUpdate($event)" [currentSmsLogStatus]="currentSmsLogStatus$ |async" [smsGatewayLogSummary]="smsGatewayLogSummary$|async"></sms-gatway-log-summary>
+              </div>
+              <div padding-top padding-bottom>
+                <sms-gateway-log-container [smsGatewayLogs]="smsGatewayLogs$|async" [smsCommandMapper]="smsCommandMapper$|async"
+                  [dataSetInformation]="dataSetInformation$|async" [dataElements]="dataElements$|async" [currentUser]="currentUser$|async"></sms-gateway-log-container>
+              </div>
+            </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>  
 </ion-content>

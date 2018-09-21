@@ -21,8 +21,16 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { Component } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import { smsLogsStatusIcons } from '../../constants/sms-logs-status';
+import * as _ from 'lodash';
 
 /**
  * Generated class for the SmsGatwayLogSummaryComponent component.
@@ -34,8 +42,39 @@ import { smsLogsStatusIcons } from '../../constants/sms-logs-status';
   selector: 'sms-gatway-log-summary',
   templateUrl: 'sms-gatway-log-summary.html'
 })
-export class SmsGatwayLogSummaryComponent {
+export class SmsGatwayLogSummaryComponent implements OnInit, OnDestroy {
+  @Input()
+  smsGatewayLogSummary;
+  @Input()
+  currentSmsLogStatus: string;
+
+  @Output()
+  currentSmsLogStatusUpdate = new EventEmitter();
+
+  icons: any[];
+
   constructor() {
-    console.log('smsLogsStatusIcons : ' + JSON.stringify(smsLogsStatusIcons));
+    this.icons = [];
+  }
+
+  ngOnInit() {
+    this.icons = _.map(Object.keys(smsLogsStatusIcons), key => {
+      return {
+        id: key,
+        src: smsLogsStatusIcons[key]
+      };
+    });
+  }
+
+  onCurrentSmsLogStatusUpdate(status) {
+    this.currentSmsLogStatusUpdate.emit(status);
+  }
+
+  trackByFn(index, item) {
+    return item && item.id ? item.id : index;
+  }
+
+  ngOnDestroy() {
+    this.icons = null;
   }
 }
