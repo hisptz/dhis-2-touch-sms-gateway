@@ -22,3 +22,22 @@
 *
 *
 -->
+<div class="animated slideInLeft" class="logs-container" (click)="toggleLogsDetails()">
+  <div class="log-list-item-border log-list-item" [ngClass]="(isSelected)? 'log-list-item-selected': ''">
+    <img class="side-menu-icon" [src]="icons[smsGatewayLog.type]" />&nbsp;&nbsp;
+    <span>{{ smsGatewayLog.time + " : " + smsGatewayLog.logMessage }}</span>
+    <div *ngIf="isSelected" class="animate fadeIn">
+      <div class="item-card non-decrypted-sms">
+        <span>
+          <b>
+            <span [translate]="'Sender'"></span>
+          </b>: {{ smsGatewayLog.message.address }} </span>
+        <br>
+        <span>
+          <b>
+            <span [translate]="'SMS Content'"></span>
+          </b>: {{ smsGatewayLog.message.body }} </span>
+      </div>
+    </div>
+  </div>
+</div>

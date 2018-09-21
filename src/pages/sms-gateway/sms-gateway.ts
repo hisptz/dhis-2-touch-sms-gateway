@@ -97,15 +97,69 @@ export class SmsGatewayPage implements OnInit {
 
   getSampleLogs(): SmsGateWayLogs[] {
     return [
-      { type: 'info', time: '1', id: '1', logMessage: 'log 1' },
-      { type: 'info', time: '3', id: '2', logMessage: 'log 2' },
-      { type: 'info', time: '2', id: '3', logMessage: 'log 3' },
-      { type: 'danger', time: '5', id: '4', logMessage: 'log 4' },
-      { type: 'warning', time: '6', id: '7', logMessage: 'log 5' },
-      { type: 'warning', time: '7', id: '5', logMessage: 'log 6' },
-      { type: 'danger', time: '23', id: '6', logMessage: 'log 7' },
-      { type: 'irrelevant', time: '10', id: '8', logMessage: 'log 8' },
-      { type: 'danger', time: '9', id: '9', logMessage: 'log 89' }
+      {
+        type: 'info',
+        time: '1',
+        id: '1',
+        logMessage: 'log 1',
+        message: { id: '1', body: 'Message 1', address: 'address 1' }
+      },
+      {
+        type: 'info',
+        time: '3',
+        id: '2',
+        logMessage: 'log 2',
+        message: { id: '2', body: 'Message 2', address: 'address 2' }
+      },
+      {
+        type: 'info',
+        time: '2',
+        id: '3',
+        logMessage: 'log 3',
+        message: { id: '3', body: 'Message 3', address: 'address 3' }
+      },
+      {
+        type: 'danger',
+        time: '5',
+        id: '4',
+        logMessage: 'log 4',
+        message: { id: '4', body: 'Message 4', address: 'address 4' }
+      },
+      {
+        type: 'warning',
+        time: '6',
+        id: '7',
+        logMessage: 'log 5',
+        message: { id: '7', body: 'Message 7', address: 'address 7' }
+      },
+      {
+        type: 'warning',
+        time: '7',
+        id: '5',
+        logMessage: 'log 6',
+        message: { id: '5', body: 'Message 5', address: 'address 5' }
+      },
+      {
+        type: 'danger',
+        time: '23',
+        id: '6',
+        logMessage: 'log 7',
+        message: { id: '6', body: 'Message 6', address: 'address 6' }
+      },
+      {
+        type: 'irrelevant',
+        time: '10',
+        id: '8',
+        logMessage: 'log 8',
+        message: { id: '8', body: 'Message 8', address: 'address 8' }
+      },
+      {
+        type: 'danger',
+        time: '9',
+        id: '9',
+        logMessage: 'log 89',
+        message: { id: '9', body: 'Message 9', address: 'address 9' }
+      }
     ];
   }
 }

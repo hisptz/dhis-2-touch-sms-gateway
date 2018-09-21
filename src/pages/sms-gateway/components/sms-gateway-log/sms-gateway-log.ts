@@ -21,7 +21,9 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { SmsGateWayLogs } from '../../../../models/sms-gateway-logs';
+import { smsLogsStatusIcons } from '../../constants/sms-logs-status';
 
 /**
  * Generated class for the SmsGatewayLogComponent component.
@@ -33,6 +35,22 @@ import { Component } from '@angular/core';
   selector: 'sms-gateway-log',
   templateUrl: 'sms-gateway-log.html'
 })
-export class SmsGatewayLogComponent {
-  constructor() {}
+export class SmsGatewayLogComponent implements OnInit, OnDestroy {
+  @Input()
+  smsGatewayLog: SmsGateWayLogs;
+  isSelected: boolean;
+  icons: any = {};
+
+  constructor() {
+    this.icons = smsLogsStatusIcons;
+    this.isSelected = false;
+  }
+
+  ngOnInit() {}
+
+  toggleLogsDetails() {
+    this.isSelected = !this.isSelected;
+  }
+
+  ngOnDestroy() {}
 }

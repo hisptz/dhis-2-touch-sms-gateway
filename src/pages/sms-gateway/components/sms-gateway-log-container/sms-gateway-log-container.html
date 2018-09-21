@@ -22,5 +22,6 @@
 *
 *
 -->
-
-smsGatewayLogs : {{ smsGatewayLogs|json}}
+<div *ngFor="let smsGatewayLog of smsGatewayLogs;trackBy: trackByFn">
+  <sms-gateway-log [smsGatewayLog]="smsGatewayLog"></sms-gateway-log>
+</div>

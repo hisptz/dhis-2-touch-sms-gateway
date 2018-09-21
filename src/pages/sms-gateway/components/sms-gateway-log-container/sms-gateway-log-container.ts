@@ -21,7 +21,7 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { SmsGateWayLogs } from '../../../../models/sms-gateway-logs';
 
 /**
@@ -34,7 +34,7 @@ import { SmsGateWayLogs } from '../../../../models/sms-gateway-logs';
   selector: 'sms-gateway-log-container',
   templateUrl: 'sms-gateway-log-container.html'
 })
-export class SmsGatewayLogContainerComponent implements OnInit {
+export class SmsGatewayLogContainerComponent implements OnInit, OnDestroy {
   @Input()
   currentUser;
   @Input()
@@ -49,4 +49,16 @@ export class SmsGatewayLogContainerComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  trackByFn(index, item) {
+    return item && item.id ? item.id : index;
+  }
+
+  ngOnDestroy() {
+    this.currentUser = null;
+    this.dataElements = null;
+    this.dataSetInformation = null;
+    this.smsCommandMapper = null;
+    this.smsGatewayLogs = null;
+  }
 }
