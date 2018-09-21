@@ -1,3 +1,25 @@
+/*
+ *
+ * Copyright 2015 HISP Tanzania
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ * @since 2015
+ * @author Joseph Chingalo <profschingalo@gmail.com>
+ */
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import 'rxjs/add/operator/map';
@@ -83,7 +105,6 @@ export class SqlLiteProvider {
         .then((db: SQLiteObject) => {
           db.executeSql(query, []).then(
             () => {
-              console.log('Success create table ' + tableName);
               observer.next();
               observer.complete();
             },
@@ -236,9 +257,15 @@ export class SqlLiteProvider {
       if (bulkData[startPoint]) {
         let row = [];
         for (let column of columns) {
-          let attribute = column.value;
-          let attributeValue = bulkData[startPoint][attribute];
-          if (column.type != 'LONGTEXT' && attributeValue == undefined) {
+          const attribute = column.value;
+          let attributeValue;
+          if (bulkData[startPoint]) {
+            const value = bulkData[startPoint][attribute];
+            if (value !== null || value !== undefined) {
+              attributeValue = value;
+            }
+          }
+          if (column.type != 'LONGTEXT' && attributeValue === '') {
             attributeValue = 0;
           } else if (column.type == 'LONGTEXT') {
             attributeValue = JSON.stringify(attributeValue);
@@ -489,60 +516,5 @@ export class SqlLiteProvider {
       data.push(row);
     }
     return data;
-  }
-
-  insertDataOnTable(tableName, fieldsValues, databaseName): Observable<any> {
-    databaseName = databaseName + '.db';
-    let columns = this.getDataBaseStructure()[tableName].columns;
-    let columnNames = '';
-    let questionMarks = '';
-    let values = [];
-    columns.forEach((column: any, index: any) => {
-      let columnValue: any;
-      let columnName = column.value;
-      columnNames += columnName;
-      if (fieldsValues[columnName]) {
-        columnValue = fieldsValues[columnName];
-      }
-      questionMarks += '?';
-      if (index + 1 < columns.length) {
-        columnNames += ',';
-        questionMarks += ',';
-      }
-      if (column.type != 'LONGTEXT') {
-        if (columnValue == undefined) {
-          columnValue = 0;
-        }
-        values.push(columnValue);
-      } else {
-        values.push(JSON.stringify(columnValue));
-      }
-    });
-    let query =
-      'INSERT OR REPLACE INTO ' +
-      tableName +
-      ' (' +
-      columnNames +
-      ') VALUES (' +
-      questionMarks +
-      ')';
-    return new Observable(observer => {
-      this.sqlite
-        .create({ name: databaseName, location: 'default' })
-        .then((db: SQLiteObject) => {
-          db.executeSql(query, values).then(
-            () => {
-              observer.next();
-              observer.complete();
-            },
-            error => {
-              observer.error(error);
-            }
-          );
-        })
-        .catch(e => {
-          observer.error(e);
-        });
-    });
   }
 }

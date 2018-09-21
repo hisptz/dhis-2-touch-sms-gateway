@@ -1,17 +1,35 @@
+/*
+ *
+ * Copyright 2015 HISP Tanzania
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ * @since 2015
+ * @author Joseph Chingalo <profschingalo@gmail.com>
+ *
+ */
 import { Injectable } from '@angular/core';
 import { HTTP } from '@ionic-native/http';
-import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/timeout';
 import { Observable } from 'rxjs/Observable';
-import { ApplicationState } from '../../store/reducers/index';
-import { Store } from '@ngrx/store';
-import { getCurrentUser } from '../../store/selectors/currentUser.selectors';
-import { CurrentUser } from '../../models/currentUser';
+import { CurrentUser } from '../../models/current-user';
 import { EncryptionProvider } from '../encryption/encryption';
-import * as _ from 'lodash';
 import { NetworkAvailabilityProvider } from '../network-availability/network-availability';
-
+import { Storage } from '@ionic/storage';
 /*
   Generated class for the HttpClientProvider provider.
 
@@ -23,12 +41,11 @@ export class HttpClientProvider {
   public timeOutTime: number;
   constructor(
     private http: HTTP,
-    private store: Store<ApplicationState>,
     private encryption: EncryptionProvider,
-    private defaultHttp: Http,
+    public storage: Storage,
     private networkProvider: NetworkAvailabilityProvider
   ) {
-    this.timeOutTime = 2 * 60 * 1000;
+    this.timeOutTime = 4 * 60 * 1000;
   }
 
   /**
@@ -45,9 +62,9 @@ export class HttpClientProvider {
       let pattern = '/api/' + user.dhisVersion;
       url = url.replace(pattern, '/api/');
     } else if (user.dhisVersion && parseInt(user.dhisVersion) >= 25) {
-      //removing hardcorded /api/25 on all apps urls
+      //removing hardcorded /api on all apps urls
       let pattern = '/api/' + user.dhisVersion;
-      url = url.replace('/api/25', '/api');
+      url = url.replace('/api', '/api');
       url = url.replace('/api', pattern);
     }
     return url;
@@ -58,25 +75,32 @@ export class HttpClientProvider {
    * @param user
    * @returns {Observable<any>}
    */
-  getSanitizedUser(user): Observable<any> {
+  getSanitizedUser(user: CurrentUser): Observable<any> {
     return new Observable(observer => {
       const { isAvailable } = this.networkProvider.getNetWorkStatus();
       if (isAvailable) {
-        if (!user) {
-          this.store.select(getCurrentUser).subscribe(
-            (currentUser: CurrentUser) => {
-              user = _.assign({}, currentUser);
-              user.password = this.encryption.decode(user.password);
-              observer.next(user);
+        if (user) {
+          if (user.isPasswordEncode) {
+            user.password = this.encryption.decode(user.password);
+          }
+          observer.next(user);
+          observer.complete();
+        } else {
+          this.storage.get('user').then(
+            currentUser => {
+              currentUser = JSON.parse(currentUser);
+              if (currentUser.isPasswordEncode) {
+                currentUser.password = this.encryption.decode(
+                  currentUser.password
+                );
+              }
+              observer.next(currentUser);
               observer.complete();
             },
             error => {
               observer.error(error);
             }
           );
-        } else {
-          observer.next(user);
-          observer.complete();
         }
       } else {
         observer.error({ error: 'network is not available' });
@@ -114,7 +138,7 @@ export class HttpClientProvider {
           this.http.setRequestTimeout(this.timeOutTime);
           if (resourceName && pageSize) {
             let promises = [];
-            let testUrl =
+            const testUrl =
               user.serverUrl +
               '/api/' +
               resourceName +
@@ -128,7 +152,7 @@ export class HttpClientProvider {
                   if (initialResponse.pager.pageCount) {
                     initialResponse[resourceName] = [];
                     for (let i = 1; i <= initialResponse.pager.pageCount; i++) {
-                      let paginatedUrl =
+                      const paginatedUrl =
                         apiUrl + '&pageSize=' + pageSize + '&page=' + i;
                       promises.push(
                         this.http
@@ -139,7 +163,6 @@ export class HttpClientProvider {
                               resourceName
                             ].concat(response[resourceName]);
                           })
-                          .catch(error => {})
                       );
                     }
                     Observable.forkJoin(promises).subscribe(
@@ -214,6 +237,7 @@ export class HttpClientProvider {
             sanitizedUser.username,
             sanitizedUser.password
           );
+          this.http.setDataSerializer('json');
           this.http.setRequestTimeout(this.timeOutTime);
           apiUrl =
             user.serverUrl + this.getUrlBasedOnDhisVersion(url, sanitizedUser);
@@ -239,79 +263,33 @@ export class HttpClientProvider {
     });
   }
 
-  /**
-   *
-   * @param url
-   * @param data
-   * @param user
-   * @returns {Observable<any>}
-   */
-  defaultPost(url, data, user?): Observable<any> {
-    let apiUrl = '';
-    return new Observable(observer => {
-      this.getSanitizedUser(user).subscribe(
-        (sanitizedUser: CurrentUser) => {
-          apiUrl =
-            sanitizedUser.serverUrl +
-            this.getUrlBasedOnDhisVersion(url, sanitizedUser);
-          let headers = new Headers();
-          headers.append(
-            'Authorization',
-            'Basic ' + sanitizedUser.authorizationKey
-          );
-          this.defaultHttp
-            .post(apiUrl, data, { headers: headers })
-            .timeout(this.timeOutTime)
-            .subscribe(
-              (response: any) => {
-                observer.next();
-                observer.complete();
-              },
-              error => {
-                observer.error(error);
-              }
-            );
-        },
-        error => {
-          observer.error(error);
-        }
-      );
-    });
-  }
-
-  /**
-   *
-   * @param url
-   * @param data
-   * @param user
-   * @returns {Observable<any>}
-   */
   put(url, data, user?): Observable<any> {
     let apiUrl = '';
     return new Observable(observer => {
       this.getSanitizedUser(user).subscribe(
         (sanitizedUser: CurrentUser) => {
-          apiUrl =
-            sanitizedUser.serverUrl +
-            this.getUrlBasedOnDhisVersion(url, sanitizedUser);
-          let headers = new Headers();
-          headers.append(
-            'Authorization',
-            'Basic ' + sanitizedUser.authorizationKey
+          this.http.useBasicAuth(
+            sanitizedUser.username,
+            sanitizedUser.password
           );
-          this.defaultHttp
-            .put(apiUrl, data, { headers: headers })
-            .timeout(this.timeOutTime)
-            .map(res => res.json())
-            .subscribe(
-              response => {
+          this.http.setDataSerializer('json');
+          this.http.setRequestTimeout(this.timeOutTime);
+          apiUrl =
+            user.serverUrl + this.getUrlBasedOnDhisVersion(url, sanitizedUser);
+          this.http
+            .put(apiUrl, data, {})
+            .then(
+              (response: any) => {
                 observer.next(response);
                 observer.complete();
               },
               error => {
                 observer.error(error);
               }
-            );
+            )
+            .catch(error => {
+              observer.error(error);
+            });
         },
         error => {
           observer.error(error);
@@ -331,27 +309,28 @@ export class HttpClientProvider {
     return new Observable(observer => {
       this.getSanitizedUser(user).subscribe(
         (sanitizedUser: CurrentUser) => {
-          apiUrl =
-            sanitizedUser.serverUrl +
-            this.getUrlBasedOnDhisVersion(url, sanitizedUser);
-          let headers = new Headers();
-          headers.append(
-            'Authorization',
-            'Basic ' + sanitizedUser.authorizationKey
+          this.http.useBasicAuth(
+            sanitizedUser.username,
+            sanitizedUser.password
           );
-          this.defaultHttp
-            .delete(apiUrl, { headers: headers })
-            .timeout(this.timeOutTime)
-            .map(res => res.json())
-            .subscribe(
-              response => {
+          this.http.setDataSerializer('json');
+          this.http.setRequestTimeout(this.timeOutTime);
+          apiUrl =
+            user.serverUrl + this.getUrlBasedOnDhisVersion(url, sanitizedUser);
+          this.http
+            .delete(apiUrl, {}, {})
+            .then(
+              (response: any) => {
                 observer.next(response);
                 observer.complete();
               },
               error => {
                 observer.error(error);
               }
-            );
+            )
+            .catch(error => {
+              observer.error(error);
+            });
         },
         error => {
           observer.error(error);

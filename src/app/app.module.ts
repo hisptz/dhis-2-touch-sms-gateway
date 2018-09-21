@@ -1,98 +1,70 @@
-///<reference path="../providers/user/user.ts"/>
+/*
+ *
+ * Copyright 2015 HISP Tanzania
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ * @since 2015
+ * @author Joseph Chingalo <profschingalo@gmail.com>
+ *
+ */
+import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
-
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpModule, Http } from '@angular/http';
-
-//native plugins
-import { SQLite } from '@ionic-native/sqlite';
-import { HTTP } from '@ionic-native/http';
-import { AppVersion } from '@ionic-native/app-version';
-import { Network } from '@ionic-native/network';
-import { BackgroundMode } from '@ionic-native/background-mode';
+import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
-import { SMS } from '@ionic-native/sms';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
-
-//translations
-export function createTranslateLoader(http: Http) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
-
-//store
-import { reducers } from '../store/reducers';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { effects } from '../store/effects';
 
 import { MyApp } from './app.component';
-import { LauncherPage } from '../pages/launcher/launcher';
-import { SharedModule } from '../components/shared.module';
-import { NetworkAvailabilityProvider } from '../providers/network-availability/network-availability';
-import { UserProvider } from '../providers/user/user';
-import { SmsCommandProvider } from '../providers/sms-command/sms-command';
-import { SqlLiteProvider } from '../providers/sql-lite/sql-lite';
-import { AppProvider } from '../providers/app/app';
-import { LocalInstanceProvider } from '../providers/local-instance/local-instance';
-import { HttpClientProvider } from '../providers/http-client/http-client';
-import { AppTranslationProvider } from '../providers/app-translation/app-translation';
-import { EncryptionProvider } from '../providers/encryption/encryption';
-import { SettingsProvider } from '../providers/settings/settings';
-import { DataSetsProvider } from '../providers/data-sets/data-sets';
-import { SmsGatewayProvider } from '../providers/sms-gateway/sms-gateway';
-import { AboutProvider } from '../providers/about/about';
-import { AppPermissionProvider } from '../providers/app-permission/app-permission';
+
+//store
+import { reducers, effects, metaReducers } from '../store';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+
+// Multi-language
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+// core services and native plugins
+import { appProviders, nativePlugins } from '../providers';
 
 @NgModule({
-  declarations: [MyApp, LauncherPage],
+  declarations: [MyApp],
   imports: [
     BrowserModule,
-    HttpModule,
-    StoreModule.forRoot(reducers),
-    EffectsModule.forRoot(effects),
     IonicStorageModule.forRoot(),
-    SharedModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [Http]
-      }
-    }),
-    IonicModule.forRoot(MyApp)
+    StoreModule.forRoot(reducers, { metaReducers }),
+    EffectsModule.forRoot(effects),
+    IonicModule.forRoot(MyApp, { scrollAssist: false, autoFocusAssist: false }),
+    HttpClientModule,
+    TranslateModule.forRoot()
   ],
   bootstrap: [IonicApp],
-  entryComponents: [MyApp, LauncherPage],
+  entryComponents: [MyApp],
   providers: [
-    StatusBar,
-    SQLite,
-    AndroidPermissions,
-    SMS,
-    SplashScreen,
-    HTTP,
-    AppVersion,
-    Network,
-    BackgroundMode,
+    HttpClient,
+    {
+      provide: TranslateLoader,
+      useFactory: (http: HttpClient) =>
+        new TranslateHttpLoader(http, '/assets/i18n/', '.json'),
+      deps: [HttpClient]
+    },
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    NetworkAvailabilityProvider,
-    UserProvider,
-    SettingsProvider,
-    AboutProvider,
-    SqlLiteProvider,
-    SmsCommandProvider,
-    AppProvider,
-    EncryptionProvider,
-    LocalInstanceProvider,
-    HttpClientProvider,
-    AppTranslationProvider,
-    DataSetsProvider,
-    SmsGatewayProvider,
-    AppPermissionProvider
+    ...appProviders,
+    ...nativePlugins
   ]
 })
 export class AppModule {}

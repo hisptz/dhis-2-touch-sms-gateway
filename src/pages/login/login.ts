@@ -1,19 +1,49 @@
-import { Component, OnInit } from '@angular/core';
-import { IonicPage, MenuController, NavController } from 'ionic-angular';
-import { BackgroundMode } from '@ionic-native/background-mode';
-import { LocalInstanceProvider } from '../../providers/local-instance/local-instance';
+/*
+ *
+ * Copyright 2015 HISP Tanzania
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ * @since 2015
+ * @author Joseph Chingalo <profschingalo@gmail.com>
+ *
+ */
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  IonicPage,
+  NavController,
+  ModalOptions,
+  ModalController,
+  MenuController
+} from 'ionic-angular';
 import { UserProvider } from '../../providers/user/user';
-import { CurrentUser } from '../../models/currentUser';
+import { CurrentUser } from '../../models/current-user';
+
+import { Store } from '@ngrx/store';
+import { State, AddCurrentUser } from '../../store';
+
+import * as _ from 'lodash';
 import { AppTranslationProvider } from '../../providers/app-translation/app-translation';
 import { AppProvider } from '../../providers/app/app';
-import { SqlLiteProvider } from '../../providers/sql-lite/sql-lite';
-import { HttpClientProvider } from '../../providers/http-client/http-client';
+import { SystemSettingProvider } from '../../providers/system-setting/system-setting';
 import { SettingsProvider } from '../../providers/settings/settings';
-import { EncryptionProvider } from '../../providers/encryption/encryption';
 import { SmsCommandProvider } from '../../providers/sms-command/sms-command';
-import { ApplicationState } from '../../store/reducers';
-import { Store } from '@ngrx/store';
-import { LoadedCurrentUser } from '../../store/actions/currentUser.actons';
+import { LocalInstanceProvider } from '../../providers/local-instance/local-instance';
+import { EncryptionProvider } from '../../providers/encryption/encryption';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 /**
  * Generated class for the LoginPage page.
@@ -27,329 +57,207 @@ import { LoadedCurrentUser } from '../../store/actions/currentUser.actons';
   selector: 'page-login',
   templateUrl: 'login.html'
 })
-export class LoginPage implements OnInit {
-  isLocalInstancesListOpen: boolean;
-  animationEffect: any;
+export class LoginPage implements OnInit, OnDestroy {
   logoUrl: string;
-  offlineIcon: string;
-  cancelLoginProcessData: any = { isProcessActive: false };
-  progressTracker: any;
-  completedTrackedProcess: any;
-  localInstances: any;
-  currentUser: CurrentUser;
-  currentLanguage: string;
-  topThreeTranslationCodes: Array<string> = [];
-  translationCodes: Array<any> = [];
-  isTranslationListOpen: boolean;
-  progressBar: string;
+  isLoginFormValid: boolean;
   isLoginProcessActive: boolean;
-  hasUserAuthenticated: boolean;
-  loggedInInInstance: string;
+  isOnLogin: boolean;
+  showOverallProgressBar: boolean;
+  overAllLoginMessage: string;
+  offlineIcon: string;
+  currentUser: CurrentUser;
+  topThreeTranslationCodes: string[];
+  localInstances: string[];
+  processes: string[];
+  keyFlag: string;
+  keyApplicationFooter: string;
+  applicationTitle: string;
+  keyApplicationNotification: string;
+  keyApplicationIntro: string;
 
   constructor(
     private navCtrl: NavController,
-    private store: Store<ApplicationState>,
-    private localInstanceProvider: LocalInstanceProvider,
-    private UserProvider: UserProvider,
-    private sqlLite: SqlLiteProvider,
-    private HttpClientProvider: HttpClientProvider,
+    private userProvider: UserProvider,
     private appTranslationProvider: AppTranslationProvider,
-    private AppProvider: AppProvider,
-    private encryption: EncryptionProvider,
+    private appProvider: AppProvider,
+    private systemSettings: SystemSettingProvider,
     private settingsProvider: SettingsProvider,
-    private menu: MenuController,
     private smsCommandProvider: SmsCommandProvider,
-    private backgroundMode: BackgroundMode
-  ) {}
-
-  ngOnInit() {
-    this.topThreeTranslationCodes = this.appTranslationProvider.getTopThreeSupportedTranslationCodes();
-    this.translationCodes = this.appTranslationProvider.getSupportedTranslationObjects();
-    this.isLocalInstancesListOpen = false;
-    this.isTranslationListOpen = false;
-    this.backgroundMode.disable();
-    this.menu.enable(false);
-    this.animationEffect = {
-      loginForm: 'animated slideInUp',
-      progressBar: 'animated fadeIn'
-    };
+    private localInstanceProvider: LocalInstanceProvider,
+    private encryptionProvider: EncryptionProvider,
+    private modalCtrl: ModalController,
+    private backgroundMode: BackgroundMode,
+    private store: Store<State>,
+    private menuCtrl: MenuController
+  ) {
+    this.menuCtrl.enable(false);
     this.logoUrl = 'assets/img/logo.png';
     this.offlineIcon = 'assets/icon/offline.png';
-    this.currentUser = {
-      serverUrl: '',
-      username: '',
-      password: '',
-      currentLanguage: 'en'
-    };
-    this.cancelLoginProcess(this.cancelLoginProcessData);
-    this.progressTracker = {};
-    this.completedTrackedProcess = [];
-    this.UserProvider.getCurrentUser().subscribe((currentUser: any) => {
-      this.localInstanceProvider
-        .getLocalInstances()
-        .subscribe((localInstances: any) => {
-          this.localInstances = localInstances;
-          this.setUpCurrentUser(currentUser);
-        });
-    });
+    this.isLoginFormValid = false;
+    this.isLoginProcessActive = false;
+    this.isOnLogin = true;
+    this.showOverallProgressBar = true;
+    this.topThreeTranslationCodes = this.appTranslationProvider.getTopThreeSupportedTranslationCodes();
+    this.processes = [
+      'organisationUnits',
+      'sections',
+      'dataElements',
+      'smsCommand',
+      'dataSets'
+      // 'programs',
+      // 'programStageSections',
+      // 'programRules',
+      // 'indicators',
+      // 'programRuleActions',
+      // 'programRuleVariables',
+
+      // 'reports',
+      // 'constants'
+    ];
   }
 
-  setUpCurrentUser(currentUser) {
-    if (currentUser && currentUser.serverUrl) {
-      if (currentUser.password) {
-        delete currentUser.password;
+  ngOnInit() {
+    const defaultCurrentUser: CurrentUser = {
+      serverUrl: 'play.dhis2.org/2.28', // 'ssudanhis.org', //'play.dhis2.org/2.28',
+      username: 'admin', // 'boma',
+      password: 'district', // 'Boma_2018',
+      currentLanguage: 'en',
+      progressTracker: {}
+    };
+    this.localInstanceProvider.getLocalInstances().subscribe(localInstances => {
+      this.localInstances = localInstances;
+    });
+    this.userProvider.getCurrentUser().subscribe(
+      (currentUser: CurrentUser) => {
+        if (currentUser && currentUser.username) {
+          currentUser.password = '';
+          this.currentUser = currentUser;
+        } else {
+          this.currentUser = defaultCurrentUser;
+        }
+      },
+      () => {
+        this.currentUser = defaultCurrentUser;
       }
-      if (!currentUser.currentLanguage) {
-        currentUser.currentLanguage = 'en';
-      }
-      this.currentUser = currentUser;
-    } else {
-      this.currentUser.serverUrl = 'play.dhis2.org/2.28';
-      this.currentUser.username = 'admin';
-      this.currentUser.password = 'district';
-    }
-    this.currentLanguage = this.currentUser.currentLanguage;
-    this.appTranslationProvider.setAppTranslation(
-      this.currentUser.currentLanguage
     );
   }
 
-  changeCurrentUser(data) {
-    if (data && data.currentUser) {
-      this.setUpCurrentUser(data.currentUser);
+  openLocalInstancesSelection() {
+    const options: ModalOptions = {
+      cssClass: 'inset-modal',
+      enableBackdropDismiss: true
+    };
+    const data = { localInstances: this.localInstances };
+    const modal = this.modalCtrl.create(
+      'LocalInstancesSelectionPage',
+      { data: data },
+      options
+    );
+    modal.onDidDismiss((currentUser: CurrentUser) => {
+      if (currentUser) {
+        this.currentUser = null;
+        currentUser.password = '';
+        setTimeout(() => {
+          this.currentUser = _.assign({}, this.currentUser, currentUser);
+        }, 20);
+      }
+    });
+    modal.present();
+  }
+
+  openTranslationCodeSelection() {
+    const options: ModalOptions = {
+      cssClass: 'inset-modal',
+      enableBackdropDismiss: true
+    };
+    const data = { currentLanguage: this.currentUser.currentLanguage };
+    const modal = this.modalCtrl.create(
+      'TransalationSelectionPage',
+      { data: data },
+      options
+    );
+    modal.onDidDismiss((code: string) => {
+      if (code) {
+        this.updateTranslationLanguage(code);
+      }
+    });
+    modal.present();
+  }
+
+  updateTranslationLanguage(code) {
+    this.appTranslationProvider.setAppTranslation(code);
+    this.currentUser.currentLanguage = code;
+  }
+
+  onFormFieldChange(data) {
+    const { status } = data;
+    const { currentUser } = data;
+    this.isLoginFormValid = status;
+    if (status) {
+      this.currentUser = _.assign({}, this.currentUser, currentUser);
+    } else {
+      this.isLoginProcessActive = false;
     }
-    this.toggleLocalInstancesList();
   }
 
-  toggleLocalInstancesList() {
-    this.isLocalInstancesListOpen = !this.isLocalInstancesListOpen;
+  onUpdateCurrentUser(currentUser) {
+    this.currentUser = _.assign({}, this.currentUser, currentUser);
   }
 
-  changeLanguageFromList(language: string) {
-    if (language) {
-      this.updateTranslationLanguage(language);
+  onCancelLoginProcess() {
+    this.isLoginProcessActive = false;
+  }
+
+  onFailLogin(errorReponse) {
+    this.appProvider.setNormalNotification(errorReponse);
+    this.onCancelLoginProcess();
+  }
+
+  onSuccessLogin(data) {
+    const { currentUser } = data;
+    currentUser.isLogin = true;
+    let loggedInInInstance = this.currentUser.serverUrl;
+    if (currentUser.serverUrl.split('://').length > 1) {
+      loggedInInInstance = this.currentUser.serverUrl.split('://')[1];
     }
-    this.toggleTransalationCodesSelectionList();
-  }
-
-  toggleTransalationCodesSelectionList() {
-    if (!this.isLoginProcessActive) {
-      this.isTranslationListOpen = !this.isTranslationListOpen;
-      this.isLocalInstancesListOpen = false;
-    }
-  }
-
-  updateTranslationLanguage(language: string) {
-    try {
-      this.appTranslationProvider.setAppTranslation(language);
-      this.currentLanguage = language;
-      this.currentUser.currentLanguage = language;
-      this.UserProvider.setCurrentUser(this.currentUser).subscribe(() => {});
-    } catch (e) {
-      this.AppProvider.setNormalNotification('Fail to set translation ');
-      console.log(JSON.stringify(e));
-    }
-  }
-
-  startLoginProcess() {
-    this.hasUserAuthenticated = false;
-    this.backgroundMode.enable();
-    this.progressBar = '0';
-    this.loggedInInInstance = this.currentUser.serverUrl;
-    this.isLoginProcessActive = true;
-    this.animationEffect.loginForm = 'animated fadeOut';
-    this.animationEffect.progressBar = 'animated fadeIn';
+    this.reCheckingAppSetting(currentUser);
+    currentUser.hashedKeyForOfflineAuthentication = this.encryptionProvider.getHashedKeyForOfflineAuthentication(
+      currentUser
+    );
+    currentUser.password = this.encryptionProvider.encode(currentUser.password);
+    currentUser.isPasswordEncode = true;
+    this.currentUser = _.assign({}, this.currentUser, currentUser);
     if (
+      this.currentUser &&
       this.currentUser.serverUrl &&
-      this.currentUser.username &&
-      this.currentUser.password
+      this.currentUser.username
     ) {
-      delete this.currentUser.dhisVersion;
-      let currentResourceType = 'communication';
-      this.progressTracker = {};
-      let resource = 'Authenticating user';
-      this.currentUser.serverUrl = this.AppProvider.getFormattedBaseUrl(
-        this.currentUser.serverUrl
+      this.currentUser['currentDatabase'] = this.appProvider.getDataBaseName(
+        this.currentUser.serverUrl,
+        this.currentUser.username
       );
-      this.loggedInInInstance = this.currentUser.serverUrl;
-      this.reInitiateProgressTrackerObject(this.currentUser);
-      this.progressTracker[currentResourceType].message =
-        'Establishing connection to server';
-      this.UserProvider.authenticateUser(this.currentUser).subscribe(
-        (response: any) => {
-          response = this.getResponseData(response);
-          this.currentUser = response.user;
-          this.loggedInInInstance = this.currentUser.serverUrl;
-          if (this.currentUser.serverUrl.split('://').length > 1) {
-            this.loggedInInInstance = this.currentUser.serverUrl.split(
-              '://'
-            )[1];
-          }
-          this.currentUser.authorizationKey = btoa(
-            this.currentUser.username + ':' + this.currentUser.password
+      this.localInstanceProvider
+        .setLocalInstanceInstances(
+          this.localInstances,
+          this.currentUser,
+          loggedInInInstance
+        )
+        .subscribe(() => {
+          this.store.dispatch(
+            new AddCurrentUser({ currentUser: this.currentUser })
           );
-          this.currentUser.currentDatabase = this.AppProvider.getDataBaseName(
-            this.currentUser.serverUrl,
-            this.currentUser.username
-          );
-          this.reInitiateProgressTrackerObject(this.currentUser);
-          this.updateProgressTracker(resource);
-          resource = 'Discovering system information';
-          if (this.isLoginProcessActive) {
-            this.progressTracker[currentResourceType].message =
-              'Discovering system information';
-            this.HttpClientProvider.get(
-              '/api/system/info',
-              false,
-              this.currentUser
-            ).subscribe(
-              (response: any) => {
-                this.UserProvider.setCurrentUserSystemInformation(
-                  JSON.parse(response.data)
-                ).subscribe(
-                  (dhisVersion: string) => {
-                    this.currentUser.dhisVersion = dhisVersion;
-                    this.updateProgressTracker(resource);
-                    if (this.isLoginProcessActive) {
-                      this.progressTracker[currentResourceType].message =
-                        'Discovering current user authorities';
-                      this.UserProvider.getUserAuthorities(
-                        this.currentUser
-                      ).subscribe(
-                        (response: any) => {
-                          this.currentUser.id = response.id;
-                          this.currentUser.name = response.name;
-                          this.currentUser.authorities = response.authorities;
-                          this.currentUser.dataViewOrganisationUnits =
-                            response.dataViewOrganisationUnits;
-                          resource = 'Preparing local storage';
-                          this.progressTracker[currentResourceType].message =
-                            'Preparing local storage';
-                          this.sqlLite
-                            .generateTables(this.currentUser.currentDatabase)
-                            .subscribe(
-                              () => {
-                                this.UserProvider.getUserDataFromServer(
-                                  this.currentUser,
-                                  true
-                                ).subscribe(
-                                  (response: any) => {
-                                    response = this.getResponseData(response);
-                                    this.UserProvider.setUserData(
-                                      JSON.parse(response.data)
-                                    ).subscribe(
-                                      userData => {
-                                        this.updateProgressTracker(resource);
-                                        this.hasUserAuthenticated = true;
-                                      },
-                                      error => {}
-                                    );
-                                  },
-                                  error => {
-                                    this.cancelLoginProcess(
-                                      this.cancelLoginProcessData
-                                    );
-                                    this.AppProvider.setNormalNotification(
-                                      'Fail to save current user information'
-                                    );
-                                    console.error(
-                                      'error : ' + JSON.stringify(error)
-                                    );
-                                  }
-                                );
-                              },
-                              error => {
-                                this.cancelLoginProcess(
-                                  this.cancelLoginProcessData
-                                );
-                                this.AppProvider.setNormalNotification(
-                                  'Fail to prepare local storage'
-                                );
-                                console.error(
-                                  'error : ' + JSON.stringify(error)
-                                );
-                              }
-                            );
-                        },
-                        error => {
-                          this.cancelLoginProcess(this.cancelLoginProcessData);
-                          this.AppProvider.setNormalNotification(
-                            'Fail to discover user authorities'
-                          );
-                          console.error('error : ' + JSON.stringify(error));
-                        }
-                      );
-                    }
-                  },
-                  error => {
-                    this.cancelLoginProcess(this.cancelLoginProcessData);
-                    this.AppProvider.setNormalNotification(
-                      'Fail to discover user authorities'
-                    );
-                    console.error('error : ' + JSON.stringify(error));
-                  }
-                );
-              },
-              error => {
-                this.cancelLoginProcess(this.cancelLoginProcessData);
-                this.AppProvider.setNormalNotification(
-                  'Fail to discover system information'
-                );
-                console.error('error : ' + JSON.stringify(error));
-              }
-            );
-          }
-        },
-        (error: any) => {
-          if (error.status == 0) {
-            this.AppProvider.setNormalNotification(
-              'Please check your network connectivity'
-            );
-          } else if (error.status == 401) {
-            this.AppProvider.setNormalNotification(
-              'You have enter wrong username or password or server address'
-            );
-          } else if (error.status == 404) {
-            console.log(JSON.stringify(error));
-            this.AppProvider.setNormalNotification(
-              'Please check server address, or contact your help desk'
-            );
-          } else if (error.error) {
-            this.AppProvider.setNormalNotification(error.error);
-          } else {
-            this.AppProvider.setNormalNotification(JSON.stringify(error));
-          }
-          this.cancelLoginProcess(this.cancelLoginProcessData);
-        }
-      );
-    } else {
-      this.cancelLoginProcess(this.cancelLoginProcessData);
-      this.AppProvider.setNormalNotification(
-        'Please enter server address, username and password'
-      );
+          this.userProvider.setCurrentUser(this.currentUser).subscribe(() => {
+            this.backgroundMode
+              .disable()
+              .then(() => {})
+              .catch(e => {});
+            this.smsCommandProvider
+              .checkAndGenerateSmsCommands(this.currentUser)
+              .subscribe(() => {}, error => {});
+            this.navCtrl.setRoot('HomePage');
+          });
+        });
     }
-  }
-
-  getResponseData(response) {
-    if (response.data.data) {
-      return this.getResponseData(response.data);
-    } else {
-      return response;
-    }
-  }
-
-  cancelLoginProcess(data) {
-    this.animationEffect.progressBar = 'animated fadeOut';
-    this.animationEffect.loginForm = 'animated fadeIn';
-    if (this.currentUser && this.currentUser.serverUrl) {
-      let url = this.currentUser.serverUrl.split('/dhis-web-commons')[0];
-      url = url.split('/dhis-web-dashboard-integration')[0];
-      this.currentUser.serverUrl = url;
-    }
-    setTimeout(() => {
-      this.isLoginProcessActive = data.isProcessActive;
-    }, 300);
-    this.backgroundMode.disable();
   }
 
   reCheckingAppSetting(currentUser) {
@@ -371,179 +279,58 @@ export class LoginPage implements OnInit {
       });
   }
 
-  setLandingPage(currentUser: CurrentUser) {
-    //currentUser.isLogin = true;
-    this.reCheckingAppSetting(currentUser);
-    this.smsCommandProvider
-      .checkAndGenerateSmsCommands(currentUser)
-      .subscribe(() => {}, error => {});
-    currentUser.password = this.encryption.encode(currentUser.password);
-    this.store.dispatch(new LoadedCurrentUser(currentUser));
-    if (
-      this.currentUser &&
-      this.currentUser.serverUrl &&
-      this.currentUser.username
-    ) {
-      this.currentUser['currentDatabase'] = this.AppProvider.getDataBaseName(
-        this.currentUser.serverUrl,
-        this.currentUser.username
-      );
-      this.localInstanceProvider
-        .setLocalInstanceInstances(
-          this.localInstances,
-          currentUser,
-          this.loggedInInInstance
-        )
+  onSystemSettingLoaded(data: any, skipSaving?: boolean) {
+    const { keyFlag } = data;
+    const { keyApplicationFooter } = data;
+    const { applicationTitle } = data;
+    const { keyApplicationNotification } = data;
+    const { keyApplicationIntro } = data;
+    const { serverUrl } = this.currentUser;
+
+    this.keyFlag = keyFlag ? keyFlag : null;
+    this.keyApplicationFooter = keyApplicationFooter
+      ? keyApplicationFooter
+      : null;
+    this.applicationTitle = applicationTitle ? applicationTitle : null;
+    this.keyApplicationNotification = keyApplicationNotification
+      ? keyApplicationNotification
+      : null;
+    this.keyApplicationIntro = keyApplicationIntro ? keyApplicationIntro : null;
+    if (!skipSaving) {
+      this.systemSettings
+        .saveSystemSettings(data, serverUrl)
         .subscribe(() => {});
     }
-    this.UserProvider.setCurrentUser(currentUser).subscribe(() => {
-      this.backgroundMode.disable();
-      this.navCtrl.setRoot('SmsGatewayPage');
-    });
   }
 
-  resetPassSteps() {
-    let noEmptyStep;
-    this.progressTracker.communication.passStep.forEach((step: any) => {
-      if (step.name == 'organisationUnits') {
-        step.hasBeenPassed = false;
-        noEmptyStep = step;
-      }
-    });
-    this.progressTracker.communication.passStep = [];
-    if (noEmptyStep) {
-      this.progressTracker.communication.passStep.push(noEmptyStep);
-    }
-    this.progressTracker.communication.passStepCount = 0;
-    let dataBaseStructure = this.sqlLite.getDataBaseStructure();
-    Object.keys(dataBaseStructure).forEach(key => {
-      let table = dataBaseStructure[key];
-      if (table.isMetadata && table.resourceType && table.resourceType != '') {
-        if (this.progressTracker[table.resourceType]) {
-          this.progressTracker[table.resourceType].passStepCount = 0;
-          this.progressTracker[table.resourceType].message = '';
-          this.progressTracker[table.resourceType].passStep.forEach(
-            (passStep: any) => {
-              passStep.hasBeenPassed = false;
-            }
-          );
-        }
-      }
-    });
+  startLoginProcess() {
+    this.overAllLoginMessage = this.currentUser.serverUrl;
+    this.isLoginProcessActive = true;
+    this.resetLoginSpinnerValues();
   }
 
-  reInitiateProgressTrackerObject(user) {
-    if (
-      user.progressTracker &&
-      user.currentDatabase &&
-      user.progressTracker[user.currentDatabase]
-    ) {
-      this.progressTracker = user.progressTracker[user.currentDatabase];
-      this.resetPassSteps();
-    } else if (user.currentDatabase && user.progressTracker) {
-      this.currentUser.progressTracker[
-        user.currentDatabase
-      ] = this.getEmptyProgressTracker();
-      this.progressTracker = this.currentUser.progressTracker[
-        user.currentDatabase
-      ];
-    } else {
-      this.currentUser['progressTracker'] = {};
-      this.progressTracker = {};
-      this.progressTracker = this.getEmptyProgressTracker();
-    }
+  ngOnDestroy() {
+    this.resetAllValues();
   }
 
-  getEmptyProgressTracker() {
-    let dataBaseStructure = this.sqlLite.getDataBaseStructure();
-    let progressTracker = {};
-    progressTracker['communication'] = {
-      count: 3,
-      passStep: [],
-      passStepCount: 0,
-      message: ''
-    };
-    Object.keys(dataBaseStructure).forEach(key => {
-      let table = dataBaseStructure[key];
-      if (table.isMetadata && table.resourceType && table.resourceType != '') {
-        if (!progressTracker[table.resourceType]) {
-          progressTracker[table.resourceType] = {
-            count: 1,
-            passStep: [],
-            passStepCount: 0,
-            message: ''
-          };
-        } else {
-          progressTracker[table.resourceType].count += 1;
-        }
-      }
-    });
-    return progressTracker;
+  resetLoginSpinnerValues() {
+    this.keyFlag = null;
+    this.keyApplicationFooter = null;
+    this.applicationTitle = null;
+    this.keyApplicationNotification = null;
+    this.keyApplicationIntro = null;
   }
-
-  updateProgressTracker(resourceName) {
-    let dataBaseStructure = this.sqlLite.getDataBaseStructure();
-    let resourceType = 'communication';
-    if (dataBaseStructure[resourceName]) {
-      let table = dataBaseStructure[resourceName];
-      if (table.isMetadata && table.resourceType) {
-        resourceType = table.resourceType;
-      }
-    }
-    if (
-      this.progressTracker[resourceType].passStep.length ==
-      this.progressTracker[resourceType].count
-    ) {
-      this.progressTracker[resourceType].passStep.forEach((passStep: any) => {
-        if (passStep.name == resourceName && passStep.hasBeenDownloaded) {
-          passStep.hasBeenPassed = true;
-        }
-      });
-    } else {
-      this.progressTracker[resourceType].passStep.push({
-        name: resourceName,
-        hasBeenSaved: true,
-        hasBeenDownloaded: true,
-        hasBeenPassed: true
-      });
-    }
-    this.progressTracker[resourceType].passStepCount =
-      this.progressTracker[resourceType].passStepCount + 1;
-    this.currentUser['progressTracker'][
-      this.currentUser.currentDatabase
-    ] = this.progressTracker;
-    this.UserProvider.setCurrentUser(this.currentUser).subscribe(() => {});
-    this.completedTrackedProcess = this.getCompletedTrackedProcess();
-    this.updateProgressBarPercentage();
-  }
-
-  updateProgressBarPercentage() {
-    let total = 0;
-    let completed = 0;
-    Object.keys(this.progressTracker).forEach(key => {
-      let process = this.progressTracker[key];
-      completed += process.passStepCount;
-      total += process.count;
-    });
-    let value = completed / total * 100;
-    this.progressBar = String(value);
-    if (completed == total) {
-      this.setLandingPage(this.currentUser);
-    }
-  }
-
-  getCompletedTrackedProcess() {
-    let completedTrackedProcess = [];
-    Object.keys(this.progressTracker).forEach(key => {
-      let process = this.progressTracker[key];
-      process.passStep.forEach((passStep: any) => {
-        if (passStep.name && passStep.hasBeenDownloaded) {
-          if (completedTrackedProcess.indexOf(passStep.name) == -1) {
-            completedTrackedProcess.push(passStep.name);
-          }
-        }
-      });
-    });
-    return completedTrackedProcess;
+  resetAllValues() {
+    this.logoUrl = null;
+    this.isLoginFormValid = null;
+    this.isLoginProcessActive = null;
+    this.offlineIcon = null;
+    this.currentUser = null;
+    this.topThreeTranslationCodes = null;
+    this.localInstances = null;
+    this.processes = null;
+    this.showOverallProgressBar = null;
+    this.isOnLogin = null;
+    this.resetLoginSpinnerValues();
   }
 }

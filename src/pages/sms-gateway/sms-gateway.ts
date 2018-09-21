@@ -1,21 +1,47 @@
+/*
+ *
+ * Copyright 2015 HISP Tanzania
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ * @since 2015
+ * @author Joseph Chingalo <profschingalo@gmail.com>
+ *
+ */
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, MenuController } from 'ionic-angular';
-import { UserProvider } from '../../providers/user/user';
-import { CurrentUser } from '../../models/currentUser';
-import { EncryptionProvider } from '../../providers/encryption/encryption';
-import { DataSetsProvider } from '../../providers/data-sets/data-sets';
-import { SmsGatewayProvider } from '../../providers/sms-gateway/sms-gateway';
-import { SmsConfiguration, SmsGateWayLogs } from '../../models/smsCommand';
-import { AppProvider } from '../../providers/app/app';
-import { SmsCommandProvider } from '../../providers/sms-command/sms-command';
-import { AppTranslationProvider } from '../../providers/app-translation/app-translation';
-import { AppPermissionProvider } from '../../providers/app-permission/app-permission';
-import { ApplicationState } from '../../store/reducers';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import * as logsSelectors from '../../store/selectors/smsGatewayLogs.selectors';
-import * as logsActions from '../../store/actions/smsGatewayLogs.action';
-import * as _ from 'lodash';
+import { IonicPage } from 'ionic-angular';
+import { Store, select } from '@ngrx/store';
+import {
+  State,
+  getSmsCommandMapper,
+  getDataSetInformation,
+  getDataSetLoadedState,
+  getSmsCommandLoadedState,
+  getDataElements,
+  getCurrentUser,
+  getSmsGatewayLogsByCurrentStatus,
+  AddSmsGateWayLogs,
+  getSmsGatewayLogsSummary,
+  getCurrentSmsLogStatus,
+  UpdateSmsGatewayLogStatus
+} from '../../store';
+import { Observable } from 'rxjs';
+import { CurrentUser } from '../../models';
+import { SmsGateWayLogs } from '../../models/sms-gateway-logs';
+import { smsLogsStatus } from './constants/sms-logs-status';
 
 /**
  * Generated class for the SmsGatewayPage page.
@@ -30,318 +56,110 @@ import * as _ from 'lodash';
   templateUrl: 'sms-gateway.html'
 })
 export class SmsGatewayPage implements OnInit {
-  currentUser: CurrentUser;
-  isLoading: boolean;
-  loadingMessage: string;
-  isSyncActive: boolean;
-  smsCommandMapper: any;
-  dataElements: any;
-  translationMapper: any;
-  icons: any;
-  currentFilter: string;
-  dataSetsInformation: any;
-  //observer
-  allSmsLogs$: Observable<Array<SmsGateWayLogs>>;
+  currentUser$: Observable<CurrentUser>;
+  smsCommandMapper$: Observable<any>;
+  dataSetInformation$: Observable<any>;
+  dataElements$: Observable<any>;
+  isDataSetLoaded$: Observable<boolean>;
+  isSmsCommandLoaded$: Observable<boolean>;
+  smsGatewayLogs$: Observable<SmsGateWayLogs[]>;
+  smsGatewayLogSummary$: Observable<any>;
+  currentSmsLogStatus$: Observable<string>;
 
-  constructor(
-    private encryption: EncryptionProvider,
-    private appProvider: AppProvider,
-    private smsGateway: SmsGatewayProvider,
-    private smsCommand: SmsCommandProvider,
-    private menu: MenuController,
-    private dataSetProvider: DataSetsProvider,
-    private userProvider: UserProvider,
-    private appTranslation: AppTranslationProvider,
-    private appPermisssion: AppPermissionProvider,
-    private store: Store<ApplicationState>
-  ) {
-    this.currentFilter = 'all';
-    this.dataSetsInformation = [];
-    this.allSmsLogs$ = store.select(logsSelectors.getCurrentSmsGatewayLogs);
-    this.icons = {
-      danger: 'assets/icon/danger.png',
-      logs: 'assets/icon/logs.png',
-      info: 'assets/icon/info.png',
-      irrelevant: 'assets/icon/irrelevant.png',
-      warning: 'assets/icon/warning.png'
-    };
+  constructor(private store: Store<State>) {
+    this.isDataSetLoaded$ = this.store.pipe(select(getDataSetLoadedState));
+    this.isSmsCommandLoaded$ = this.store.pipe(
+      select(getSmsCommandLoadedState)
+    );
+    this.currentUser$ = this.store.pipe(select(getCurrentUser));
+    this.dataElements$ = this.store.pipe(select(getDataElements));
+    this.dataSetInformation$ = this.store.pipe(select(getDataSetInformation));
+    this.smsCommandMapper$ = this.store.pipe(select(getSmsCommandMapper));
+    this.smsGatewayLogs$ = this.store.pipe(
+      select(getSmsGatewayLogsByCurrentStatus)
+    );
+    this.smsGatewayLogSummary$ = this.store.pipe(
+      select(getSmsGatewayLogsSummary(smsLogsStatus))
+    );
+    this.currentSmsLogStatus$ = this.store.pipe(select(getCurrentSmsLogStatus));
   }
 
   ngOnInit() {
-    this.menu.enable(true);
-    this.isSyncActive = false;
-    this.isLoading = true;
-    this.translationMapper = {};
-    this.smsCommandMapper = {};
-    this.appTranslation.getTransalations(this.getValuesToTranslate()).subscribe(
-      (data: any) => {
-        this.translationMapper = data;
-        this.loadingCurrentUserInformation();
-      },
-      error => {
-        this.loadingCurrentUserInformation();
-      }
-    );
+    const logs: SmsGateWayLogs[] = this.getSampleLogs();
+    setTimeout(() => {
+      this.store.dispatch(new AddSmsGateWayLogs({ logs }));
+    }, 4000);
   }
 
-  viewLogsByStatus(status) {
-    this.currentFilter = status;
+  onCurrentSmsLogStatusUpdate(status: string) {
+    this.store.dispatch(new UpdateSmsGatewayLogStatus({ status }));
   }
 
-  getLogsByStatus(logs, status) {
-    return _.filter(logs, { type: status });
-  }
-
-  getCountByStatus(logs, status) {
-    let counts = 0;
-    if (logs) {
-      const filteredLogs = _.filter(logs, { type: status });
-      counts = filteredLogs.length;
-    }
-    return counts;
-  }
-
-  loadingCurrentUserInformation() {
-    let key = 'Discovering current user information';
-    this.loadingMessage = this.translationMapper[key]
-      ? this.translationMapper[key]
-      : key;
-    this.userProvider.getCurrentUser().subscribe((currentUser: CurrentUser) => {
-      currentUser.password = this.encryption.decode(currentUser.password);
-      this.currentUser = currentUser;
-      if (currentUser.isLogin) {
-        this.loadingConfiguration(currentUser);
-      } else {
-        this.downloadingSmsCommands();
-      }
-    });
-  }
-
-  downloadingSmsCommands() {
-    let key = 'Discovering SMS commands';
-    this.loadingMessage = this.translationMapper[key]
-      ? this.translationMapper[key]
-      : key;
-    this.smsCommand.getSmsCommandFromServer(this.currentUser).subscribe(
-      (smsCommands: any) => {
-        key = 'Saving SMS commands';
-        this.loadingMessage = this.translationMapper[key]
-          ? this.translationMapper[key]
-          : key;
-        this.smsCommand
-          .savingSmsCommand(smsCommands, this.currentUser.currentDatabase)
-          .subscribe(
-            () => {
-              key = 'SMS commands have been saved';
-              this.loadingMessage = this.translationMapper[key]
-                ? this.translationMapper[key]
-                : key;
-              this.downloadingDataSets();
-            },
-            error => {
-              console.log(JSON.stringify(error));
-              this.appProvider.setNormalNotification(
-                'Fail to save SMS commands'
-              );
-            }
-          );
-      },
-      error => {
-        console.log(JSON.stringify(error));
-        this.appProvider.setNormalNotification('Fail to discover SMS commands');
-      }
-    );
-  }
-
-  downloadingDataSets() {
-    let key = 'Discovering entry forms';
-    this.loadingMessage = this.translationMapper[key]
-      ? this.translationMapper[key]
-      : key;
-    this.dataSetProvider.downloadDataSetsFromServer(this.currentUser).subscribe(
-      (dataSets: any) => {
-        key = 'Saving entry forms';
-        this.loadingMessage = this.translationMapper[key]
-          ? this.translationMapper[key]
-          : key;
-        this.dataSetProvider
-          .saveDataSetsFromServer(dataSets, this.currentUser)
-          .subscribe(
-            () => {
-              key = 'Entry forms have been saved';
-              this.loadingMessage = this.translationMapper[key]
-                ? this.translationMapper[key]
-                : key;
-              key = 'Checking and updating missed SMS commands';
-              this.loadingMessage = this.translationMapper[key]
-                ? this.translationMapper[key]
-                : key;
-              this.smsCommand
-                .checkAndGenerateSmsCommands(this.currentUser)
-                .subscribe(
-                  () => {
-                    key = 'Updating current user information';
-                    this.loadingMessage = this.translationMapper[key]
-                      ? this.translationMapper[key]
-                      : key;
-                    this.currentUser.isLogin = true;
-                    this.userProvider
-                      .setCurrentUser(this.currentUser)
-                      .subscribe(
-                        () => {
-                          this.smsGateway
-                            .getSmsConfigurations(this.currentUser)
-                            .subscribe(
-                              (smsConfigurations: SmsConfiguration) => {
-                                //@todo checking if it was unchecked on setting
-                                if (smsConfigurations.dataSetIds.length == 0) {
-                                  dataSets.map((dataSet: any) => {
-                                    if (
-                                      smsConfigurations.dataSetIds.indexOf(
-                                        dataSet.id
-                                      ) == -1
-                                    ) {
-                                      smsConfigurations.dataSetIds.push(
-                                        dataSet.id
-                                      );
-                                    }
-                                  });
-                                  this.smsGateway
-                                    .setSmsConfigurations(
-                                      this.currentUser,
-                                      smsConfigurations
-                                    )
-                                    .subscribe(
-                                      () => {
-                                        this.loadingConfiguration(
-                                          this.currentUser
-                                        );
-                                      },
-                                      error => {}
-                                    );
-                                } else {
-                                  this.loadingConfiguration(this.currentUser);
-                                }
-                              },
-                              error => {
-                                this.loadingConfiguration(this.currentUser);
-                              }
-                            );
-                        },
-                        error => {
-                          this.isLoading = false;
-                          console.log(JSON.stringify(error));
-                          this.appProvider.setNormalNotification(
-                            'Fail to update current user information'
-                          );
-                        }
-                      );
-                  },
-                  error => {
-                    this.isLoading = false;
-                    console.log(JSON.stringify(error));
-                    this.appProvider.setNormalNotification(
-                      'Fail to check and update missed SMS commands'
-                    );
-                  }
-                );
-            },
-            error => {
-              this.isLoading = false;
-              console.log(JSON.stringify(error));
-              this.appProvider.setNormalNotification(
-                'Fail to save entry forms'
-              );
-            }
-          );
-      },
-      error => {
-        this.isLoading = false;
-        console.log(JSON.stringify(error));
-        this.appProvider.setNormalNotification('Fail to discover entry forms');
-      }
-    );
-  }
-
-  loadingConfiguration(currentUser) {
-    let key = 'Discovering SMS configurations';
-    this.loadingMessage = this.translationMapper[key]
-      ? this.translationMapper[key]
-      : key;
-    this.dataSetProvider
-      .getAllDataSets(currentUser)
-      .subscribe((dataSets: Array<any>) => {
-        this.dataSetsInformation = _.map(dataSets, dataSet => {
-          return { id: dataSet.id, name: dataSet.name };
-        });
-        this.smsGateway.getSmsConfigurations(currentUser).subscribe(
-          (smsConfigurations: SmsConfiguration) => {
-            key = 'Discovering SMS commands';
-            this.loadingMessage = this.translationMapper[key]
-              ? this.translationMapper[key]
-              : key;
-            this.smsCommand.getSmsCommandMapper(this.currentUser).subscribe(
-              smsCommandMapper => {
-                this.checkPermisionsAndStartGateway(smsCommandMapper);
-              },
-              error => {
-                this.isLoading = false;
-                this.appProvider.setNormalNotification(
-                  'Fail to discover SMS commands'
-                );
-              }
-            );
-          },
-          error => {
-            this.isLoading = false;
-            console.log(
-              'Error on loading sms configurations ' + JSON.stringify(error)
-            );
-            this.appProvider.setNormalNotification(
-              'Fail to discover SMS configurations'
-            );
-          }
-        );
-      });
-  }
-
-  checkPermisionsAndStartGateway(smsCommandMapper) {
-    this.appPermisssion.requestSMSPermission().subscribe(
-      response => {
-        this.smsGateway.startWatchingSms(smsCommandMapper, this.currentUser);
-        this.smsCommandMapper = smsCommandMapper;
-        this.isLoading = false;
-        if (response) {
-          this.appProvider.setNormalNotification(
-            'SMS gatway is now listening for incoming SMS'
-          );
-        }
-        this.store.dispatch(new logsActions.LoadingLogs());
-        this.dataSetProvider.getDataSetDataElements(this.currentUser).subscribe(
-          dataElements => {
-            this.dataElements = dataElements;
-          },
-          error => {}
-        );
-      },
-      error => {
-        this.isLoading = false;
-        console.log(JSON.stringify(error));
-      }
-    );
-  }
-
-  trackByFn(index, item) {
-    return item._id;
-  }
-
-  getValuesToTranslate() {
+  getSampleLogs(): SmsGateWayLogs[] {
     return [
-      'Discovering current user information',
-      'Discovering entry forms',
-      'Discovering SMS commands',
-      'Checking and updating missed SMS commands',
-      'Updating current user information'
+      {
+        type: 'info',
+        time: '1',
+        id: '1',
+        logMessage: 'log 1',
+        message: { id: '1', body: 'Message 1', address: 'address 1' }
+      },
+      {
+        type: 'info',
+        time: '3',
+        id: '2',
+        logMessage: 'log 2',
+        message: { id: '2', body: 'Message 2', address: 'address 2' }
+      },
+      {
+        type: 'info',
+        time: '2',
+        id: '3',
+        logMessage: 'log 3',
+        message: { id: '3', body: 'Message 3', address: 'address 3' }
+      },
+      {
+        type: 'danger',
+        time: '5',
+        id: '4',
+        logMessage: 'log 4',
+        message: { id: '4', body: 'Message 4', address: 'address 4' }
+      },
+      {
+        type: 'warning',
+        time: '6',
+        id: '7',
+        logMessage: 'log 5',
+        message: { id: '7', body: 'Message 7', address: 'address 7' }
+      },
+      {
+        type: 'warning',
+        time: '7',
+        id: '5',
+        logMessage: 'log 6',
+        message: { id: '5', body: 'Message 5', address: 'address 5' }
+      },
+      {
+        type: 'danger',
+        time: '23',
+        id: '6',
+        logMessage: 'log 7',
+        message: { id: '6', body: 'Message 6', address: 'address 6' }
+      },
+      {
+        type: 'irrelevant',
+        time: '10',
+        id: '8',
+        logMessage: 'log 8',
+        message: { id: '8', body: 'Message 8', address: 'address 8' }
+      },
+      {
+        type: 'danger',
+        time: '9',
+        id: '9',
+        logMessage: 'log 89',
+        message: { id: '9', body: 'Message 9', address: 'address 9' }
+      }
     ];
   }
 }
