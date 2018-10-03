@@ -67,7 +67,7 @@ export class HttpClientProvider {
       url = url.replace('/api', '/api');
       url = url.replace('/api', pattern);
     }
-    return url;
+    return encodeURI(url);
   }
 
   /**
@@ -199,6 +199,13 @@ export class HttpClientProvider {
                 observer.error(error);
               });
           } else {
+            console.log(
+              JSON.stringify({
+                username: sanitizedUser.username,
+                password: sanitizedUser.password
+              })
+            );
+            console.log('apiUrl ' + apiUrl);
             this.http
               .get(apiUrl, {}, {})
               .then((response: any) => {
