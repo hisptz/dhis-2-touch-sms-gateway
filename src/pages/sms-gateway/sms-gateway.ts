@@ -67,10 +67,7 @@ export class SmsGatewayPage implements OnInit {
   smsGatewayLogSummary$: Observable<any>;
   currentSmsLogStatus$: Observable<string>;
 
-  constructor(
-    private store: Store<State>,
-    private smsGatewayPermissionProvider: SmsGatewayPermissionProvider
-  ) {
+  constructor(private store: Store<State>) {
     this.isDataSetLoaded$ = this.store.pipe(select(getDataSetLoadedState));
     this.isSmsCommandLoaded$ = this.store.pipe(
       select(getSmsCommandLoadedState)
