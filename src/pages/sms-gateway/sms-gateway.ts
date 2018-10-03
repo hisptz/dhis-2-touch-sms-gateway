@@ -42,6 +42,7 @@ import { Observable } from 'rxjs';
 import { CurrentUser } from '../../models';
 import { SmsGateWayLogs } from '../../models/sms-gateway-logs';
 import { smsLogsStatus } from './constants/sms-logs-status';
+import { SmsGatewayPermissionProvider } from './providers/sms-gateway-permission/sms-gateway-permission';
 
 /**
  * Generated class for the SmsGatewayPage page.
@@ -66,7 +67,10 @@ export class SmsGatewayPage implements OnInit {
   smsGatewayLogSummary$: Observable<any>;
   currentSmsLogStatus$: Observable<string>;
 
-  constructor(private store: Store<State>) {
+  constructor(
+    private store: Store<State>,
+    private smsGatewayPermissionProvider: SmsGatewayPermissionProvider
+  ) {
     this.isDataSetLoaded$ = this.store.pipe(select(getDataSetLoadedState));
     this.isSmsCommandLoaded$ = this.store.pipe(
       select(getSmsCommandLoadedState)
@@ -93,6 +97,14 @@ export class SmsGatewayPage implements OnInit {
 
   onCurrentSmsLogStatusUpdate(status: string) {
     this.store.dispatch(new UpdateSmsGatewayLogStatus({ status }));
+  }
+
+  onStartSmsGateway(data: any) {
+    const { dataElements } = data;
+    const { smsCommandMapper } = data;
+    const { dataSetInformation } = data;
+    const { currentUser } = data;
+    //this.
   }
 
   getSampleLogs(): SmsGateWayLogs[] {

@@ -100,6 +100,8 @@ export class UserProvider {
       const apiurl = withBaseUrl
         ? this.httpProvider.getUrlBasedOnDhisVersion(url, currentUser)
         : url;
+
+      console.log(apiurl);
       this.http
         .get(apiurl, {}, {})
         .then(response => {

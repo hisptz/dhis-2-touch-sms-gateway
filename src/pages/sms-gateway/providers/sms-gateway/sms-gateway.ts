@@ -22,6 +22,9 @@
  *
  */
 import { Injectable } from '@angular/core';
+import * as _ from 'lodash';
+
+declare var SMS: any;
 
 /*
   Generated class for the SmsGatewayProvider provider.
@@ -33,7 +36,8 @@ import { Injectable } from '@angular/core';
 export class SmsGatewayProvider {
   constructor() {}
 
-  test() {
-    console.log('Yeah thumbs up');
+  startWatchSms(smsCommandMapper, dataSetInformation, currentUser) {
+    if (SMS) {
+    }
   }
 }

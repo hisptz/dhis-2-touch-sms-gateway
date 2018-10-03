@@ -36,16 +36,18 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-          <div *ngIf="(isDataSetLoaded$|async) && (isSmsCommandLoaded$ |async)">
-              <div text-right class="animated fadeIn">
-                <sms-gatway-log-summary (currentSmsLogStatusUpdate)="onCurrentSmsLogStatusUpdate($event)" [currentSmsLogStatus]="currentSmsLogStatus$ |async" [smsGatewayLogSummary]="smsGatewayLogSummary$|async"></sms-gatway-log-summary>
-              </div>
-              <div padding-top padding-bottom>
-                <sms-gateway-log-container [smsGatewayLogs]="smsGatewayLogs$|async" [smsCommandMapper]="smsCommandMapper$|async"
-                  [dataSetInformation]="dataSetInformation$|async" [dataElements]="dataElements$|async" [currentUser]="currentUser$|async"></sms-gateway-log-container>
-              </div>
-            </div>
+        <div *ngIf="(isDataSetLoaded$|async) && (isSmsCommandLoaded$ |async)">
+          <div text-right class="animated fadeIn">
+            <sms-gatway-log-summary (currentSmsLogStatusUpdate)="onCurrentSmsLogStatusUpdate($event)"
+              [currentSmsLogStatus]="currentSmsLogStatus$ |async" [smsGatewayLogSummary]="smsGatewayLogSummary$|async"></sms-gatway-log-summary>
+          </div>
+          <div padding-top padding-bottom>
+            <sms-gateway-log-container (startSmsGateway)="onStartSmsGateway($event)" [smsGatewayLogs]="smsGatewayLogs$|async"
+              [smsCommandMapper]="smsCommandMapper$|async" [dataSetInformation]="dataSetInformation$|async"
+              [dataElements]="dataElements$|async" [currentUser]="currentUser$|async"></sms-gateway-log-container>
+          </div>
+        </div>
       </ion-col>
     </ion-row>
-  </ion-grid>  
+  </ion-grid>
 </ion-content>

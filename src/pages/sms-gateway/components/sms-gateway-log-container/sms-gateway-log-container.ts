@@ -21,7 +21,14 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnDestroy,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import { SmsGateWayLogs } from '../../../../models/sms-gateway-logs';
 
 /**
@@ -46,9 +53,26 @@ export class SmsGatewayLogContainerComponent implements OnInit, OnDestroy {
   @Input()
   smsGatewayLogs: SmsGateWayLogs[];
 
+  @Output()
+  startSmsGateway = new EventEmitter();
+
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (
+      this.dataElements &&
+      this.smsCommandMapper &&
+      this.dataSetInformation &&
+      this.currentUser
+    ) {
+      this.startSmsGateway.emit({
+        dataElements: this.dataElements,
+        smsCommandMapper: this.smsCommandMapper,
+        dataSetInformation: this.dataSetInformation,
+        currentUser: this.currentUser
+      });
+    }
+  }
 
   trackByFn(index, item) {
     return item && item.id ? item.id : index;
