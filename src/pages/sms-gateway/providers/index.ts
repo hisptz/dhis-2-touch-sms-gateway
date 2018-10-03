@@ -25,4 +25,7 @@
 import { SmsGatewayPermissionProvider } from './sms-gateway-permission/sms-gateway-permission';
 import { SmsGatewayProvider } from './sms-gateway/sms-gateway';
 
-export const providers = [SmsGatewayPermissionProvider, SmsGatewayProvider];
+export const smsGatewayProviders = [
+  SmsGatewayPermissionProvider,
+  SmsGatewayProvider
+];

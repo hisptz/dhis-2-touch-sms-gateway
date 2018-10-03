@@ -34,6 +34,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SMS } from '@ionic-native/sms';
 import { BackgroundMode } from '@ionic-native/background-mode';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
 
 import { AppTranslationProvider } from '../providers/app-translation/app-translation';
 import { AppProvider } from './app/app';
@@ -97,5 +98,6 @@ export const nativePlugins = [
   DatePicker,
   Geolocation,
   SplashScreen,
-  BackgroundMode
+  BackgroundMode,
+  AndroidPermissions
 ];

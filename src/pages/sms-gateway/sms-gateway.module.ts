@@ -26,7 +26,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { SmsGatewayPage } from './sms-gateway';
 
 import { TranslateModule } from '@ngx-translate/core';
-import { providers } from './providers';
+import { smsGatewayProviders } from './providers';
 import { smsGatewayComponentsModule } from './components/smsGatewayComponents.module';
 
 @NgModule({
@@ -36,6 +36,6 @@ import { smsGatewayComponentsModule } from './components/smsGatewayComponents.mo
     smsGatewayComponentsModule,
     TranslateModule.forChild({})
   ],
-  providers: [...providers]
+  providers: [...smsGatewayProviders]
 })
 export class SmsGatewayPageModule {}

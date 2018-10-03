@@ -3,7 +3,7 @@
     <name>SMS gateway</name>
     <description>SMS gateway works with DHIS 2 touch</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://192.168.100.8:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -101,5 +101,6 @@
     </plugin>
     <plugin name="cordova-plugin-datepicker" spec="^0.9.3" />
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
+    <allow-navigation href="http://192.168.100.8:8100" sessionid="ac43d591" />
     <engine name="android" spec="7.0.0" />
 </widget>

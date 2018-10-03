@@ -200,13 +200,6 @@ export class HttpClientProvider {
                 observer.error(error);
               });
           } else {
-            console.log(
-              JSON.stringify({
-                username: sanitizedUser.username,
-                password: sanitizedUser.password
-              })
-            );
-            console.log('apiUrl ' + apiUrl);
             this.http
               .get(apiUrl, {}, {})
               .then((response: any) => {
