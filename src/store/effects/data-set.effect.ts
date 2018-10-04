@@ -22,7 +22,7 @@
  *
  */
 import { Injectable } from '@angular/core';
-import { Observable, pipe } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import {
@@ -30,7 +30,6 @@ import {
   CurrentUserActions,
   LoadDataSetSuccess
 } from '../actions';
-import { CurrentUser } from '../../models/current-user';
 import { DataSetsProvider } from '../../providers/data-sets/data-sets';
 import { mergeMap, map } from 'rxjs/operators';
 
