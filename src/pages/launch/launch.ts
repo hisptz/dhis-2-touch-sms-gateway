@@ -67,7 +67,7 @@ export class LaunchPage implements OnInit {
       this.appTranslationProvider.setAppTranslation(currentLanguage);
       if (currentUser && currentUser.isLogin) {
         this.store.dispatch(new AddCurrentUser({ currentUser }));
-        this.navCtrl.setRoot('HomePage');
+        this.navCtrl.setRoot('SmsGatewayPage');
       } else {
         this.navCtrl.setRoot('LoginPage');
       }

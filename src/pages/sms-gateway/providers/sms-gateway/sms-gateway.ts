@@ -38,6 +38,7 @@ import {
 } from '../../../../models/sms-gateway-logs';
 import { SmsCommandProvider } from '../../../../providers/sms-command/sms-command';
 import { HttpClientProvider } from '../../../../providers/http-client/http-client';
+import { SqlLiteProvider } from '../../../../providers/sql-lite/sql-lite';
 
 declare var SMS: any;
 
@@ -54,11 +55,47 @@ export class SmsGatewayProvider {
     private backgroundMode: BackgroundMode,
     private smsCommandProvider: SmsCommandProvider,
     private httpClientProvider: HttpClientProvider,
+    private sqlLiteProvider: SqlLiteProvider,
     private store: Store<State>
   ) {}
 
-  updatingSmsGatewayLog(log: SmsGateWayLogs) {
+  updatingSmsGatewayLog(log: SmsGateWayLogs, currentUser) {
     this.store.dispatch(new UpdateSmsGatewayLog({ id: log.id, log }));
+    this.saveSmsLogs([log], currentUser).subscribe(() => {});
+  }
+
+  getAllSavedSmsLogs(currentUser): Observable<any> {
+    const resource = 'smsLogs';
+    return new Observable(observer => {
+      this.sqlLiteProvider
+        .getAllDataFromTable(resource, currentUser.currentDatabase)
+        .subscribe(
+          (smsLogs: SmsGateWayLogs[]) => {
+            observer.next(smsLogs.reverse());
+            observer.complete();
+          },
+          error => {
+            observer.error(error);
+          }
+        );
+    });
+  }
+
+  saveSmsLogs(smsLogs: SmsGateWayLogs[], currentUser): Observable<any> {
+    const resource = 'smsLogs';
+    return new Observable(observer => {
+      this.sqlLiteProvider
+        .insertBulkDataOnTable(resource, smsLogs, currentUser.currentDatabase)
+        .subscribe(
+          () => {
+            observer.next();
+            observer.complete();
+          },
+          error => {
+            observer.error(error);
+          }
+        );
+    });
   }
 
   startWatchSms(smsCommandObjects, dataSetInformation, currentUser) {
@@ -89,12 +126,17 @@ export class SmsGatewayProvider {
                   dataSetIds
                 } = smsConfigurations;
                 _.map(data, smsData => {
-                  const id = smsData._id;
-                  if (
-                    _.indexOf(syncedSMSIds, id) === -1 &&
-                    _.indexOf(notSyncedSMSIds, id) === -1 &&
-                    _.indexOf(skippedSMSIds, id) === -1
-                  ) {
+                  const id = 'id_' + smsData._id;
+                  const shouldProcessSMS = this.shouldProcessSMS(
+                    {
+                      syncedSMSIds,
+                      notSyncedSMSIds,
+                      skippedSMSIds
+                    },
+                    id
+                  );
+                  if (shouldProcessSMS) {
+                    console.log({ shouldProcessSMS });
                     const smsResponse: ReceivedSms = {
                       id,
                       address: smsData.address,
@@ -129,6 +171,18 @@ export class SmsGatewayProvider {
         }
       );
     }, 10 * 1000);
+  }
+
+  shouldProcessSMS(smsConfigurations, smsId: string) {
+    let result = true;
+    if (
+      smsConfigurations.syncedSMSIds.indexOf(smsId) > -1 ||
+      smsConfigurations.notSyncedSMSIds.indexOf(smsId) > -1 ||
+      smsConfigurations.skippedSMSIds.indexOf(smsId) > -1
+    ) {
+      result = false;
+    }
+    return result;
   }
 
   processIncomingMessageLog(
@@ -244,7 +298,7 @@ export class SmsGatewayProvider {
       periodIso: payload.period,
       dataSetId: payload.dataSet
     };
-    this.updatingSmsGatewayLog(log);
+    this.updatingSmsGatewayLog(log, currentUser);
     this.httpClientProvider.post(url, payload, currentUser).subscribe(
       () => {
         const logMessage =
@@ -358,7 +412,7 @@ export class SmsGatewayProvider {
   }
 
   markAsSyncedSMS(log: SmsGateWayLogs, currentUser) {
-    this.updatingSmsGatewayLog(log);
+    this.updatingSmsGatewayLog(log, currentUser);
     this.smsCommandProvider
       .getSmsConfigurations(currentUser)
       .subscribe((smsConfigurations: SmsConfiguration) => {
@@ -381,7 +435,7 @@ export class SmsGatewayProvider {
       time: this.getSMSGatewayLogTime(),
       logMessage
     };
-    this.updatingSmsGatewayLog(log);
+    this.updatingSmsGatewayLog(log, currentUser);
     this.smsCommandProvider
       .getSmsConfigurations(currentUser)
       .subscribe((smsConfigurations: SmsConfiguration) => {
@@ -399,7 +453,7 @@ export class SmsGatewayProvider {
       time: this.getSMSGatewayLogTime(),
       logMessage
     };
-    this.updatingSmsGatewayLog(log);
+    this.updatingSmsGatewayLog(log, currentUser);
     this.smsCommandProvider
       .getSmsConfigurations(currentUser)
       .subscribe((smsConfigurations: SmsConfiguration) => {

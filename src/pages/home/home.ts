@@ -40,13 +40,11 @@ import { Observable } from 'rxjs';
 })
 export class HomePage implements OnInit {
   currentUser$: Observable<any>;
-  constructor(
-    public navCtrl: NavController,
-    private menuCtrl: MenuController
-  ) {}
+  constructor(public navCtrl: NavController, private menuCtrl: MenuController) {
+    this.navCtrl.setRoot('SmsGatewayPage');
+  }
 
   ngOnInit() {
     this.menuCtrl.enable(true);
-    this.navCtrl.setRoot('SmsGatewayPage');
   }
 }

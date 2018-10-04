@@ -22,22 +22,31 @@
  *
  */
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, pipe } from 'rxjs';
 import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import {
+  CurrentUserActionTypes,
+  CurrentUserActions,
+  AddSmsGateWayLogs
+} from '../actions';
+import { mergeMap, map } from 'rxjs/operators';
+import { SmsGatewayProvider } from '../../pages/sms-gateway/providers/sms-gateway/sms-gateway';
+import { SmsGateWayLogs } from '../../models/sms-gateway-logs';
 
 @Injectable()
 export class SmsGatewayLogsEffects {
-  constructor(private actions$: Actions) {}
+  constructor(
+    private actions$: Actions,
+    private smsGatewayProvider: SmsGatewayProvider
+  ) {}
 
-  //   @Effect()
-  //   loadSmsCommands$: Observable<Action> = this.actions$.pipe(
-  //     ofType<CurrentUserActions>(CurrentUserActionTypes.AddCurrentUser),
-  //     mergeMap((action: any) =>
-  //       this.smsCommandProvider.getAllSmsCommands(action.payload.currentUser)
-  //     ),
-  //     map(
-  //       (smsCommands: SmsCommand[]) => new LoadSmsCommandSuccess({ smsCommands })
-  //     )
-  //   );
+  @Effect()
+  loadSmsCommands$: Observable<Action> = this.actions$.pipe(
+    ofType<CurrentUserActions>(CurrentUserActionTypes.AddCurrentUser),
+    mergeMap((action: any) =>
+      this.smsGatewayProvider.getAllSavedSmsLogs(action.payload.currentUser)
+    ),
+    map((logs: SmsGateWayLogs[]) => new AddSmsGateWayLogs({ logs }))
+  );
 }

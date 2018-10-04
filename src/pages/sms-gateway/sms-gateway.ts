@@ -22,7 +22,7 @@
  *
  */
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IonicPage } from 'ionic-angular';
+import { IonicPage, MenuController } from 'ionic-angular';
 import { Store, select } from '@ngrx/store';
 import {
   State,
@@ -75,7 +75,8 @@ export class SmsGatewayPage implements OnInit, OnDestroy {
     private store: Store<State>,
     private smsGatewayPermissionProvider: SmsGatewayPermissionProvider,
     private smsGatewayProvider: SmsGatewayProvider,
-    private appProvider: AppProvider
+    private appProvider: AppProvider,
+    private menuCtrl: MenuController
   ) {
     this.subscriptions = new Subscription();
     this.isDataSetLoaded$ = this.store.pipe(select(getDataSetLoadedState));
@@ -96,7 +97,7 @@ export class SmsGatewayPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.store.dispatch(new AddSmsGateWayLogs({ logs: [] }));
+    this.menuCtrl.enable(true);
   }
 
   onCurrentSmsLogStatusUpdate(status: string) {
@@ -107,6 +108,7 @@ export class SmsGatewayPage implements OnInit, OnDestroy {
     const { smsCommandMapper } = data;
     const { dataSetInformation } = data;
     const { currentUser } = data;
+    this.discoveringSavedLogs(currentUser);
     this.subscriptions.add(
       this.smsGatewayPermissionProvider.requestSMSPermission().subscribe(
         () => {
@@ -124,6 +126,14 @@ export class SmsGatewayPage implements OnInit, OnDestroy {
         }
       )
     );
+  }
+
+  discoveringSavedLogs(currentUser) {
+    this.smsGatewayProvider
+      .getAllSavedSmsLogs(currentUser)
+      .subscribe((logs: SmsGateWayLogs[]) => {
+        this.store.dispatch(new AddSmsGateWayLogs({ logs }));
+      });
   }
 
   clearAllSubscriptions() {
