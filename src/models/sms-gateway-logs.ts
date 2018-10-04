@@ -32,6 +32,13 @@ export interface SmsGateWayLogs {
   message?: ReceivedSms;
 }
 
+export interface SmsConfiguration {
+  dataSetIds: Array<string>;
+  syncedSMSIds: Array<string>;
+  notSyncedSMSIds: Array<string>;
+  skippedSMSIds: Array<string>;
+}
+
 export interface ReceivedSms {
   id: string;
   body: string;

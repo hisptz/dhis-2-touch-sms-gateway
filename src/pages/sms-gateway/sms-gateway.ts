@@ -21,7 +21,7 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
 import { Store, select } from '@ngrx/store';
 import {
@@ -39,10 +39,13 @@ import {
   UpdateSmsGatewayLogStatus
 } from '../../store';
 import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import { CurrentUser } from '../../models';
 import { SmsGateWayLogs } from '../../models/sms-gateway-logs';
 import { smsLogsStatus } from './constants/sms-logs-status';
 import { SmsGatewayPermissionProvider } from './providers/sms-gateway-permission/sms-gateway-permission';
+import { AppProvider } from '../../providers/app/app';
+import { SmsGatewayProvider } from './providers/sms-gateway/sms-gateway';
 
 /**
  * Generated class for the SmsGatewayPage page.
@@ -56,7 +59,7 @@ import { SmsGatewayPermissionProvider } from './providers/sms-gateway-permission
   selector: 'page-sms-gateway',
   templateUrl: 'sms-gateway.html'
 })
-export class SmsGatewayPage implements OnInit {
+export class SmsGatewayPage implements OnInit, OnDestroy {
   currentUser$: Observable<CurrentUser>;
   smsCommandMapper$: Observable<any>;
   dataSetInformation$: Observable<any>;
@@ -67,10 +70,14 @@ export class SmsGatewayPage implements OnInit {
   smsGatewayLogSummary$: Observable<any>;
   currentSmsLogStatus$: Observable<string>;
 
+  subscriptions: Subscription;
   constructor(
     private store: Store<State>,
-    private smsGatewayPermissionProvider: SmsGatewayPermissionProvider
+    private smsGatewayPermissionProvider: SmsGatewayPermissionProvider,
+    private smsGatewayProvider: SmsGatewayProvider,
+    private appProvider: AppProvider
   ) {
+    this.subscriptions = new Subscription();
     this.isDataSetLoaded$ = this.store.pipe(select(getDataSetLoadedState));
     this.isSmsCommandLoaded$ = this.store.pipe(
       select(getSmsCommandLoadedState)
@@ -89,10 +96,7 @@ export class SmsGatewayPage implements OnInit {
   }
 
   ngOnInit() {
-    const logs: SmsGateWayLogs[] = this.getSampleLogs();
-    setTimeout(() => {
-      this.store.dispatch(new AddSmsGateWayLogs({ logs }));
-    }, 4000);
+    this.store.dispatch(new AddSmsGateWayLogs({ logs: [] }));
   }
 
   onCurrentSmsLogStatusUpdate(status: string) {
@@ -100,78 +104,34 @@ export class SmsGatewayPage implements OnInit {
   }
 
   onStartSmsGateway(data: any) {
-    const { dataElements } = data;
     const { smsCommandMapper } = data;
     const { dataSetInformation } = data;
     const { currentUser } = data;
-    //this.
+    this.subscriptions.add(
+      this.smsGatewayPermissionProvider.requestSMSPermission().subscribe(
+        () => {
+          this.smsGatewayProvider.startWatchSms(
+            smsCommandMapper,
+            dataSetInformation,
+            currentUser
+          );
+          this.appProvider.setNormalNotification(
+            'SMS gatway is now listening for incoming SMS'
+          );
+        },
+        error => {
+          this.appProvider.setNormalNotification(error);
+        }
+      )
+    );
   }
 
-  getSampleLogs(): SmsGateWayLogs[] {
-    return [
-      {
-        type: 'info',
-        time: '1',
-        id: '1',
-        logMessage: 'log 1',
-        message: { id: '1', body: 'Message 1', address: 'address 1' }
-      },
-      {
-        type: 'info',
-        time: '3',
-        id: '2',
-        logMessage: 'log 2',
-        message: { id: '2', body: 'Message 2', address: 'address 2' }
-      },
-      {
-        type: 'info',
-        time: '2',
-        id: '3',
-        logMessage: 'log 3',
-        message: { id: '3', body: 'Message 3', address: 'address 3' }
-      },
-      {
-        type: 'danger',
-        time: '5',
-        id: '4',
-        logMessage: 'log 4',
-        message: { id: '4', body: 'Message 4', address: 'address 4' }
-      },
-      {
-        type: 'warning',
-        time: '6',
-        id: '7',
-        logMessage: 'log 5',
-        message: { id: '7', body: 'Message 7', address: 'address 7' }
-      },
-      {
-        type: 'warning',
-        time: '7',
-        id: '5',
-        logMessage: 'log 6',
-        message: { id: '5', body: 'Message 5', address: 'address 5' }
-      },
-      {
-        type: 'danger',
-        time: '23',
-        id: '6',
-        logMessage: 'log 7',
-        message: { id: '6', body: 'Message 6', address: 'address 6' }
-      },
-      {
-        type: 'irrelevant',
-        time: '10',
-        id: '8',
-        logMessage: 'log 8',
-        message: { id: '8', body: 'Message 8', address: 'address 8' }
-      },
-      {
-        type: 'danger',
-        time: '9',
-        id: '9',
-        logMessage: 'log 89',
-        message: { id: '9', body: 'Message 9', address: 'address 9' }
-      }
-    ];
+  clearAllSubscriptions() {
+    this.subscriptions.unsubscribe();
+    this.subscriptions = new Subscription();
+  }
+
+  ngOnDestroy() {
+    this.clearAllSubscriptions();
   }
 }

@@ -21,12 +21,13 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  */
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/map';
 import { SqlLiteProvider } from '../sql-lite/sql-lite';
+import { Storage } from '@ionic/storage';
 import { HttpClientProvider } from '../http-client/http-client';
 import { DataSetsProvider } from '../data-sets/data-sets';
 import { DataSet } from '../../models/data-set';
 import { SmsCommand } from '../../models/sms-command';
+import { SmsConfiguration } from '../../models/sms-gateway-logs';
 import { SMS } from '@ionic-native/sms';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
@@ -45,7 +46,8 @@ export class SmsCommandProvider {
     private SqlLite: SqlLiteProvider,
     private dataSetProvider: DataSetsProvider,
     private sms: SMS,
-    private HttpClient: HttpClientProvider
+    private HttpClient: HttpClientProvider,
+    private storage: Storage
   ) {
     this.resourceName = 'smsCommand';
   }
@@ -119,6 +121,7 @@ export class SmsCommandProvider {
             let smsCommands: Array<SmsCommand> = this.getGenerateSmsCommands(
               dataSets
             );
+            this.checkingAndUpdateSmsConfigurations(dataSets, currentUser);
             this.savingSmsCommand(
               smsCommands,
               currentUser.currentDatabase
@@ -485,5 +488,82 @@ export class SmsCommandProvider {
       });
     }
     return dataElements;
+  }
+
+  checkingAndUpdateSmsConfigurations(dataSets, currentUser) {
+    const dataSetIds = _.map(dataSets, dataSet => dataSet.id);
+    this.getSmsConfigurations(currentUser, dataSetIds).subscribe(
+      configurations => {
+        this.setSmsConfigurations(currentUser, configurations).subscribe(
+          () => {}
+        );
+      }
+    );
+  }
+
+  /**
+   *
+   * @param currentUser
+   * @returns {Observable<SmsConfiguration>}
+   */
+  getSmsConfigurations(
+    currentUser,
+    dataSetIds?: string[]
+  ): Observable<SmsConfiguration> {
+    return new Observable(observer => {
+      let key = 'sms-configuration-' + currentUser.currentDatabase;
+      this.storage
+        .get(key)
+        .then((configuration: any) => {
+          configuration = JSON.parse(configuration);
+          if (!configuration) {
+            configuration = this.getDefaultConfigurations();
+            if (dataSetIds) {
+              configuration = { ...configuration, dataSetIds };
+            }
+          }
+          observer.next(configuration);
+          observer.complete();
+        })
+        .catch(error => {
+          observer.error(error);
+        });
+    });
+  }
+
+  /**
+   *
+   * @param currentUser
+   * @param configuration
+   * @returns {Observable<any>}
+   */
+  setSmsConfigurations(currentUser, configuration: any): Observable<any> {
+    return new Observable(observer => {
+      let key = 'sms-configuration-' + currentUser.currentDatabase;
+      configuration = JSON.stringify(configuration);
+      this.storage
+        .set(key, configuration)
+        .then(() => {
+          observer.next();
+          observer.complete();
+        })
+        .catch(error => {
+          observer.error(error);
+        });
+    });
+  }
+
+  /**
+   *
+   * @returns {SmsConfiguration}
+   */
+  getDefaultConfigurations(): SmsConfiguration {
+    let defaultConfigurations: SmsConfiguration = {
+      dataSetIds: [],
+      syncedSMSIds: [],
+      notSyncedSMSIds: [],
+      skippedSMSIds: []
+    };
+    return defaultConfigurations;
   }
 }

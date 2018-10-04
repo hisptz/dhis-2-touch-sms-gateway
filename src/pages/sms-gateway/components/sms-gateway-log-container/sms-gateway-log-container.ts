@@ -66,7 +66,6 @@ export class SmsGatewayLogContainerComponent implements OnInit, OnDestroy {
       this.currentUser
     ) {
       this.startSmsGateway.emit({
-        dataElements: this.dataElements,
         smsCommandMapper: this.smsCommandMapper,
         dataSetInformation: this.dataSetInformation,
         currentUser: this.currentUser
