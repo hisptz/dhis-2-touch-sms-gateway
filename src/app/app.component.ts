@@ -51,7 +51,10 @@ export class MyApp {
   ) {
     this.logoUrl = 'assets/img/logo.png';
     this.logOutIcon = 'assets/img/logo.png';
-    this.pages = [{ title: 'Home', component: 'HomePage', icon: 'home' }];
+    this.pages = [
+      { title: 'Home', component: 'SmsGatewayPage', icon: 'home' },
+      { title: 'Profile', component: 'ProfilePage', icon: 'person' }
+    ];
     this.initializeApp();
   }
 

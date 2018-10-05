@@ -104,7 +104,7 @@ export class LoginPage implements OnInit, OnDestroy {
       'dataElements',
       'smsCommand',
       'dataSets'
-      // 'programs',
+      // 'programs'
       // 'programStageSections',
       // 'programRules',
       // 'indicators',
