@@ -21,6 +21,3 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-import { ProfileProvider } from './profile/profile';
-
-export const providers: any[] = [ProfileProvider];

@@ -28,6 +28,7 @@ import { HttpClientProvider } from '../http-client/http-client';
 import { CurrentUser } from '../../models/current-user';
 import { EncryptionProvider } from '../encryption/encryption';
 import { LocalStorageProvider } from '../local-storage/local-storage';
+import * as _ from 'lodash';
 
 /*
  Generated class for the UserProvider provider.
@@ -382,14 +383,12 @@ export class UserProvider {
         'settings'
       ];
       status = status ? status : false;
-      const profileInfo = { status: status };
-      Object.keys(userDataResponse).map(key => {
-        if (ommittedKeys.indexOf(key) === -1) {
-          profileInfo[key] = userDataResponse[key];
-        }
-      });
+      const profileInfo = _.omit(userDataResponse, ommittedKeys);
       this.localStorageProvider
-        .setDataOnLocalStorage(JSON.stringify(profileInfo), 'profileInfo')
+        .setDataOnLocalStorage(
+          JSON.stringify({ ...profileInfo, status }),
+          'profileInfo'
+        )
         .subscribe(
           () => {
             observer.next();
