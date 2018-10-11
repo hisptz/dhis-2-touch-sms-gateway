@@ -40,6 +40,11 @@ export const getCurrentSmsLogStatus = createSelector(
   (state: SmsGatewayLogsState) => state.status
 );
 
+export const getSmsLogFilterKey = createSelector(
+  getSmsGatewayLogsEntityState,
+  (state: SmsGatewayLogsState) => state.filterKey
+);
+
 export const {
   selectIds: getSmsGatewayLogsIds,
   selectEntities: getSmsGatewayLogEntities,
@@ -49,31 +54,58 @@ export const {
 export const getSmsGatewayLogsByCurrentStatus = createSelector(
   getAllSmsGatewayLogs,
   getCurrentSmsLogStatus,
-  (smsGateWayLogs: SmsGateWayLogs[], status: string) => {
+  getSmsLogFilterKey,
+  (smsGateWayLogs: SmsGateWayLogs[], status: string, filterKey: string) => {
     const logs =
       status === 'all'
         ? smsGateWayLogs
         : _.filter(smsGateWayLogs, (smsGateWayLog: SmsGateWayLogs) => {
             return smsGateWayLog.type === status;
           });
-    return _.reverse(
-      _.sortBy(logs, (log: SmsGateWayLogs) => {
-        return log.time;
-      })
+    return getFilteredSmsLogs(
+      _.reverse(
+        _.sortBy(logs, (log: SmsGateWayLogs) => {
+          return log.time;
+        })
+      ),
+      filterKey
     );
   }
 );
 
 export const getSmsGatewayLogsSummary = smsLogsStatus =>
-  createSelector(getAllSmsGatewayLogs, (smsGateWayLogs: SmsGateWayLogs[]) => {
-    const summary = {};
-    for (status of smsLogsStatus) {
-      summary[status] =
-        status === 'all'
-          ? smsGateWayLogs.length
-          : _.filter(smsGateWayLogs, (smsGateWayLog: SmsGateWayLogs) => {
-              return smsGateWayLog.type === status;
-            }).length;
+  createSelector(
+    getAllSmsGatewayLogs,
+    getSmsLogFilterKey,
+    (smsGateWayLogs: SmsGateWayLogs[], filterKey: string) => {
+      const summary = {};
+      for (status of smsLogsStatus) {
+        summary[status] =
+          status === 'all'
+            ? getFilteredSmsLogs(smsGateWayLogs, filterKey).length
+            : getFilteredSmsLogs(
+                _.filter(smsGateWayLogs, (smsGateWayLog: SmsGateWayLogs) => {
+                  return smsGateWayLog.type === status;
+                }),
+                filterKey
+              ).length;
+      }
+      return summary;
     }
-    return summary;
-  });
+  );
+
+function getFilteredSmsLogs(logs: SmsGateWayLogs[], filterKey?: string) {
+  return filterKey.trim() === ''
+    ? logs
+    : _.filter(logs, (log: SmsGateWayLogs) => filterLogs(log, filterKey));
+}
+
+function filterLogs(log: SmsGateWayLogs, filterKey: string) {
+  return (
+    (log.organisationUnitName &&
+      log.organisationUnitName.indexOf(filterKey) > -1) ||
+    log.time.indexOf(filterKey) > -1 ||
+    log.logMessage.indexOf(filterKey) > -1 ||
+    log.message.body.indexOf(filterKey) > -1
+  );
+}

@@ -27,6 +27,7 @@ import { SmsGatewayLogsActions, SmsGatewayLogsActionTypes } from '../actions';
 
 export interface SmsGatewayLogsState extends EntityState<SmsGateWayLogs> {
   status: string;
+  filterKey: string;
 }
 
 export const smsGatewayLogsAdapter: EntityAdapter<
@@ -35,7 +36,8 @@ export const smsGatewayLogsAdapter: EntityAdapter<
 
 const initialState: SmsGatewayLogsState = smsGatewayLogsAdapter.getInitialState(
   {
-    status: 'all'
+    status: 'all',
+    filterKey: ''
   }
 );
 
@@ -55,6 +57,9 @@ export function smsGatewayLogReducer(
     }
     case SmsGatewayLogsActionTypes.UpdateSmsGatewayLogStatus: {
       return { ...state, status: action.payload.status };
+    }
+    case SmsGatewayLogsActionTypes.UpdateSmsGatewayLogFitlterKey: {
+      return { ...state, filterKey: action.payload.filterKey };
     }
     default: {
       return state;

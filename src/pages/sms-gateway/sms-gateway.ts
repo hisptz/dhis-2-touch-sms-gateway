@@ -36,7 +36,8 @@ import {
   AddSmsGateWayLogs,
   getSmsGatewayLogsSummary,
   getCurrentSmsLogStatus,
-  UpdateSmsGatewayLogStatus
+  UpdateSmsGatewayLogStatus,
+  UpdateSmsGatewayLogFitlterKey
 } from '../../store';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
@@ -69,6 +70,7 @@ export class SmsGatewayPage implements OnInit, OnDestroy {
   smsGatewayLogs$: Observable<SmsGateWayLogs[]>;
   smsGatewayLogSummary$: Observable<any>;
   currentSmsLogStatus$: Observable<string>;
+  searchItem: string;
 
   subscriptions: Subscription;
   constructor(
@@ -78,6 +80,7 @@ export class SmsGatewayPage implements OnInit, OnDestroy {
     private appProvider: AppProvider,
     private menuCtrl: MenuController
   ) {
+    this.searchItem = '';
     this.subscriptions = new Subscription();
     this.isDataSetLoaded$ = this.store.pipe(select(getDataSetLoadedState));
     this.isSmsCommandLoaded$ = this.store.pipe(
@@ -98,6 +101,12 @@ export class SmsGatewayPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.menuCtrl.enable(true);
+  }
+
+  onSearchingLogs() {
+    this.store.dispatch(
+      new UpdateSmsGatewayLogFitlterKey({ filterKey: this.searchItem })
+    );
   }
 
   onCurrentSmsLogStatusUpdate(status: string) {

@@ -28,13 +28,15 @@ import { SmsGatewayPage } from './sms-gateway';
 import { TranslateModule } from '@ngx-translate/core';
 import { smsGatewayProviders } from './providers';
 import { smsGatewayComponentsModule } from './components/smsGatewayComponents.module';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [SmsGatewayPage],
   imports: [
     IonicPageModule.forChild(SmsGatewayPage),
     smsGatewayComponentsModule,
-    TranslateModule.forChild({})
+    TranslateModule.forChild({}),
+    PipesModule
   ],
   providers: [...smsGatewayProviders]
 })

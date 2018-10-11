@@ -32,7 +32,8 @@
     </ion-title>
   </ion-navbar>
   <ion-toolbar>
-    <ion-searchbar animated="true" autocomplete="on" placeholder="{{ 'Search'|translate }}"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="searchItem" animated="true" autocomplete="on" (ionInput)="onSearchingLogs()"
+      placeholder="{{ 'Search'|translate }}"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content>
