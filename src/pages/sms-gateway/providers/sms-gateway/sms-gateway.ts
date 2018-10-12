@@ -136,7 +136,6 @@ export class SmsGatewayProvider {
                     id
                   );
                   if (shouldProcessSMS) {
-                    console.log({ shouldProcessSMS });
                     const smsResponse: ReceivedSms = {
                       id,
                       address: smsData.address,
