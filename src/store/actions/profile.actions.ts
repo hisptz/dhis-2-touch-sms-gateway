@@ -1,5 +1,3 @@
-import { from } from 'rxjs/observable/from';
-
 /*
  *
  * Copyright 2015 HISP Tanzania
@@ -23,8 +21,20 @@ import { from } from 'rxjs/observable/from';
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
-export * from './current-user.actons';
-export * from './data-set.actions';
-export * from './sms-command.actions';
-export * from './sms-gateway-logs.actions';
-export * from './profile.actions';
+import { Action } from '@ngrx/store';
+
+export enum ProfileActionTypes {
+  LoadProfileInformation = '[Profile] Loading profile informations',
+  LoadProfileInformationSuccess = '[Profile] Load profile information success'
+}
+
+export class LoadProfileInformation implements Action {
+  readonly type = ProfileActionTypes.LoadProfileInformation;
+}
+
+export class LoadProfileInformationSuccess implements Action {
+  readonly type = ProfileActionTypes.LoadProfileInformationSuccess;
+  constructor(public payload: any) {}
+}
+
+export type ProfileActions = LoadProfileInformation;
