@@ -21,3 +21,7 @@
  * @author Joseph Chingalo <profschingalo@gmail.com>
  *
  */
+export interface Profile {
+  id: string;
+  data: any;
+}

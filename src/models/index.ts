@@ -28,3 +28,4 @@ export * from './data-set';
 export * from './queue-manager';
 export * from './sms-command';
 export * from './translation';
+export * from './profile';

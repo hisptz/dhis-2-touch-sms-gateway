@@ -22,3 +22,27 @@
  *
  */
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { Profile } from '../../models';
+import { ProfileActions, ProfileActionTypes } from '../actions';
+
+export interface profileState extends EntityState<Profile> {}
+
+export const profileAdapter: EntityAdapter<Profile> = createEntityAdapter<
+  Profile
+>();
+
+const initialState: profileState = profileAdapter.getInitialState({});
+
+export function currentUserReducer(
+  state = initialState,
+  action: ProfileActions
+): profileState {
+  switch (action.type) {
+    case ProfileActionTypes.LoadProfileInformationSuccess: {
+      return profileAdapter.upsertOne(action.payload, state);
+    }
+    default: {
+      return state;
+    }
+  }
+}

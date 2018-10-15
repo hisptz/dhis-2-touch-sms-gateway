@@ -22,6 +22,7 @@
  *
  */
 import { Action } from '@ngrx/store';
+import { Profile } from '../../models';
 
 export enum ProfileActionTypes {
   LoadProfileInformation = '[Profile] Loading profile informations',
@@ -34,7 +35,9 @@ export class LoadProfileInformation implements Action {
 
 export class LoadProfileInformationSuccess implements Action {
   readonly type = ProfileActionTypes.LoadProfileInformationSuccess;
-  constructor(public payload: any) {}
+  constructor(public payload: Profile) {}
 }
 
-export type ProfileActions = LoadProfileInformation;
+export type ProfileActions =
+  | LoadProfileInformation
+  | LoadProfileInformationSuccess;
