@@ -22,16 +22,21 @@
 *
 *
 -->
-<div class="animated slideInLeft" class="logs-container" (click)="toggleLogsDetails()">
+<div class="animated slideInLeft" class="logs-container">
   <div class="log-list-item-border log-list-item" [ngClass]="(isSelected)? 'log-list-item-selected': ''">
-    <img class="side-menu-icon" [src]="icons[smsGatewayLog.type]" />&nbsp;&nbsp;
-    <span>{{ smsGatewayLog.time + " : " + smsGatewayLog.logMessage }}</span>
-    <div *ngIf="isSelected" class="animate fadeIn">
+    <span (click)="toggleLogsDetails()">
+      <img class="side-menu-icon" [src]="icons[smsGatewayLog.type]" />&nbsp;&nbsp;
+      <span>{{ smsGatewayLog.time + " : " + smsGatewayLog.logMessage }}</span>
+    </span>
+    <button ion-button clear color="light">
+      <ion-icon name="refresh-circle"></ion-icon>
+    </button>
+    <div *ngIf="isSelected" class="animate fadeIn" (click)="toggleLogsDetails()">
       <div class="item-card non-decrypted-sms">
         <span>
           <b>
             <span [translate]="'Sender'"></span>
-          </b>: {{ smsGatewayLog.message.address }} </span>
+          </b>: {{ smsGatewayLog.message.address }} [hasBeenProceced] = {{smsGatewayLog.type }}</span>
         <br>
         <span>
           <b>

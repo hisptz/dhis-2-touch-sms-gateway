@@ -39,7 +39,7 @@ export function currentUserReducer(
 ): profileState {
   switch (action.type) {
     case ProfileActionTypes.LoadProfileInformationSuccess: {
-      return profileAdapter.upsertOne(action.payload, state);
+      return profileAdapter.addOne(action.payload, state);
     }
     default: {
       return state;
