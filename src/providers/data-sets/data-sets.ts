@@ -98,7 +98,7 @@ export class DataSetsProvider {
             (dataSetElementMapper: any) => {
               let dataSets: Array<DataSet> = [];
               dataSetsResponse.map((dataSet: any) => {
-                const dataElemets = dataSetElementMapper[dataSet.id]
+                let dataElemets = dataSetElementMapper[dataSet.id]
                   ? dataSetElementMapper[dataSet.id]
                   : [];
                 dataSets = _.concat(dataSets, {
@@ -133,27 +133,27 @@ export class DataSetsProvider {
         currentUser.currentDatabase
       ).subscribe(
         (dataSetElements: any) => {
-          const dataElementIds = _.concat(
-            [],
-            _.flattenDeep(
-              _.map(dataSetElements, (dataSetElement: any) => {
-                return dataSetElement.dataElementIds;
-              })
+          dataSetElements = _.map(dataSetElements, dataSetElement => {
+            return { ...dataSetElement, dataSetId: dataSetElement.id };
+          });
+          const dataElementids = _.flattenDeep(
+            _.map(
+              dataSetElements,
+              (dataSetElement: any) => dataSetElement.dataElementIds
             )
           );
-          const dataSetElementMapper = {};
-          this.getAllDataElementsMapper(currentUser, dataElementIds).subscribe(
+          let dataSetElementMapper = {};
+          this.getAllDataElementsMapper(currentUser, dataElementids).subscribe(
             (dataElementMapper: any) => {
               dataSetElements.map((dataSetElement: any) => {
-                if (!dataSetElementMapper[dataSetElement.id]) {
-                  dataSetElementMapper[dataSetElement.id] = [];
+                if (!dataSetElementMapper[dataSetElement.dataSetId]) {
+                  dataSetElementMapper[dataSetElement.dataSetId] = [];
                 }
-                dataSetElementMapper[dataSetElement.id] = _.map(
-                  dataSetElement.dataElementIds,
-                  (dataElementId: string) => {
-                    return dataElementMapper[dataElementId];
-                  }
-                );
+                for (const dataElementId of dataSetElement.dataElementIds) {
+                  dataSetElementMapper[dataSetElement.dataSetId].push(
+                    dataElementMapper[dataElementId]
+                  );
+                }
               });
               observer.next(dataSetElementMapper);
               observer.complete();
@@ -187,14 +187,13 @@ export class DataSetsProvider {
         currentUser.currentDatabase
       ).subscribe(
         (dataElements: any) => {
-          const dataElementsmapper = {};
-          dataElements.map((dataElement: any) => {
-            dataElementsmapper[dataElement.id] = {
+          const dataElementObjects = _.map(dataElements, dataElement => {
+            return {
               id: dataElement.id,
               categoryCombo: dataElement.categoryCombo
             };
           });
-          observer.next(dataElementsmapper);
+          observer.next(_.keyBy(dataElementObjects, 'id'));
           observer.complete();
         },
         error => {
